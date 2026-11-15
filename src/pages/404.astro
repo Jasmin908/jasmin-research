@@ -4,7 +4,7 @@ import '@fontsource-variable/geist';
 import '@fontsource-variable/newsreader/opsz.css';
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
-import { homePath, localeCodes, locales } from '../i18n/config';
+import { homePath, localeCodes, locales, sectionPath } from '../i18n/config';
 import { useTranslations } from '../i18n/ui';
 
 // Cloudflare Pages serves this single file for every unknown URL,
@@ -32,9 +32,14 @@ import { useTranslations } from '../i18n/ui';
             <section lang={locales[code].htmlLang}>
               <Heading class="title">{t.notFound.title}</Heading>
               <p>{t.notFound.text}</p>
-              <a class="btn btn--ghost" href={homePath(code)}>
-                {t.notFound.cta}
-              </a>
+              <div class="actions">
+                <a class="btn btn--ghost" href={homePath(code)}>
+                  {t.notFound.cta}
+                </a>
+                <a class="text-link" href={sectionPath(code, 'publications')}>
+                  {t.notFound.library} <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </section>
           );
         })
@@ -73,6 +78,13 @@ import { useTranslations } from '../i18n/ui';
 
   .title {
     font-size: 1.75rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
   }
 
   section p {

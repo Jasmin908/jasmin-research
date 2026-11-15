@@ -40,6 +40,9 @@ const items: { id: Section; label: string }[] = [
           </li>
         ))
       }
+      <li>
+        <a class="external" href={site.portfolio} rel="me">{t.nav.portfolio}<span aria-hidden="true">↗</span></a>
+      </li>
     </ul>
 
     <div class="end">
@@ -144,6 +147,12 @@ const items: { id: Section; label: string }[] = [
   .links a:hover,
   .links a[aria-current] {
     color: var(--text);
+  }
+
+  .external span {
+    margin-left: 0.2rem;
+    font-size: 0.8em;
+    color: var(--violet-soft);
   }
 
   .indicator {

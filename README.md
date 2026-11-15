@@ -69,7 +69,7 @@ Connect the GitHub repository in Cloudflare → Workers & Pages → Create → P
 | Environment variable (optional) | `SITE_URL` = the final address, e.g. a custom domain |
 
 Without `SITE_URL`, canonical links and the sitemap use
-`https://jasmin-research.pages.dev`. The Node version comes from `.node-version`;
+`https://jasmin-research.loeffeljasmin.workers.dev`. The Node version comes from `.node-version`;
 caching headers from `public/_headers`.
 
 ## Licence

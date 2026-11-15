@@ -25,7 +25,7 @@ const copy: Localized<{
   journey: { when: string; what: string; text: string }[];
   approachTitle: string;
   approachIntro: string;
-  principles: { title: string; text: string }[];
+  principles: { title: string; text?: string }[];
   independenceTitle: string;
   independence: string;
   copyrightTitle: string;
@@ -35,28 +35,41 @@ const copy: Localized<{
   portfolioCta: string;
 }> = {
   en: {
-    title: 'Learning in public, carefully.',
-    lead: 'I’m Jasmin – a software development apprentice in Switzerland with far more interests than one field can hold.',
+    title: 'A little about me.',
+    lead: 'I’m Jasmin, a software development apprentice with a curiosity for all kinds of subjects. I enjoy learning new things, exploring different ideas and understanding how the world works.',
     intro: [
-      'Code is my profession, but curiosity doesn’t stop at the edge of a job description. I read about the universe, the mind, languages and the history of ideas, and I learn best when I have to explain what I’ve read.',
-      'This library is the result: a place where notes become summaries, summaries become reviews, and sometimes a question turns into a small piece of research of my own.',
+      'I’ve always been someone who enjoys learning, especially when something catches my interest and makes me want to understand it better. My interests range from astronomy and psychology to languages, history and computer science.',
+      'I created this website as a place to organise what I learn and share it with others. Some topics become short summaries or study notes, while others turn into more detailed research papers. It’s also a way for me to look back on what I’ve learned and see how my understanding develops over time.',
     ],
     interestsTitle: 'What I study',
     interestsText: 'The shelves of the library. New ones will be added as my interests grow.',
     journeyTitle: 'Learning journey',
     journey: [
-      { when: 'Now', what: 'Software development apprenticeship', text: 'Training as an Informatikerin EFZ in application development – the technical side of this site comes from there.' },
-      { when: 'Ongoing', what: 'Self-directed study', text: 'Books, lectures and papers in the subjects above, alongside work and school.' },
-      { when: '2026', what: 'This library', text: 'Started publishing what I learn, so it is organised, citable and open to correction.' },
+      {
+        when: 'Now',
+        what: 'Software development apprenticeship',
+        text: 'I’m currently completing an apprenticeship in application development, where I’m developing my programming and technical skills.',
+      },
+      {
+        when: 'Ongoing',
+        what: 'Independent learning',
+        text: 'Outside of school and work, I enjoy exploring different subjects through books, articles, videos and my own research.',
+      },
+      {
+        when: '2026',
+        what: 'This website',
+        text: 'I started this website to collect my notes, research and summaries in one place and share what I learn.',
+      },
     ],
-    approachTitle: 'How I research',
-    approachIntro: 'I’m not affiliated with a university. To make independent work worth reading, I hold myself to a few rules:',
+    approachTitle: 'My approach',
+    approachIntro:
+      'I try to understand the subjects I study rather than simply memorise information. When writing summaries or research papers, I aim to use reliable sources, explain things clearly and distinguish established facts from my own interpretations.',
     principles: [
-      { title: 'Go to the sources', text: 'Primary sources and peer-reviewed work first; popular summaries only as a way in.' },
-      { title: 'Cite everything', text: 'Every claim that isn’t mine points to where it comes from, so you can check it.' },
-      { title: 'Say how sure I am', text: 'I separate what is established from what is debated, and from my own interpretation.' },
-      { title: 'Label the format', text: 'Notes, summaries, reviews and original investigations promise different things – each piece says what it is.' },
-      { title: 'Revise in the open', text: 'When I learn I was wrong, the text is corrected and the update is dated.' },
+      { title: 'Use reliable sources.' },
+      { title: 'Give credit to the original authors.' },
+      { title: 'Stay open to different perspectives and new evidence.' },
+      { title: 'Clearly distinguish summaries, notes and research papers.' },
+      { title: 'Correct mistakes and update information when necessary.' },
     ],
     independenceTitle: 'Independent, not peer-reviewed',
     independence:
@@ -72,28 +85,41 @@ const copy: Localized<{
     portfolioCta: 'Visit my portfolio',
   },
   de: {
-    title: 'Öffentlich lernen, sorgfältig.',
-    lead: 'Ich bin Jasmin – lernende Informatikerin in der Schweiz, mit mehr Interessen, als in ein einziges Fach passen.',
+    title: 'Ein bisschen über mich.',
+    lead: 'Ich bin Jasmin und mache eine Ausbildung in der Applikationsentwicklung. Neben dem Programmieren interessiere ich mich für ganz unterschiedliche Themen. Ich lerne gerne Neues, beschäftige mich mit verschiedenen Ideen und versuche, die Welt um mich herum besser zu verstehen.',
     intro: [
-      'Code ist mein Beruf, aber Neugier hört nicht am Rand einer Stellenbeschreibung auf. Ich lese über das Universum, den Geist, Sprachen und die Geschichte der Ideen – und ich lerne am besten, wenn ich erklären muss, was ich gelesen habe.',
-      'Diese Bibliothek ist das Ergebnis: ein Ort, an dem aus Notizen Zusammenfassungen werden, aus Zusammenfassungen Übersichten, und aus einer Frage manchmal ein kleines eigenes Forschungsprojekt.',
+      'Ich habe schon immer gerne gelernt, besonders wenn mich ein Thema neugierig macht und ich mehr darüber verstehen möchte. Meine Interessen reichen von Astronomie und Psychologie über Sprachen und Geschichte bis hin zur Informatik.',
+      'Diese Website habe ich erstellt, um das, was ich lerne, an einem Ort zu sammeln und mit anderen zu teilen. Manche Themen fasse ich in kurzen Texten oder Lernnotizen zusammen, andere beschäftigen mich länger und werden zu ausführlicheren Recherchen. Gleichzeitig kann ich so später zurückblicken und sehen, wie sich mein Wissen und mein Verständnis weiterentwickelt haben.',
     ],
     interestsTitle: 'Was ich lerne',
     interestsText: 'Die Regale der Bibliothek. Neue kommen dazu, wenn meine Interessen wachsen.',
     journeyTitle: 'Mein Lernweg',
     journey: [
-      { when: 'Jetzt', what: 'Lehre in der Applikationsentwicklung', text: 'Ausbildung zur Informatikerin EFZ – daher kommt die technische Seite dieser Website.' },
-      { when: 'Laufend', what: 'Selbststudium', text: 'Bücher, Vorlesungen und Fachartikel zu den Themen oben, neben Arbeit und Schule.' },
-      { when: '2026', what: 'Diese Bibliothek', text: 'Ich veröffentliche, was ich lerne – geordnet, zitierbar und offen für Korrekturen.' },
+      {
+        when: 'Jetzt',
+        what: 'Ausbildung in der Applikationsentwicklung',
+        text: 'Ich mache zurzeit eine Ausbildung in der Applikationsentwicklung und erweitere dabei meine Kenntnisse im Programmieren und in anderen technischen Bereichen.',
+      },
+      {
+        when: 'Laufend',
+        what: 'Selbstständiges Lernen',
+        text: 'Auch ausserhalb von Schule und Arbeit beschäftige ich mich gerne mit verschiedenen Themen – durch Bücher, Artikel, Videos und eigene Recherchen.',
+      },
+      {
+        when: '2026',
+        what: 'Diese Website',
+        text: '2026 habe ich diese Website gestartet, um meine Notizen, Recherchen und Zusammenfassungen an einem Ort zu sammeln und mein Wissen mit anderen zu teilen.',
+      },
     ],
-    approachTitle: 'Wie ich forsche',
-    approachIntro: 'Ich bin keiner Hochschule angeschlossen. Damit unabhängige Arbeit lesenswert ist, halte ich mich an ein paar Regeln:',
+    approachTitle: 'Meine Herangehensweise',
+    approachIntro:
+      'Mir ist es wichtig, die Themen, mit denen ich mich beschäftige, wirklich zu verstehen, statt Informationen nur auswendig zu lernen. Bei meinen Zusammenfassungen und Recherchen versuche ich, zuverlässige Quellen zu verwenden, Inhalte verständlich zu erklären und zwischen gesicherten Erkenntnissen und meinen eigenen Interpretationen zu unterscheiden.',
     principles: [
-      { title: 'Zu den Quellen gehen', text: 'Primärquellen und begutachtete Arbeiten zuerst; populäre Darstellungen nur als Einstieg.' },
-      { title: 'Alles belegen', text: 'Jede Aussage, die nicht von mir stammt, verweist auf ihre Herkunft – damit du sie prüfen kannst.' },
-      { title: 'Sagen, wie sicher ich bin', text: 'Ich trenne Gesichertes von Umstrittenem und beides von meiner eigenen Deutung.' },
-      { title: 'Das Format benennen', text: 'Notizen, Zusammenfassungen, Übersichten und eigene Untersuchungen versprechen Verschiedenes – jeder Text sagt, was er ist.' },
-      { title: 'Offen überarbeiten', text: 'Wenn ich merke, dass ich falsch lag, wird der Text korrigiert und die Änderung datiert.' },
+      { title: 'Zuverlässige Quellen verwenden.' },
+      { title: 'Die ursprünglichen Autorinnen und Autoren nennen.' },
+      { title: 'Offen für andere Perspektiven und neue Erkenntnisse bleiben.' },
+      { title: 'Zusammenfassungen, Lernnotizen und ausführliche Recherchen klar unterscheiden.' },
+      { title: 'Fehler korrigieren und Informationen bei Bedarf aktualisieren.' },
     ],
     independenceTitle: 'Unabhängig, nicht begutachtet',
     independence:
@@ -182,7 +208,7 @@ const c = copy[locale];
             <li data-reveal style={`--d: ${(i % 2) * 70}ms`}>
               <span class="n">{String(i + 1).padStart(2, '0')}</span>
               <h3>{p.title}</h3>
-              <p>{p.text}</p>
+              {p.text && <p>{p.text}</p>}
             </li>
           ))
         }

@@ -8,8 +8,8 @@ import remarkCitations, { rehypeFootnoteLabel } from './src/plugins/remark-citat
 
 // The public address, used for canonical links, hreflang, RSS and the sitemap.
 // - SITE_URL, if set, wins (e.g. for a custom domain later).
-// - Otherwise the Cloudflare Pages address is used, for every build.
-const site = process.env.SITE_URL ?? 'https://jasmin-research.pages.dev';
+// - Otherwise the live Cloudflare address is used, for every build.
+const site = process.env.SITE_URL ?? 'https://jasmin-research.loeffeljasmin.workers.dev';
 
 export default defineConfig({
   site,
