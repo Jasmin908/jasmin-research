@@ -1,0 +1,14 @@
+// Cloudflare Workers configuration for the static site.
+// Workers Builds runs `npm run build`, then deploys the files in dist/.
+{
+  "name": "jasmin-research",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    // Serve dist/404.html (with status 404) for addresses that don't exist,
+    // instead of an empty response.
+    "not_found_handling": "404-page",
+    // Same as Cloudflare's default: /en/about redirects to /en/about/.
+    "html_handling": "auto-trailing-slash"
+  }
+}
