@@ -1,0 +1,182 @@
+---
+import Arrow from './Arrow.astro';
+import SubjectIcon from './SubjectIcon.astro';
+import { topicPath, type Locale } from '../i18n/config';
+import { count, useTranslations } from '../i18n/ui';
+import { subjects, type SubjectId } from '../data/subjects';
+
+interface Props {
+  id: SubjectId;
+  locale: Locale;
+  total: number;
+  /** Titles of the latest publications, shown on the topics page. */
+  latest?: string[];
+  delay?: number;
+  level?: 'h2' | 'h3';
+}
+
+const { id, locale, total, latest = [], delay = 0, level: Heading = 'h3' } = Astro.props;
+const t = useTranslations(locale);
+const subject = subjects[id];
+---
+
+<article class="subject" data-spot data-reveal style={`--d: ${delay}ms`} data-empty={total === 0 ? '' : undefined}>
+  <div class="icon"><SubjectIcon name={subject.icon} /></div>
+  <Heading class="name"><a href={topicPath(locale, id)}>{subject.name[locale]}</a></Heading>
+  <p class="desc">{subject.description[locale]}</p>
+  {
+    latest.length > 0 && (
+      <ul class="latest">
+        {latest.map((title) => (
+          <li>{title}</li>
+        ))}
+      </ul>
+    )
+  }
+  <div class="foot">
+    <span class="count">{count(total, t.topics.countOne, t.topics.count, t.topics.countNone)}</span>
+    <span class="arrow" aria-hidden="true"><Arrow /></span>
+  </div>
+</article>
+
+<style>
+  .subject {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-radius: var(--r-m);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      border-color 0.5s var(--ease),
+      translate 0.6s var(--ease),
+      opacity 0.9s var(--ease) var(--d, 0ms),
+      transform 0.9s var(--ease) var(--d, 0ms);
+  }
+
+  .subject::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(20rem circle at var(--mx, 50%) var(--my, 0%), rgb(139 92 246 / 0.16), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s var(--ease);
+  }
+
+  .subject:hover {
+    border-color: var(--line-strong);
+    translate: 0 -3px;
+  }
+
+  .subject:hover::before {
+    opacity: 1;
+  }
+
+  .subject[data-empty] {
+    border-style: dashed;
+    background: rgb(27 26 42 / 0.45);
+  }
+
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 14px;
+    border: 1px solid rgb(196 181 253 / 0.25);
+    background: rgb(139 92 246 / 0.1);
+    color: var(--violet-soft);
+    transition:
+      color 0.4s var(--ease),
+      border-color 0.4s var(--ease);
+  }
+
+  .icon :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .subject:hover .icon {
+    color: var(--lime);
+    border-color: rgb(182 243 106 / 0.35);
+  }
+
+  .name {
+    margin-top: 1.25rem;
+    font-size: 1.35rem;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+
+  .name a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .name a:focus-visible {
+    outline: none;
+  }
+
+  .subject:has(.name a:focus-visible) {
+    outline: 2px solid var(--lime);
+    outline-offset: 3px;
+  }
+
+  .desc {
+    margin-top: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  .latest {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: 0.4rem;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .latest li::before {
+    content: '— ';
+    color: var(--violet-soft);
+  }
+
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 1.25rem;
+  }
+
+  .count {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .arrow :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .subject:hover .arrow :global(svg) {
+    transform: translateX(5px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .subject:hover {
+      translate: none;
+    }
+  }
+</style>

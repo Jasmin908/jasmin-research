@@ -1,0 +1,277 @@
+---
+import Base from '../layouts/Base.astro';
+import PublicationCard from '../components/PublicationCard.astro';
+import { alternatesFor, localeCodes, sectionPath, type Locale } from '../i18n/config';
+import { count, useTranslations } from '../i18n/ui';
+import { subjectIds, subjects } from '../data/subjects';
+import { publicationTypeIds, publicationTypes } from '../data/types';
+import { forLocale, getPublications } from '../lib/publications';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const all = await getPublications();
+const shown = forLocale(all, locale);
+const usedSubjects = subjectIds.filter((id) => shown.some((e) => e.data.subjects.includes(id)));
+const usedTypes = publicationTypeIds.filter((id) => shown.some((e) => e.data.type === id));
+---
+
+<Base
+  locale={locale}
+  title={t.meta.libraryTitle}
+  description={t.meta.libraryDescription}
+  alternates={alternatesFor((code) => sectionPath(code, 'publications'))}
+  active="publications"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="label" data-index="§">{t.library.label}</p>
+      <h1 class="page-title">{t.library.title}</h1>
+      <p class="page-intro">{t.library.intro}</p>
+    </div>
+  </header>
+
+  <div class="container" data-library>
+    <form class="controls" data-library-form role="search" hidden>
+      <div class="search">
+        <label class="visually-hidden" for="lib-q">{t.library.search}</label>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5" stroke-linecap="round"></path></svg>
+        <input id="lib-q" name="q" type="search" placeholder={t.library.searchPlaceholder} autocomplete="off" />
+        <kbd aria-hidden="true">/</kbd>
+      </div>
+      <div class="selects">
+        <label>
+          <span>{t.library.subject}</span>
+          <select name="subject">
+            <option value="">{t.library.allSubjects}</option>
+            {usedSubjects.map((id) => <option value={id}>{subjects[id].name[locale]}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>{t.library.type}</span>
+          <select name="type">
+            <option value="">{t.library.allTypes}</option>
+            {usedTypes.map((id) => <option value={id}>{publicationTypes[id][locale]}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>{t.library.language}</span>
+          <select name="lang">
+            <option value="">{t.library.allLanguages}</option>
+            {localeCodes.map((code) => <option value={code}>{t.languages[code]}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>{t.library.sort}</span>
+          <select name="sort">
+            <option value="newest">{t.library.newest}</option>
+            <option value="oldest">{t.library.oldest}</option>
+            <option value="title">{t.library.alphabetical}</option>
+          </select>
+        </label>
+      </div>
+      <div class="status-row">
+        <p class="status" role="status" data-library-status data-one={t.library.resultsOne} data-many={t.library.results}>
+          {count(shown.length, t.library.resultsOne, t.library.results)}
+        </p>
+        <button type="reset" class="reset">{t.library.reset}</button>
+      </div>
+    </form>
+
+    <div class="grid" data-library-list>
+      {shown.map((entry, i) => <PublicationCard entry={entry} all={all} locale={locale} level="h2" filterable delay={(i % 3) * 70} />)}
+    </div>
+
+    <div class="empty" data-library-empty hidden>
+      <p>{t.library.empty}</p>
+      <button type="button" class="btn btn--ghost" data-library-reset>{t.library.reset}</button>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .controls {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: var(--r-m);
+    border: 1px solid var(--line);
+    background: rgb(27 26 42 / 0.6);
+  }
+
+  .controls[hidden] {
+    display: none;
+  }
+
+  .search {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search svg {
+    position: absolute;
+    left: 1.1rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  input,
+  select {
+    width: 100%;
+    min-height: 3rem;
+    border-radius: var(--pill);
+    border: 1px solid var(--line-strong);
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 1rem;
+    transition: border-color 0.3s var(--ease);
+  }
+
+  input {
+    padding: 0 3rem 0 3rem;
+  }
+
+  input::placeholder {
+    color: var(--muted);
+    opacity: 0.8;
+  }
+
+  input:hover,
+  select:hover {
+    border-color: rgb(196 181 253 / 0.5);
+  }
+
+  input:focus-visible,
+  select:focus-visible {
+    outline: 2px solid var(--lime);
+    outline-offset: 2px;
+    border-color: transparent;
+  }
+
+  kbd {
+    position: absolute;
+    right: 1rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: 6px;
+    border: 1px solid var(--line-strong);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .selects {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .selects label {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .selects span {
+    padding-left: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  select {
+    appearance: none;
+    padding: 0 2.5rem 0 1rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23c4b5fd' stroke-width='1.6'%3E%3Cpath d='m4 6 4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+    cursor: pointer;
+  }
+
+  select option {
+    background: var(--surface);
+  }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-inline: 0.5rem;
+  }
+
+  .status {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--lime);
+  }
+
+  .reset {
+    font-size: 0.875rem;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--line-strong);
+    transition: color 0.3s var(--ease);
+  }
+
+  .reset:hover {
+    color: var(--text);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .empty {
+    display: grid;
+    justify-items: center;
+    gap: 1.25rem;
+    padding: 4rem 1rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-m);
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    color: var(--muted);
+  }
+
+  .empty[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 1000px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .selects {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    kbd {
+      display: none;
+    }
+
+    input {
+      padding-right: 1rem;
+    }
+  }
+</style>

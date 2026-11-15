@@ -1,0 +1,277 @@
+---
+import Arrow from './Arrow.astro';
+import SubjectIcon from './SubjectIcon.astro';
+import { formatDate, locales, type Locale } from '../i18n/config';
+import { fill, useTranslations } from '../i18n/ui';
+import { subjects } from '../data/subjects';
+import { publicationTypes } from '../data/types';
+import { languagesOf, readingTime, urlOf, type Publication } from '../lib/publications';
+
+interface Props {
+  entry: Publication;
+  /** All publications, to find translations. */
+  all: Publication[];
+  locale: Locale;
+  /** `feature` for the large cards on the home page. */
+  size?: 'default' | 'feature';
+  /** Heading level of the title, so the outline stays correct on every page. */
+  level?: 'h2' | 'h3';
+  delay?: number;
+  /** Adds the data the library's search and filters read. */
+  filterable?: boolean;
+}
+
+const { entry, all, locale, size = 'default', level: Heading = 'h3', delay = 0, filterable = false } = Astro.props;
+const t = useTranslations(locale);
+const { data } = entry;
+const first = subjects[data.subjects[0]];
+const otherLanguages = languagesOf(entry, all).filter((code) => code !== data.lang);
+const searchText = [data.title, data.description, data.abstract ?? '', ...data.tags, ...data.subjects.map((s) => subjects[s].name[locale])]
+  .join(' ')
+  .toLowerCase();
+---
+
+<article
+  class:list={['card', `card--${size}`]}
+  data-spot
+  data-reveal
+  style={`--d: ${delay}ms`}
+  data-pub={filterable ? '' : undefined}
+  data-subjects={filterable ? data.subjects.join(' ') : undefined}
+  data-type={filterable ? data.type : undefined}
+  data-lang={filterable ? data.lang : undefined}
+  data-date={filterable ? data.date.toISOString() : undefined}
+  data-title={filterable ? data.title.toLowerCase() : undefined}
+  data-search={filterable ? searchText : undefined}
+>
+  <div class="top">
+    <span class="kicker">{publicationTypes[data.type][locale]}</span>
+    <span class="badges">
+      {data.example && <span class="chip chip--lime">{t.card.example}</span>}
+      <span class="chip" lang={locales[data.lang].htmlLang} title={t.languages[data.lang]}>
+        {locales[data.lang].label}
+        {otherLanguages.map((code) => <span class="also">+{locales[code].label}</span>)}
+      </span>
+    </span>
+  </div>
+
+  <Heading class="title" lang={data.lang !== locale ? locales[data.lang].htmlLang : undefined}>
+    <a href={urlOf(entry)}>{data.title}</a>
+  </Heading>
+
+  <p class="desc" lang={data.lang !== locale ? locales[data.lang].htmlLang : undefined}>
+    {size === 'feature' && data.abstract ? data.abstract : data.description}
+  </p>
+
+  <ul class="subjects" aria-label={t.article.subjects}>
+    {data.subjects.map((id) => <li>{subjects[id].short[locale]}</li>)}
+  </ul>
+
+  <div class="foot">
+    <span class="meta">
+      <time datetime={data.date.toISOString()}>{formatDate(data.date, locale, 'short')}</time>
+      <span aria-hidden="true">·</span>
+      <span>{fill(t.card.minutes, { n: readingTime(entry) })}</span>
+    </span>
+    <span class="more" aria-hidden="true">{t.card.read}<Arrow /></span>
+  </div>
+
+  {size === 'feature' && <SubjectIcon name={first.icon} class="glyph" />}
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: clamp(1.4rem, 2.4vw, 1.9rem);
+    border-radius: var(--r-m);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      border-color 0.5s var(--ease),
+      translate 0.6s var(--ease),
+      opacity 0.9s var(--ease) var(--d, 0ms),
+      transform 0.9s var(--ease) var(--d, 0ms);
+  }
+
+  .card[hidden] {
+    display: none;
+  }
+
+  /* Soft light that follows the pointer (position set in site.ts). */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(24rem circle at var(--mx, 50%) var(--my, 0%), rgb(139 92 246 / 0.16), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s var(--ease);
+    pointer-events: none;
+  }
+
+  .card:hover,
+  .card:focus-within {
+    border-color: var(--line-strong);
+    translate: 0 -3px;
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .badges {
+    display: flex;
+    gap: 0.35rem;
+  }
+
+  .also {
+    color: var(--muted);
+  }
+
+  .title {
+    margin-top: 1rem;
+    font-size: clamp(1.35rem, 2.2vw, 1.6rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+  }
+
+  .title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .title a:focus-visible {
+    outline: none;
+  }
+
+  .card:has(.title a:focus-visible) {
+    outline: 2px solid var(--lime);
+    outline-offset: 3px;
+  }
+
+  .desc {
+    margin-top: 0.75rem;
+    font-size: 0.975rem;
+    color: var(--muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .subjects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+  }
+
+  .subjects li {
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--pill);
+    background: rgb(255 255 255 / 0.05);
+    font-size: 0.8125rem;
+    color: var(--text);
+  }
+
+  .foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9375rem;
+    font-weight: 560;
+  }
+
+  .more :global(svg) {
+    width: 0.95rem;
+    height: 0.95rem;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .card:hover .more :global(svg) {
+    transform: translateX(5px);
+  }
+
+  /* ---------- Feature: larger card with the abstract ---------- */
+  .card--feature {
+    padding: clamp(1.75rem, 3.4vw, 2.75rem);
+    border-radius: var(--r-l);
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(139 92 246 / 0.16), transparent 55%),
+      var(--surface);
+  }
+
+  .card--feature .title {
+    margin-top: 1.5rem;
+    font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+    line-height: 1.04;
+    max-width: 22ch;
+  }
+
+  .card--feature .desc {
+    margin-top: 1rem;
+    max-width: 40rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+    line-height: 1.55;
+    -webkit-line-clamp: 5;
+  }
+
+  .card--feature :global(.glyph) {
+    position: absolute;
+    right: -1.5rem;
+    bottom: -1.5rem;
+    z-index: -1;
+    width: 11rem;
+    height: 11rem;
+    color: rgb(196 181 253 / 0.09);
+    stroke-width: 0.6;
+    transition:
+      transform 0.9s var(--ease),
+      color 0.6s var(--ease);
+  }
+
+  .card--feature:hover :global(.glyph) {
+    transform: rotate(-8deg) scale(1.05);
+    color: rgb(196 181 253 / 0.16);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card:hover,
+    .card:focus-within {
+      translate: none;
+    }
+  }
+</style>

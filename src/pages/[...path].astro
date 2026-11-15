@@ -1,0 +1,56 @@
+---
+/**
+ * Every page of the site, in every language. The URLs come from
+ * src/i18n/config.ts, so renaming a segment there is all it takes.
+ */
+import type { GetStaticPaths } from 'astro';
+import HomeView from '../views/HomeView.astro';
+import LibraryView from '../views/LibraryView.astro';
+import ArticleView from '../views/ArticleView.astro';
+import TopicsView from '../views/TopicsView.astro';
+import TopicView from '../views/TopicView.astro';
+import AboutView from '../views/AboutView.astro';
+import { homePath, localeCodes, sectionPath, topicPath, type Locale } from '../i18n/config';
+import { subjectIds, type SubjectId } from '../data/subjects';
+import { getPublications, urlOf, type Publication } from '../lib/publications';
+
+type Route =
+  | { view: 'home' | 'library' | 'topics' | 'about'; locale: Locale }
+  | { view: 'topic'; locale: Locale; subject: SubjectId }
+  | { view: 'article'; entry: Publication; all: Publication[] };
+
+export const getStaticPaths = (async () => {
+  // "/en/publications/" → "en/publications"; the root becomes undefined.
+  const toParam = (url: string) => url.replace(/^\/|\/$/g, '') || undefined;
+  const all = await getPublications();
+  const routes: { url: string; route: Route }[] = [];
+
+  for (const locale of localeCodes) {
+    routes.push(
+      { url: homePath(locale), route: { view: 'home', locale } },
+      { url: sectionPath(locale, 'publications'), route: { view: 'library', locale } },
+      { url: sectionPath(locale, 'topics'), route: { view: 'topics', locale } },
+      { url: sectionPath(locale, 'about'), route: { view: 'about', locale } },
+      ...subjectIds.map((subject) => ({ url: topicPath(locale, subject), route: { view: 'topic', locale, subject } as Route })),
+    );
+  }
+  for (const entry of all) routes.push({ url: urlOf(entry), route: { view: 'article', entry, all } });
+
+  const seen = new Set<string>();
+  for (const { url } of routes) {
+    if (seen.has(url)) throw new Error(`Two pages want the same address: ${url}`);
+    seen.add(url);
+  }
+
+  return routes.map(({ url, route }) => ({ params: { path: toParam(url) }, props: { route } }));
+}) satisfies GetStaticPaths;
+
+const { route } = Astro.props as { route: Route };
+---
+
+{route.view === 'home' && <HomeView locale={route.locale} />}
+{route.view === 'library' && <LibraryView locale={route.locale} />}
+{route.view === 'topics' && <TopicsView locale={route.locale} />}
+{route.view === 'topic' && <TopicView locale={route.locale} subject={route.subject} />}
+{route.view === 'about' && <AboutView locale={route.locale} />}
+{route.view === 'article' && <ArticleView entry={route.entry} all={route.all} />}

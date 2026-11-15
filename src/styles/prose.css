@@ -1,0 +1,280 @@
+/* ------------------------------------------------------------------
+   Long-form article typography (rendered Markdown / MDX).
+   Body in the editorial serif, headings in the portfolio's display face.
+------------------------------------------------------------------ */
+.prose {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.1rem + 0.25vw, 1.275rem);
+  line-height: 1.72;
+  color: #e4e2ee;
+  font-optical-sizing: auto;
+  hanging-punctuation: first;
+  overflow-wrap: break-word;
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-display);
+  color: var(--text);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  scroll-margin-top: calc(var(--nav-h) + 2.5rem);
+}
+
+.prose h2 {
+  margin-top: 2.6em;
+  font-size: 1.75em;
+  font-weight: 700;
+}
+
+.prose h3 {
+  margin-top: 2em;
+  font-size: 1.3em;
+  font-weight: 650;
+}
+
+.prose h4 {
+  margin-top: 1.75em;
+  font-size: 1.05em;
+  font-weight: 650;
+}
+
+.prose h2 + *,
+.prose h3 + *,
+.prose h4 + * {
+  margin-top: 0.75em;
+}
+
+/* Drop-cap-like opening: the first paragraph is set slightly larger. */
+.prose > p:first-child {
+  font-size: 1.1em;
+  color: var(--text);
+}
+
+.prose a {
+  color: var(--violet-soft);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: rgb(196 181 253 / 0.4);
+  transition:
+    color 0.3s var(--ease),
+    text-decoration-color 0.3s var(--ease);
+}
+
+.prose a:hover {
+  color: var(--text);
+  text-decoration-color: var(--lime);
+}
+
+.prose strong {
+  font-weight: 650;
+  color: var(--text);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose ul {
+  list-style: none;
+}
+
+.prose ul > li {
+  position: relative;
+}
+
+.prose ul > li::before {
+  content: '';
+  position: absolute;
+  left: -1.05em;
+  top: 0.72em;
+  width: 0.38em;
+  height: 0.38em;
+  border-radius: 50%;
+  border: 1.5px solid var(--violet-soft);
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose ol > li::marker {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--violet-soft);
+}
+
+.prose li + li,
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.45em;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding: 0.2em 0 0.2em 1.4em;
+  border-left: 2px solid var(--violet);
+  font-style: italic;
+  color: var(--text);
+}
+
+.prose blockquote p + p {
+  margin-top: 0.75em;
+}
+
+.prose hr {
+  height: auto;
+  margin-block: 3em;
+  border: 0;
+  text-align: center;
+}
+
+.prose hr::before {
+  content: '⁂';
+  font-size: 1.2em;
+  letter-spacing: 0.5em;
+  color: var(--violet-soft);
+}
+
+/* Inline code and code blocks (highlighted by Shiki at build time). */
+.prose :not(pre) > code {
+  padding: 0.12em 0.4em;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--violet-soft);
+}
+
+.prose pre {
+  padding: 1.15rem 1.3rem;
+  border-radius: var(--r-s);
+  border: 1px solid var(--line);
+  background: #11101c !important;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  overflow-x: auto;
+  tab-size: 2;
+}
+
+.prose pre code {
+  font-family: inherit;
+}
+
+/* Tables scroll sideways on narrow screens instead of breaking the layout. */
+.prose table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.8em;
+  line-height: 1.5;
+}
+
+.prose th,
+.prose td {
+  padding: 0.65em 1em;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--violet-soft);
+  border-bottom-color: var(--line-strong);
+}
+
+.prose tbody tr:hover {
+  background: rgb(255 255 255 / 0.025);
+}
+
+.prose img {
+  height: auto;
+  border-radius: var(--r-s);
+}
+
+/* Maths (KaTeX). Display formulas scroll on small screens. */
+.prose .katex {
+  font-size: 1.05em;
+}
+
+.prose .katex-display {
+  margin-block: 1.6em;
+  padding: 1em 0.5em;
+  border-radius: var(--r-s);
+  background: rgb(255 255 255 / 0.02);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.prose .katex-display > .katex {
+  font-size: 1.15em;
+}
+
+/* Citation markers from [@key]. */
+.prose .citation {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.prose .citation .cite {
+  color: var(--lime);
+  text-decoration: none;
+}
+
+.prose .citation .cite:hover {
+  text-decoration: underline;
+}
+
+/* Footnotes (GitHub style [^1]). */
+.prose sup a,
+.prose a[data-footnote-ref] {
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  color: var(--lime);
+  text-decoration: none;
+}
+
+.prose .footnotes {
+  margin-top: 3.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--line);
+  font-size: 0.85em;
+  color: var(--muted);
+}
+
+.prose .footnotes h2 {
+  margin-top: 0;
+  font-size: 1.1em;
+}
+
+.prose .footnotes li:target {
+  color: var(--text);
+}
+
+.prose [data-footnote-backref] {
+  text-decoration: none;
+}
+
+.prose :target {
+  scroll-margin-top: calc(var(--nav-h) + 3rem);
+}

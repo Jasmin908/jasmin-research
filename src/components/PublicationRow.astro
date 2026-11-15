@@ -1,0 +1,142 @@
+---
+// One line of an editorial index: date, title and description, type.
+import Arrow from './Arrow.astro';
+import { formatDate, locales, type Locale } from '../i18n/config';
+import { subjects } from '../data/subjects';
+import { publicationTypes } from '../data/types';
+import { urlOf, type Publication } from '../lib/publications';
+
+interface Props {
+  entry: Publication;
+  locale: Locale;
+  index: number;
+}
+
+const { entry, locale, index } = Astro.props;
+const { data } = entry;
+const foreign = data.lang !== locale ? locales[data.lang].htmlLang : undefined;
+---
+
+<li class="row" data-reveal style={`--d: ${index * 60}ms`}>
+  <time class="date" datetime={data.date.toISOString()}>{formatDate(data.date, locale, 'short')}</time>
+  <div class="main">
+    <h3 class="title" lang={foreign}>
+      <a href={urlOf(entry)}>{data.title}</a>
+    </h3>
+    <p class="desc" lang={foreign}>{data.description}</p>
+  </div>
+  <div class="side">
+    <span class="kicker">{publicationTypes[data.type][locale]}</span>
+    <span class="subject">
+      {data.subjects.map((s) => subjects[s].short[locale]).join(' · ')}
+      {foreign && <span class="chip">{locales[data.lang].label}</span>}
+    </span>
+  </div>
+  <span class="arrow" aria-hidden="true"><Arrow /></span>
+</li>
+
+<style>
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 8.5rem minmax(0, 1fr) 13rem 1.5rem;
+    align-items: baseline;
+    gap: 0.5rem 2rem;
+    padding: 1.6rem 0.25rem;
+    border-bottom: 1px solid var(--line);
+    transition:
+      background-color 0.4s var(--ease),
+      opacity 0.9s var(--ease) var(--d, 0ms),
+      transform 0.9s var(--ease) var(--d, 0ms);
+  }
+
+  .row:hover {
+    background: linear-gradient(90deg, transparent, rgb(139 92 246 / 0.06) 30%, transparent);
+  }
+
+  .date {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .title {
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+
+  .title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .title a:focus-visible {
+    outline: none;
+  }
+
+  .row:has(.title a:focus-visible) {
+    outline: 2px solid var(--lime);
+    outline-offset: 2px;
+    border-radius: var(--r-s);
+  }
+
+  .desc {
+    margin-top: 0.45rem;
+    font-family: var(--font-serif);
+    font-size: 1.075rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .subject {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .arrow :global(svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--violet-soft);
+    transition: transform 0.4s var(--ease);
+  }
+
+  .row:hover .arrow :global(svg) {
+    transform: translateX(5px);
+  }
+
+  @media (max-width: 900px) {
+    .row {
+      grid-template-columns: minmax(0, 1fr) 1.5rem;
+    }
+
+    .date {
+      grid-column: 1 / -1;
+    }
+
+    .side {
+      grid-column: 1;
+      grid-row: 3;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .arrow {
+      grid-column: 2;
+      grid-row: 2;
+    }
+  }
+</style>

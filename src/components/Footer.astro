@@ -1,0 +1,81 @@
+---
+import Logo from './Logo.astro';
+import { homePath, sectionPath, type Locale } from '../i18n/config';
+import { fill, useTranslations } from '../i18n/ui';
+import { site } from '../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+const years = year > site.since ? `${site.since}–${year}` : String(site.since);
+---
+
+<footer class="footer">
+  <div class="container inner">
+    <div class="brand">
+      <a href={homePath(locale)} aria-label={`${site.title} – ${t.nav.home}`}><Logo /></a>
+      <p>
+        <span>{fill(t.footer.content, { years })}</span>
+        <span>{t.footer.code}</span>
+      </p>
+    </div>
+    <ul class="links">
+      <li><a href={sectionPath(locale, 'publications')}>{t.nav.publications}</a></li>
+      <li><a href={sectionPath(locale, 'topics')}>{t.nav.topics}</a></li>
+      <li><a href={`${sectionPath(locale, 'about')}#copyright`}>{t.footer.copyright}</a></li>
+      <li><a href="/rss.xml">{t.footer.rss}</a></li>
+      <li><a href={site.portfolio} rel="me">{t.nav.portfolio} ↗</a></li>
+      <li><a href="#main">{t.footer.top} <span aria-hidden="true">↑</span></a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--section);
+    border-top: 1px solid var(--line);
+    padding-block: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .brand p {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+
+  a {
+    transition: color 0.3s var(--ease);
+  }
+
+  .links a:hover {
+    color: var(--text);
+  }
+</style>

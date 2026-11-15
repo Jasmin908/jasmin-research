@@ -1,0 +1,656 @@
+---
+import 'katex/dist/katex.min.css';
+import '../styles/prose.css';
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import PublicationCard from '../components/PublicationCard.astro';
+import Callout from '../components/mdx/Callout.astro';
+import Figure from '../components/mdx/Figure.astro';
+import { formatDate, localeCodes, locales, sectionPath, topicPath, type Locale } from '../i18n/config';
+import { fill, useTranslations } from '../i18n/ui';
+import { site } from '../data/site';
+import { subjects } from '../data/subjects';
+import { publicationTypes } from '../data/types';
+import { forLocale, readingTime, relatedTo, translationsOf, urlOf, type Publication } from '../lib/publications';
+
+interface Props {
+  entry: Publication;
+  all: Publication[];
+}
+
+const { entry, all } = Astro.props;
+const { data } = entry;
+const locale: Locale = data.lang;
+const t = useTranslations(locale);
+const { Content, headings } = await render(entry);
+
+const translations = translationsOf(entry, all);
+const alternates = Object.fromEntries(
+  localeCodes.map((code) => {
+    if (code === locale) return [code, urlOf(entry)];
+    const translation = translations.find((tr) => tr.data.lang === code);
+    return [code, translation ? urlOf(translation) : sectionPath(code, 'publications')];
+  }),
+) as Record<Locale, string>;
+const missing = localeCodes.filter((code) => code !== locale && !translations.some((tr) => tr.data.lang === code));
+
+const toc = headings.filter((h) => (h.depth === 2 || h.depth === 3) && h.slug !== 'footnote-label');
+if (data.references.length) toc.push({ depth: 2, slug: 'references', text: t.article.references });
+
+const related = relatedTo(entry, forLocale(all, locale));
+const minutes = readingTime(entry);
+const year = data.date.getUTCFullYear();
+const url = new URL(urlOf(entry), Astro.site).href;
+
+// "Jasmin Loeffel" → "Loeffel, J."
+const nameParts = data.author.trim().split(/\s+/);
+const citedAuthor = nameParts.length > 1 ? `${nameParts.at(-1)}, ${nameParts.slice(0, -1).map((n) => `${n[0]}.`).join(' ')}` : data.author;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': data.type === 'paper' || data.type === 'review' ? 'ScholarlyArticle' : 'Article',
+  headline: data.title,
+  description: data.description,
+  abstract: data.abstract,
+  inLanguage: locales[locale].htmlLang,
+  datePublished: data.date.toISOString(),
+  dateModified: (data.updated ?? data.date).toISOString(),
+  author: { '@type': 'Person', name: data.author, url: site.portfolio },
+  keywords: [...data.tags, ...data.subjects.map((s) => subjects[s].name[locale])].join(', '),
+  url,
+  copyrightHolder: { '@type': 'Person', name: data.author },
+  copyrightYear: year,
+  isPartOf: { '@type': 'WebSite', name: site.title, url: new URL('/', Astro.site).href },
+  ...(translations.length && {
+    workTranslation: translations.map((tr) => ({ '@type': 'Article', url: new URL(urlOf(tr), Astro.site).href, inLanguage: locales[tr.data.lang].htmlLang })),
+  }),
+};
+---
+
+<Base
+  locale={locale}
+  title={`${data.title} – ${site.title}`}
+  description={data.description}
+  alternates={alternates}
+  missing={missing}
+  active="publications"
+  kind="article"
+  article={{ published: data.date, modified: data.updated, author: data.author, tags: data.tags, section: subjects[data.subjects[0]].name[locale] }}
+  schema={schema}
+>
+  <div class="progress" aria-hidden="true"><span data-progress></span></div>
+
+  <article class="article">
+    <header class="head container">
+      <a class="back" href={sectionPath(locale, 'publications')}><span aria-hidden="true">←</span> {t.article.back}</a>
+
+      <p class="kicker-row">
+        <span class="kicker">{publicationTypes[data.type][locale]}</span>
+        {data.subjects.map((id) => <a class="chip" href={topicPath(locale, id)}>{subjects[id].short[locale]}</a>)}
+      </p>
+
+      <h1 class="title">{data.title}</h1>
+      <p class="description">{data.description}</p>
+
+      <dl class="meta">
+        <div><dt>{t.article.by}</dt><dd>{data.author}</dd></div>
+        <div><dt>{t.article.published}</dt><dd><time datetime={data.date.toISOString()}>{formatDate(data.date, locale)}</time></dd></div>
+        {data.updated && <div><dt>{t.article.updated}</dt><dd><time datetime={data.updated.toISOString()}>{formatDate(data.updated, locale)}</time></dd></div>}
+        <div><dt>{t.article.readingTime}</dt><dd>{fill(t.article.minutes, { n: minutes })}</dd></div>
+        <div><dt>{t.article.language}</dt><dd>{locales[locale].name}</dd></div>
+      </dl>
+
+      {
+        (data.pdf || translations.length > 0) && (
+          <div class="actions">
+            {data.pdf && (
+              <a class="btn btn--primary" href={data.pdf} download>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v8.5M4.5 7 8 10.5 11.5 7M3 13.5h10" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                {t.article.pdf}
+              </a>
+            )}
+            {translations.map((tr) => (
+              <a class="btn btn--ghost" href={urlOf(tr)} hreflang={locales[tr.data.lang].htmlLang}>
+                {fill(t.article.readTranslation, { lang: t.languages[tr.data.lang] })}
+                <Arrow />
+              </a>
+            ))}
+          </div>
+        )
+      }
+
+      {
+        data.example && (
+          <p class="example" role="note">
+            <span class="chip chip--lime">{useTranslations(locale).card.example}</span>
+            {t.article.example}
+          </p>
+        )
+      }
+
+      {
+        data.abstract && (
+          <section class="abstract" aria-labelledby="abstract-title">
+            <h2 id="abstract-title">{t.article.abstract}</h2>
+            <p>{data.abstract}</p>
+          </section>
+        )
+      }
+    </header>
+
+    <div class="layout container">
+      {
+        toc.length > 1 && (
+          <aside class="toc-wrap">
+            <details class="toc" open data-toc>
+              <summary>{t.article.contents}</summary>
+              <nav aria-label={t.article.contents}>
+                <ol>
+                  {toc.map((h) => (
+                    <li class:list={[`depth-${h.depth}`]}>
+                      <a href={`#${h.slug}`}>{h.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </details>
+          </aside>
+        )
+      }
+
+      <div class="body">
+        <div class="prose" data-prose>
+          <Content components={{ Callout, Figure }} />
+        </div>
+
+        {
+          data.references.length > 0 && (
+            <section class="references" aria-labelledby="references">
+              <h2 id="references">{t.article.references}</h2>
+              <ol>
+                {data.references.map((ref) => (
+                  <li id={`ref-${ref.id}`}>
+                    {ref.authors} ({ref.year}). <cite>{ref.title}</cite>
+                    {ref.source && <>. {ref.source}</>}.
+                    {ref.url && (
+                      <>
+                        {' '}
+                        <a href={ref.url} rel="noopener">
+                          {ref.url.replace(/^https?:\/\//, '')}
+                        </a>
+                      </>
+                    )}
+                    {ref.note && <span class="note"> {ref.note}</span>}
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )
+        }
+
+        <section class="cite" aria-labelledby="cite-title">
+          <div class="cite-head">
+            <h2 id="cite-title">{t.article.cite}</h2>
+            <button type="button" class="copy" data-copy="citation" data-done={t.article.copied} hidden>
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="2" /><path d="M10.5 5V3.5A1.5 1.5 0 0 0 9 2H3.5A1.5 1.5 0 0 0 2 3.5V9a1.5 1.5 0 0 0 1.5 1.5H5" /></svg>
+              <span>{t.article.copy}</span>
+            </button>
+          </div>
+          <p id="citation">
+            {citedAuthor} ({year}). <cite>{data.title}</cite>. {site.title}. {url}
+          </p>
+        </section>
+
+        <p class="rights">{fill(t.article.rights, { year, author: data.author })}</p>
+
+        {
+          data.tags.length > 0 && (
+            <ul class="tags" aria-label={t.article.tags}>
+              {data.tags.map((tag) => (
+                <li>
+                  <a class="chip" href={`${sectionPath(locale, 'publications')}?q=${encodeURIComponent(tag)}`}>#{tag}</a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="related container" aria-labelledby="related-title">
+        <h2 class="related-title" id="related-title">{t.article.related}</h2>
+        <div class="related-grid">
+          {related.map((other, i) => (
+            <PublicationCard entry={other} all={all} locale={locale} delay={i * 70} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    height: 2px;
+    pointer-events: none;
+  }
+
+  .progress span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--violet), var(--violet-soft) 70%, var(--lime));
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .article {
+    --toc: 15rem;
+    --cols: calc(var(--toc) + 4rem + var(--read));
+  }
+
+  .head {
+    position: relative;
+    isolation: isolate;
+    max-width: var(--cols);
+    padding-top: calc(var(--nav-h) + clamp(4rem, 9vw, 7rem));
+  }
+
+  .head::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 40rem;
+    height: 28rem;
+    right: -18rem;
+    top: -10rem;
+    border-radius: 50%;
+    background: rgb(139 92 246 / 0.24);
+    filter: blur(100px);
+  }
+
+  .back {
+    display: inline-flex;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s var(--ease);
+  }
+
+  .back:hover {
+    color: var(--text);
+  }
+
+  .kicker-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .kicker-row .chip {
+    transition: border-color 0.3s var(--ease);
+  }
+
+  .kicker-row .chip:hover {
+    border-color: var(--violet-soft);
+  }
+
+  .title {
+    margin-top: 1.25rem;
+    max-width: 22ch;
+    font-size: clamp(2.3rem, 5.6vw, 4.25rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .description {
+    max-width: 40rem;
+    margin-top: 1.25rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 2vw, 1.45rem);
+    line-height: 1.45;
+    color: var(--muted);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2.5rem;
+    margin-top: 2.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  dd {
+    margin-top: 0.2rem;
+    font-size: 0.9375rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .actions .btn svg {
+    transform: none;
+  }
+
+  .example {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-top: 2rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: var(--r-s);
+    border: 1px dashed rgb(182 243 106 / 0.35);
+    background: rgb(182 243 106 / 0.04);
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  .abstract {
+    margin-top: 2.5rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-radius: var(--r-m);
+    border: 1px solid var(--line);
+    background:
+      linear-gradient(180deg, rgb(139 92 246 / 0.08), transparent 70%),
+      var(--surface);
+  }
+
+  .abstract h2 {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--violet-soft);
+  }
+
+  .abstract p {
+    margin-top: 0.85rem;
+    font-family: var(--font-serif);
+    font-size: clamp(1.1rem, 1.6vw, 1.25rem);
+    line-height: 1.6;
+  }
+
+  /* ---------- Body with table of contents ---------- */
+  .layout {
+    display: grid;
+    grid-template-columns: var(--toc) minmax(0, var(--read));
+    justify-content: center;
+    gap: 4rem;
+    max-width: var(--cols);
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .layout:not(:has(.toc-wrap)) {
+    grid-template-columns: minmax(0, var(--read));
+    justify-content: start;
+  }
+
+  .toc-wrap {
+    position: relative;
+  }
+
+  .toc {
+    position: sticky;
+    top: calc(var(--nav-h) + 2.5rem);
+    max-height: calc(100vh - var(--nav-h) - 4rem);
+    overflow-y: auto;
+  }
+
+  .toc summary {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--violet-soft);
+    list-style: none;
+    pointer-events: none;
+  }
+
+  .toc summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc ol {
+    margin-top: 1rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .toc a {
+    display: block;
+    margin-left: -1px;
+    padding: 0.35rem 0 0.35rem 1rem;
+    border-left: 1px solid transparent;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--muted);
+    transition:
+      color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+
+  .toc .depth-3 a {
+    padding-left: 1.85rem;
+    font-size: 0.8125rem;
+  }
+
+  .toc a:hover {
+    color: var(--text);
+  }
+
+  .toc a[aria-current] {
+    color: var(--text);
+    border-left-color: var(--lime);
+  }
+
+  .body {
+    min-width: 0;
+  }
+
+  /* ---------- After the text ---------- */
+  .references,
+  .cite {
+    margin-top: 3.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .references h2,
+  .cite h2 {
+    font-size: 1.5rem;
+    letter-spacing: -0.03em;
+  }
+
+  .references ol {
+    margin-top: 1.25rem;
+    padding-left: 1.75rem;
+    list-style: decimal;
+    display: grid;
+    gap: 0.75rem;
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .references li::marker {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--violet-soft);
+  }
+
+  .references li {
+    scroll-margin-top: calc(var(--nav-h) + 3rem);
+    border-radius: 6px;
+    transition: background-color 0.6s var(--ease);
+  }
+
+  .references li:target {
+    background: rgb(182 243 106 / 0.08);
+    color: var(--text);
+  }
+
+  .references cite {
+    font-style: italic;
+    color: var(--text);
+  }
+
+  .references a {
+    color: var(--violet-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgb(196 181 253 / 0.4);
+    overflow-wrap: anywhere;
+  }
+
+  .cite-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: var(--pill);
+    border: 1px solid var(--line-strong);
+    font-size: 0.8125rem;
+    transition: border-color 0.3s var(--ease);
+  }
+
+  .copy[hidden] {
+    display: none;
+  }
+
+  .copy:hover {
+    border-color: var(--violet-soft);
+  }
+
+  .copy svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  #citation {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--r-s);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  #citation cite {
+    font-style: italic;
+  }
+
+  .rights {
+    margin-top: 2.5rem;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+  }
+
+  .tags a {
+    color: var(--muted);
+    transition:
+      color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+
+  .tags a:hover {
+    color: var(--text);
+    border-color: var(--violet-soft);
+  }
+
+  .related {
+    margin-top: clamp(4rem, 8vw, 6rem);
+    padding-top: 3rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .related-title {
+    font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 1000px) {
+    .layout {
+      grid-template-columns: minmax(0, var(--read));
+      gap: 2rem;
+    }
+
+    .toc {
+      position: static;
+      max-height: none;
+      padding: 1rem 1.25rem;
+      border-radius: var(--r-m);
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .toc summary {
+      pointer-events: auto;
+      cursor: pointer;
+      list-style: revert;
+    }
+
+    .related-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .meta {
+      gap: 1rem 1.75rem;
+    }
+  }
+</style>

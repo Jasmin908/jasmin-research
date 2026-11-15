@@ -1,0 +1,73 @@
+---
+title: 'How Many Steps Does Binary Search Really Take?'
+description: 'A small investigation comparing the textbook bound for binary search with step counts measured on real arrays.'
+abstract: 'Binary search is usually summarised as O(log n). This example investigation derives the exact worst-case number of comparisons, counts them on arrays of different sizes, and looks at the classic overflow bug in the midpoint calculation. It is placeholder content written in MDX, showing code blocks, callouts and inline maths.'
+date: 2026-11-08
+lang: en
+type: investigation
+subjects: [computer-science]
+tags: [algorithms, complexity, TypeScript]
+featured: true
+example: true
+---
+
+Every introduction to algorithms says binary search runs in $O(\log n)$ time. That statement hides a concrete, checkable number – so let’s check it.
+
+## The algorithm
+
+Binary search looks for a value in a **sorted** array by repeatedly halving the range that could contain it:
+
+```ts
+export function binarySearch(items: number[], target: number): { index: number; steps: number } {
+  let low = 0;
+  let high = items.length - 1;
+  let steps = 0;
+
+  while (low <= high) {
+    steps++;
+    const mid = low + Math.floor((high - low) / 2);
+    if (items[mid] === target) return { index: mid, steps };
+    if (items[mid] < target) low = mid + 1;
+    else high = mid - 1;
+  }
+  return { index: -1, steps };
+}
+```
+
+## The exact bound
+
+Each step removes at least half of the remaining candidates. After $k$ steps at most $\lfloor n / 2^k \rfloor$ remain, so the search ends after at most
+
+$$
+k_\text{max} = \lfloor \log_2 n \rfloor + 1
+$$
+
+steps. For a million elements that is just 20.
+
+<Callout type="definition" title="Definition">
+  A *step* here is one iteration of the loop: one look at the middle element and one decision about which half to keep.
+</Callout>
+
+## Measured results
+
+Searching for a value that is not in the array forces the worst case. Counting steps for several sizes:
+
+| $n$ | $\lfloor \log_2 n \rfloor + 1$ | measured worst case |
+| ---: | ---: | ---: |
+| 10 | 4 | 4 |
+| 1 000 | 10 | 10 |
+| 1 000 000 | 20 | 20 |
+
+The measurement matches the bound exactly – which is the point of an exact bound. *(Values in this example table follow from the formula; a real investigation would include the measurement script and raw data.)*
+
+## The midpoint bug
+
+The tempting midpoint `(low + high) / 2` can overflow in languages with fixed-size integers when the array is very large. Writing `low + (high - low) / 2` avoids it.
+
+<Callout type="warning" title="Note">
+  JavaScript numbers are floating-point, so this overflow does not happen in the TypeScript version above – but the habit is worth keeping for Java, C or C++.
+</Callout>
+
+## Conclusion
+
+“Logarithmic” is an abstraction; $\lfloor \log_2 n \rfloor + 1$ is a promise you can test. Small investigations like this make the abstraction concrete.

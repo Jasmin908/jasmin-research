@@ -1,0 +1,435 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import SubjectIcon from '../components/SubjectIcon.astro';
+import { alternatesFor, sectionPath, topicPath, type Locale, type Localized } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+import { site } from '../data/site';
+import { subjectIds, subjects } from '../data/subjects';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+// The texts of this page. Edit freely – both languages live side by side.
+const copy: Localized<{
+  title: string;
+  lead: string;
+  intro: string[];
+  interestsTitle: string;
+  interestsText: string;
+  journeyTitle: string;
+  journey: { when: string; what: string; text: string }[];
+  approachTitle: string;
+  approachIntro: string;
+  principles: { title: string; text: string }[];
+  independenceTitle: string;
+  independence: string;
+  copyrightTitle: string;
+  copyright: string[];
+  portfolioTitle: string;
+  portfolioText: string;
+  portfolioCta: string;
+}> = {
+  en: {
+    title: 'Learning in public, carefully.',
+    lead: 'I’m Jasmin – a software development apprentice in Switzerland with far more interests than one field can hold.',
+    intro: [
+      'Code is my profession, but curiosity doesn’t stop at the edge of a job description. I read about the universe, the mind, languages and the history of ideas, and I learn best when I have to explain what I’ve read.',
+      'This library is the result: a place where notes become summaries, summaries become reviews, and sometimes a question turns into a small piece of research of my own.',
+    ],
+    interestsTitle: 'What I study',
+    interestsText: 'The shelves of the library. New ones will be added as my interests grow.',
+    journeyTitle: 'Learning journey',
+    journey: [
+      { when: 'Now', what: 'Software development apprenticeship', text: 'Training as an Informatikerin EFZ in application development – the technical side of this site comes from there.' },
+      { when: 'Ongoing', what: 'Self-directed study', text: 'Books, lectures and papers in the subjects above, alongside work and school.' },
+      { when: '2026', what: 'This library', text: 'Started publishing what I learn, so it is organised, citable and open to correction.' },
+    ],
+    approachTitle: 'How I research',
+    approachIntro: 'I’m not affiliated with a university. To make independent work worth reading, I hold myself to a few rules:',
+    principles: [
+      { title: 'Go to the sources', text: 'Primary sources and peer-reviewed work first; popular summaries only as a way in.' },
+      { title: 'Cite everything', text: 'Every claim that isn’t mine points to where it comes from, so you can check it.' },
+      { title: 'Say how sure I am', text: 'I separate what is established from what is debated, and from my own interpretation.' },
+      { title: 'Label the format', text: 'Notes, summaries, reviews and original investigations promise different things – each piece says what it is.' },
+      { title: 'Revise in the open', text: 'When I learn I was wrong, the text is corrected and the update is dated.' },
+    ],
+    independenceTitle: 'Independent, not peer-reviewed',
+    independence:
+      'Nothing here has gone through formal peer review. Treat it as a careful learner’s work: useful as a starting point, not as an authority. Corrections and suggestions are very welcome.',
+    copyrightTitle: 'Copyright',
+    copyright: [
+      'All written content on this site – research papers, reviews, summaries, study notes, language materials and other texts, including their PDF versions – is © Jasmin Loeffel. All rights reserved.',
+      'You are welcome to read, link to and quote short passages with attribution, as copyright law allows. Republishing, translating or adapting larger parts needs my permission.',
+      'The source code of the website itself is open source under the MIT licence. That licence does not cover the written content.',
+    ],
+    portfolioTitle: 'The developer side',
+    portfolioText: 'Projects, skills and how to reach me are on my developer portfolio.',
+    portfolioCta: 'Visit my portfolio',
+  },
+  de: {
+    title: 'Öffentlich lernen, sorgfältig.',
+    lead: 'Ich bin Jasmin – lernende Informatikerin in der Schweiz, mit mehr Interessen, als in ein einziges Fach passen.',
+    intro: [
+      'Code ist mein Beruf, aber Neugier hört nicht am Rand einer Stellenbeschreibung auf. Ich lese über das Universum, den Geist, Sprachen und die Geschichte der Ideen – und ich lerne am besten, wenn ich erklären muss, was ich gelesen habe.',
+      'Diese Bibliothek ist das Ergebnis: ein Ort, an dem aus Notizen Zusammenfassungen werden, aus Zusammenfassungen Übersichten, und aus einer Frage manchmal ein kleines eigenes Forschungsprojekt.',
+    ],
+    interestsTitle: 'Was ich lerne',
+    interestsText: 'Die Regale der Bibliothek. Neue kommen dazu, wenn meine Interessen wachsen.',
+    journeyTitle: 'Mein Lernweg',
+    journey: [
+      { when: 'Jetzt', what: 'Lehre in der Applikationsentwicklung', text: 'Ausbildung zur Informatikerin EFZ – daher kommt die technische Seite dieser Website.' },
+      { when: 'Laufend', what: 'Selbststudium', text: 'Bücher, Vorlesungen und Fachartikel zu den Themen oben, neben Arbeit und Schule.' },
+      { when: '2026', what: 'Diese Bibliothek', text: 'Ich veröffentliche, was ich lerne – geordnet, zitierbar und offen für Korrekturen.' },
+    ],
+    approachTitle: 'Wie ich forsche',
+    approachIntro: 'Ich bin keiner Hochschule angeschlossen. Damit unabhängige Arbeit lesenswert ist, halte ich mich an ein paar Regeln:',
+    principles: [
+      { title: 'Zu den Quellen gehen', text: 'Primärquellen und begutachtete Arbeiten zuerst; populäre Darstellungen nur als Einstieg.' },
+      { title: 'Alles belegen', text: 'Jede Aussage, die nicht von mir stammt, verweist auf ihre Herkunft – damit du sie prüfen kannst.' },
+      { title: 'Sagen, wie sicher ich bin', text: 'Ich trenne Gesichertes von Umstrittenem und beides von meiner eigenen Deutung.' },
+      { title: 'Das Format benennen', text: 'Notizen, Zusammenfassungen, Übersichten und eigene Untersuchungen versprechen Verschiedenes – jeder Text sagt, was er ist.' },
+      { title: 'Offen überarbeiten', text: 'Wenn ich merke, dass ich falsch lag, wird der Text korrigiert und die Änderung datiert.' },
+    ],
+    independenceTitle: 'Unabhängig, nicht begutachtet',
+    independence:
+      'Nichts hier hat ein formelles Peer-Review durchlaufen. Lies es als Arbeit einer sorgfältigen Lernenden: hilfreich als Ausgangspunkt, nicht als Autorität. Korrekturen und Hinweise sind sehr willkommen.',
+    copyrightTitle: 'Urheberrecht',
+    copyright: [
+      'Alle Texte auf dieser Website – Forschungsarbeiten, Übersichten, Zusammenfassungen, Lernnotizen, Sprachmaterial und weitere Inhalte, einschliesslich ihrer PDF-Fassungen – sind © Jasmin Loeffel. Alle Rechte vorbehalten.',
+      'Lesen, verlinken und kurze Passagen mit Quellenangabe zitieren ist im Rahmen des Urheberrechts willkommen. Für das Veröffentlichen, Übersetzen oder Bearbeiten grösserer Teile brauchst du meine Erlaubnis.',
+      'Der Quellcode der Website selbst ist Open Source unter der MIT-Lizenz. Diese Lizenz gilt nicht für die Texte.',
+    ],
+    portfolioTitle: 'Die Entwicklerinnen-Seite',
+    portfolioText: 'Projekte, Skills und Kontaktmöglichkeiten findest du in meinem Entwickler-Portfolio.',
+    portfolioCta: 'Zum Portfolio',
+  },
+};
+
+const c = copy[locale];
+---
+
+<Base
+  locale={locale}
+  title={t.meta.aboutTitle}
+  description={t.meta.aboutDescription}
+  alternates={alternatesFor((code) => sectionPath(code, 'about'))}
+  active="about"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="label" data-index="§">{t.nav.about}</p>
+      <h1 class="page-title">{c.title}</h1>
+      <p class="page-intro">{c.lead}</p>
+    </div>
+  </header>
+
+  <div class="container about">
+    <section class="block intro" data-reveal>
+      {c.intro.map((p) => <p>{p}</p>)}
+    </section>
+
+    <section class="block" aria-labelledby="interests">
+      <div class="side">
+        <h2 id="interests">{c.interestsTitle}</h2>
+        <p>{c.interestsText}</p>
+      </div>
+      <ul class="interests">
+        {
+          subjectIds.map((id, i) => (
+            <li data-reveal style={`--d: ${i * 50}ms`}>
+              <a href={topicPath(locale, id)}>
+                <SubjectIcon name={subjects[id].icon} />
+                <span>{subjects[id].name[locale]}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="block" aria-labelledby="journey">
+      <div class="side">
+        <h2 id="journey">{c.journeyTitle}</h2>
+      </div>
+      <ol class="timeline">
+        {
+          c.journey.map((step, i) => (
+            <li data-reveal style={`--d: ${i * 70}ms`}>
+              <span class="when">{step.when}</span>
+              <div>
+                <h3>{step.what}</h3>
+                <p>{step.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="block" id="approach" aria-labelledby="approach-title">
+      <div class="side">
+        <h2 id="approach-title">{c.approachTitle}</h2>
+        <p>{c.approachIntro}</p>
+      </div>
+      <ol class="principles">
+        {
+          c.principles.map((p, i) => (
+            <li data-reveal style={`--d: ${(i % 2) * 70}ms`}>
+              <span class="n">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </li>
+          ))
+        }
+        <li class="independent" data-reveal>
+          <span class="n">!</span>
+          <h3>{c.independenceTitle}</h3>
+          <p>{c.independence}</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="block" id="copyright" aria-labelledby="copyright-title">
+      <div class="side">
+        <h2 id="copyright-title">{c.copyrightTitle}</h2>
+      </div>
+      <div class="copyright">
+        {c.copyright.map((p) => <p>{p}</p>)}
+        <p class="links">
+          <a href={`${site.repository}/blob/main/CONTENT-LICENSE.md`} rel="noopener">CONTENT-LICENSE.md</a>
+          <a href={`${site.repository}/blob/main/LICENSE`} rel="noopener">LICENSE (MIT)</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="portfolio" data-reveal aria-labelledby="portfolio-title">
+      <div>
+        <h2 id="portfolio-title">{c.portfolioTitle}</h2>
+        <p>{c.portfolioText}</p>
+      </div>
+      <a class="btn btn--primary" href={site.portfolio} rel="me">{c.portfolioCta}<Arrow /></a>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    gap: clamp(3.5rem, 7vw, 5.5rem);
+  }
+
+  .block {
+    display: grid;
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: 1.5rem 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    scroll-margin-top: calc(var(--nav-h) + 2rem);
+  }
+
+  .side h2 {
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+  }
+
+  .side p {
+    margin-top: 0.75rem;
+    color: var(--muted);
+  }
+
+  .intro {
+    display: block;
+    max-width: 46rem;
+    border-top: 0;
+    padding-top: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.2rem, 1.9vw, 1.45rem);
+    line-height: 1.6;
+  }
+
+  .intro p + p {
+    margin-top: 1em;
+  }
+
+  .interests {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .interests a {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem 1.15rem;
+    border-radius: var(--r-s);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    transition:
+      border-color 0.4s var(--ease),
+      translate 0.5s var(--ease);
+  }
+
+  .interests a:hover {
+    border-color: var(--line-strong);
+    translate: 0 -2px;
+  }
+
+  .interests :global(svg) {
+    flex: none;
+    width: 1.4rem;
+    height: 1.4rem;
+    color: var(--violet-soft);
+  }
+
+  .timeline {
+    display: grid;
+    gap: 0;
+    border-left: 1px solid var(--line-strong);
+  }
+
+  .timeline li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0 0 2rem 1.75rem;
+  }
+
+  .timeline li::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 0.35rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--violet-soft);
+  }
+
+  .timeline li:first-child::before {
+    background: var(--lime);
+    border-color: var(--lime);
+    box-shadow: 0 0 0 4px rgb(182 243 106 / 0.18);
+  }
+
+  .when {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--violet-soft);
+  }
+
+  .timeline h3,
+  .principles h3 {
+    font-size: 1.2rem;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  .timeline p,
+  .principles p {
+    margin-top: 0.4rem;
+    color: var(--muted);
+  }
+
+  .principles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .principles li {
+    padding: 1.4rem;
+    border-radius: var(--r-m);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .n {
+    display: block;
+    margin-bottom: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--lime);
+  }
+
+  .independent {
+    grid-column: 1 / -1;
+    border-style: dashed !important;
+    background: rgb(139 92 246 / 0.07) !important;
+  }
+
+  .copyright {
+    display: grid;
+    gap: 1rem;
+    max-width: 44rem;
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .copyright p:first-child {
+    color: var(--text);
+  }
+
+  .copyright .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  .copyright .links a {
+    color: var(--violet-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .portfolio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    border-radius: var(--r-l);
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(90% 140% at 100% 0%, rgb(139 92 246 / 0.28), transparent 60%),
+      var(--surface);
+  }
+
+  .portfolio h2 {
+    font-size: clamp(1.75rem, 3.6vw, 2.6rem);
+  }
+
+  .portfolio p {
+    margin-top: 0.6rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .block {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .interests,
+    .principles {
+      grid-template-columns: 1fr;
+    }
+
+    .timeline li {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+  }
+</style>

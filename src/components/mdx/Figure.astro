@@ -1,0 +1,46 @@
+---
+// Usable in .mdx publications without importing:
+//   <Figure src="/images/chart.png" alt="…" caption="Figure 1. …" />
+// Or wrap any content (a table, an SVG) with a caption:
+//   <Figure caption="Table 2. …"> … </Figure>
+interface Props {
+  src?: string;
+  alt?: string;
+  caption?: string;
+  credit?: string;
+}
+
+const { src, alt = '', caption, credit } = Astro.props;
+---
+
+<figure class="figure">
+  {src ? <img src={src} alt={alt} loading="lazy" decoding="async" /> : <slot />}
+  {
+    (caption || credit) && (
+      <figcaption>
+        {caption}
+        {credit && <span class="credit"> {credit}</span>}
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  .figure {
+    margin-block: 2em;
+  }
+
+  figcaption {
+    margin-top: 0.75em;
+    font-family: var(--font-body);
+    font-size: 0.75em;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .credit {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
+</style>

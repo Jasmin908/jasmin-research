@@ -1,0 +1,50 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 676 >>
+stream
+BT
+/F2 22 Tf 1 0 0 1 72 760 Tm (Estimating the Equilibrium Temperature of Exoplanets) Tj
+/F1 12 Tf 1 0 0 1 72 716 Tm (Jasmin Loeffel  -  Jasmin Loeffel Research  -  2026) Tj
+/F1 12 Tf 1 0 0 1 72 692 Tm () Tj
+/F2 14 Tf 1 0 0 1 72 668 Tm (EXAMPLE PDF - PLACEHOLDER CONTENT) Tj
+/F1 12 Tf 1 0 0 1 72 640 Tm (This file demonstrates the optional PDF download of a publication.) Tj
+/F1 12 Tf 1 0 0 1 72 616 Tm (Replace it with the real PDF of your paper in public/papers/.) Tj
+/F1 12 Tf 1 0 0 1 72 592 Tm () Tj
+/F1 10 Tf 1 0 0 1 72 568 Tm (Copyright 2026 Jasmin Loeffel. All rights reserved.) Tj
+/F1 10 Tf 1 0 0 1 72 548 Tm (Not covered by the MIT licence of the website code.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+7 0 obj
+<< /Title (Estimating the Equilibrium Temperature of Exoplanets - example) /Author (Jasmin Loeffel) >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000978 00000 n 
+0000001048 00000 n 
+0000001123 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R /Info 7 0 R >>
+startxref
+1241
+%%EOF

@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import SubjectCard from '../components/SubjectCard.astro';
+import { alternatesFor, sectionPath, type Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+import { subjectIds } from '../data/subjects';
+import { bySubject, forLocale, getPublications } from '../lib/publications';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const shown = forLocale(await getPublications(), locale);
+// Subjects with publications first, the rest keep their order.
+const ordered = [...subjectIds].sort((a, b) => Number(bySubject(shown, b).length > 0) - Number(bySubject(shown, a).length > 0));
+---
+
+<Base
+  locale={locale}
+  title={t.meta.topicsTitle}
+  description={t.meta.topicsDescription}
+  alternates={alternatesFor((code) => sectionPath(code, 'topics'))}
+  active="topics"
+>
+  <header class="page-head">
+    <div class="container">
+      <p class="label" data-index="§">{t.topics.label}</p>
+      <h1 class="page-title">{t.topics.title}</h1>
+      <p class="page-intro">{t.topics.intro}</p>
+    </div>
+  </header>
+
+  <div class="container grid">
+    {
+      ordered.map((id, i) => {
+        const items = bySubject(shown, id);
+        return (
+          <SubjectCard id={id} locale={locale} total={items.length} latest={items.slice(0, 3).map((e) => e.data.title)} delay={(i % 3) * 70} level="h2" />
+        );
+      })
+    }
+  </div>
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
