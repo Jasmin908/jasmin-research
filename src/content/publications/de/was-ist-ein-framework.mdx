@@ -1,0 +1,174 @@
+---
+title: 'Was ist ein Programmier-Framework?'
+description: 'Eine einsteigerfreundliche Erklärung von Frameworks und Bibliotheken, Inversion of Control und vier bekannten Frameworks: Angular, Django, Laravel und Spring Boot.'
+date: 2026-11-15
+lang: de
+type: explanation
+subjects: [computer-science]
+tags: [Frameworks, Bibliotheken, Webentwicklung, Softwarearchitektur]
+difficulty: beginner
+draft: true
+aiAssisted: true
+translationKey: programming-framework
+references:
+  - id: fowler2005
+    authors: 'Fowler, M.'
+    year: 2005
+    title: 'InversionOfControl'
+    source: 'martinfowler.com (bliki)'
+    url: 'https://martinfowler.com/bliki/InversionOfControl.html'
+  - id: mdn-frameworks
+    authors: 'MDN Web Docs'
+    year: 'o. J.'
+    title: 'Introduction to client-side frameworks'
+    source: 'Mozilla'
+    url: 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Frameworks_libraries/Introduction'
+  - id: angular
+    authors: 'Angular-Team'
+    year: 'o. J.'
+    title: 'What is Angular?'
+    source: 'Angular-Dokumentation'
+    url: 'https://angular.dev/overview'
+  - id: django
+    authors: 'Django Software Foundation'
+    year: 'o. J.'
+    title: 'Django at a glance'
+    source: 'Django-Dokumentation'
+    url: 'https://docs.djangoproject.com/en/stable/intro/overview/'
+  - id: laravel
+    authors: 'Laravel'
+    year: 'o. J.'
+    title: 'Laravel Documentation'
+    source: 'laravel.com'
+    url: 'https://laravel.com/docs'
+  - id: springboot
+    authors: 'Spring-Team'
+    year: 'o. J.'
+    title: 'Spring Boot reference documentation'
+    source: 'docs.spring.io'
+    url: 'https://docs.spring.io/spring-boot/index.html'
+  - id: react
+    authors: 'React-Team'
+    year: 'o. J.'
+    title: 'React'
+    source: 'react.dev'
+    url: 'https://react.dev/'
+---
+
+Wer mit Webentwicklung anfängt, hört das Wort *Framework* fast sofort: «Bau es mit Django», «Bei uns läuft alles mit Angular», «Mit Laravel geht das ganz einfach». Aber was genau ist ein Framework, und worin unterscheidet es sich von den Bibliotheken, die du bereits in deinen Code importierst? Dieser Artikel erklärt die Idee von Grund auf, mit kleinen Beispielen und einem Blick auf vier bekannte Frameworks.
+
+## Zuerst: Was ist eine Bibliothek?
+
+Eine **Bibliothek** (englisch *library*) ist eine Sammlung von fertigem Code, der ein bestimmtes Problem löst. Du verwendest sie, indem du sie aus deinem eigenen Programm heraus *aufrufst*. Eine Bibliothek für Datumsangaben hilft dir beim Formatieren von Daten, eine Mathematikbibliothek liefert Funktionen wie die Quadratwurzel. Du entscheidest, wann du sie benutzt, und kannst den Rest ignorieren.
+
+Hier ein Bibliotheksaufruf in Python. Das Modul `math` gehört zur Standardbibliothek von Python:
+
+```python
+import math
+
+result = math.sqrt(16)  # dein Code ruft die Bibliothek auf
+print(result)           # 4.0
+```
+
+Dein Programm hat von Anfang bis Ende die Kontrolle. Die Bibliothek ist ein Werkzeug, das du in die Hand nimmst und wieder weglegst.
+
+## Und was ist ein Framework?
+
+Ein **Framework** ist ebenfalls fertiger Code, funktioniert aber umgekehrt. Statt dass du es aufrufst, gibt das Framework die Grundstruktur einer Anwendung vor und **ruft deinen Code** im richtigen Moment auf. Du ergänzt die Teile, die für dein Projekt spezifisch sind, zum Beispiel was eine Webseite anzeigen soll oder was passiert, wenn ein Formular abgeschickt wird.
+
+Ein hilfreicher Vergleich: Eine Bibliothek ist wie ein Werkzeugkasten, ein Framework wie das Gerüst eines Hauses. Mit einem Werkzeugkasten baust du, was du willst, in beliebiger Reihenfolge. Beim Hausgerüst haben Wände, Böden und Türen bereits ihren Platz; du entscheidest, wie die Räume aussehen, aber innerhalb der Form, die das Gerüst vorgibt.
+
+<FrameworkVsLibrary />
+
+## Inversion of Control
+
+Der entscheidende Unterschied hat einen Namen: **Inversion of Control** (Umkehrung der Kontrolle). Bei einer Bibliothek fliesst die Kontrolle von deinem Code zur Bibliothek. Bei einem Framework ist es *umgekehrt*: Das Framework steuert das Hauptprogramm und entscheidet, wann dein Code ausgeführt wird. Oft wird das mit dem «Hollywood-Prinzip» zusammengefasst: *Don't call us, we'll call you* – «Ruf uns nicht an, wir rufen dich an» [@fowler2005].
+
+Das zeigt sich schon in einem kleinen Django-Beispiel. Du schreibst eine Funktion, die eine Anfrage verarbeitet, rufst sie aber nie selbst auf:
+
+```python
+# views.py
+from django.http import HttpResponse
+
+def hello(request):
+    return HttpResponse("Hello, world!")
+```
+
+```python
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("hello/", views.hello),
+]
+```
+
+Wenn jemand `/hello/` aufruft, nimmt Django die Anfrage entgegen, sucht das passende URL-Muster und ruft `hello` für dich auf. Deine Aufgabe ist es, die Funktion zu schreiben; um Webserver, Routing und Antwort kümmert sich das Framework [@django].
+
+<Callout type="definition" title="Wichtige Begriffe">
+  **Bibliothek:** wiederverwendbarer Code, den du bei Bedarf aufrufst. **Framework:** eine wiederverwendbare Struktur für eine ganze Anwendung, die deinen Code aufruft. **Inversion of Control:** Das Framework, nicht dein Code, steuert den Ablauf des Programms.
+</Callout>
+
+## Vier bekannte Frameworks
+
+Frameworks gibt es für fast jede Programmiersprache und jede Art von Software. Diese vier sind in der Webentwicklung weit verbreitet und zeigen, wie ähnliche Ideen in verschiedenen Sprachen auftauchen.
+
+| Framework | Sprache | Hauptsächlich für | Bekannt für |
+| --- | --- | --- | --- |
+| Angular | TypeScript | Frontend (im Browser) | Komponenten, klare Projektstruktur, viele eingebaute Werkzeuge |
+| Django | Python | Backend (auf dem Server) | «Batteries included»: Admin-Oberfläche, Datenbankzugriff, Authentifizierung |
+| Laravel | PHP | Backend | Gut lesbare Syntax, Routing, Eloquent für Datenbanken, Blade-Templates |
+| Spring Boot | Java | Backend | Schneller Start von Spring-Anwendungen, verbreitet in Unternehmen |
+
+### Angular
+
+Angular ist ein Framework für Webanwendungen, die im Browser laufen. Es wird von Google gepflegt und verwendet TypeScript, eine typisierte Variante von JavaScript. Die Oberfläche baust du aus **Komponenten** auf, und Angular bringt Routing, Formulare und Werkzeuge für die Kommunikation mit Servern bereits mit [@angular].
+
+### Django
+
+Django ist ein Web-Framework für Python. Es folgt dem Ansatz «batteries included»: Vieles, was eine typische Website braucht, etwa Benutzerkonten, eine Admin-Oberfläche und der Umgang mit Datenbanken, ist bereits vorhanden. Du beschreibst deine Daten als Python-Klassen, und Django übernimmt einen grossen Teil der Arbeit drumherum [@django].
+
+### Laravel
+
+Laravel ist ein PHP-Framework für Webanwendungen. Es ist für seinen gut lesbaren Code bekannt und bietet Routing, ein Template-System namens Blade sowie einen objektrelationalen Mapper namens Eloquent für die Arbeit mit Datenbanken [@laravel].
+
+### Spring Boot
+
+Spring Boot baut auf dem Spring Framework für Java auf. Ziel ist es, schnell eine funktionierende Spring-Anwendung mit sinnvollen Standardeinstellungen zu erstellen, ohne vorher alles von Hand konfigurieren zu müssen [@springboot]. Besonders verbreitet ist es in grösseren Unternehmen.
+
+## Ist React ein Framework?
+
+React wird oft neben Angular genannt, beschreibt sich selbst aber als **Bibliothek** für Benutzeroberflächen [@react]. Es konzentriert sich auf eine Aufgabe: Daten in Oberflächenkomponenten umzuwandeln und diese zu aktualisieren, wenn sich die Daten ändern. Dinge wie Routing oder das Laden von Daten gehören nicht zu React selbst; dafür ergänzt man weitere Bibliotheken oder nutzt ein Framework, das auf React aufbaut.
+
+Wenn also jemand React ein Framework nennt, ist meist «React zusammen mit den Werkzeugen drumherum» gemeint. Genau genommen ist React in erster Linie eine UI-Bibliothek [@mdn-frameworks].
+
+## Vorteile von Frameworks
+
+- **Weniger wiederholte Arbeit.** Häufige Aufgaben wie Routing, Formulare oder Datenbankzugriff sind bereits gelöst.
+- **Struktur.** Projekte folgen bekannten Konventionen. Dadurch findest du dich leichter zurecht, auch in fremdem Code.
+- **Sicherheit.** Ausgereifte Frameworks enthalten Schutz vor häufigen Angriffen, zum Beispiel Cross-Site Request Forgery.
+- **Community und Dokumentation.** Zu beliebten Frameworks gibt es ausführliche Dokumentation, Tutorials und Antworten auf typische Probleme.
+
+## Nachteile von Frameworks
+
+- **Lernaufwand.** Du musst die Konzepte und Konventionen des Frameworks kennen, bevor du produktiv arbeitest.
+- **Weniger Freiheit.** Das Framework gibt die Struktur vor. Passt deine Idee nicht hinein, musst du sie unter Umständen umgehen.
+- **Grösse und Komplexität.** Für ein kleines Projekt kann ein Framework zu viel sein.
+- **Abhängigkeit.** Dein Projekt hängt von den Updates des Frameworks ab. Grosse neue Versionen können Änderungen an deinem Code nötig machen.
+
+## Wann lohnt sich ein Framework?
+
+Ein Framework ist meist eine gute Wahl, wenn du eine vollständige Anwendung mit typischen Anforderungen baust (Seiten, Benutzer, Datenbank, Formulare) und eine bewährte Struktur möchtest. Auch im Team ist es hilfreich, weil alle denselben Konventionen folgen.
+
+Eine Bibliothek oder einfacher eigener Code kann die bessere Wahl sein für kleine Skripte, zum Lernen der Grundlagen einer Sprache oder wenn du nur ein bestimmtes Problem lösen willst. Viele Entwicklerinnen und Entwickler empfehlen, zuerst die Grundlagen einer Sprache zu lernen: Wer versteht, was ein Framework einem abnimmt, lernt es viel leichter.
+
+## Fazit
+
+Der Unterschied zwischen Bibliothek und Framework läuft auf die Kontrolle hinaus. Eine Bibliothek rufst du auf; ein Framework ruft dich auf. Frameworks wie Angular, Django, Laravel und Spring Boot sparen viel Arbeit, weil sie eine erprobte Struktur mitbringen, kosten aber etwas Freiheit und Einarbeitungszeit. Wenn du weisst, womit du arbeitest, verstehst du auch, warum dein Code so aufgebaut ist.
+
+## Weiterführende Literatur
+
+- Martin Fowlers kurzer Artikel zu Inversion of Control ist eine klassische Erklärung der Idee [@fowler2005].
+- Die Einführung von MDN in clientseitige Frameworks erklärt, warum es Frontend-Frameworks gibt [@mdn-frameworks].
+- Die offiziellen Tutorials von Angular, Django, Laravel und Spring Boot sind der beste Ort, um eines selbst auszuprobieren.

@@ -1,0 +1,174 @@
+---
+title: 'What Is a Programming Framework?'
+description: 'A beginner-friendly explanation of frameworks and libraries, inversion of control, and four popular frameworks: Angular, Django, Laravel and Spring Boot.'
+date: 2026-11-15
+lang: en
+type: explanation
+subjects: [computer-science]
+tags: [frameworks, libraries, web development, software architecture]
+difficulty: beginner
+draft: true
+aiAssisted: true
+translationKey: programming-framework
+references:
+  - id: fowler2005
+    authors: 'Fowler, M.'
+    year: 2005
+    title: 'InversionOfControl'
+    source: 'martinfowler.com (bliki)'
+    url: 'https://martinfowler.com/bliki/InversionOfControl.html'
+  - id: mdn-frameworks
+    authors: 'MDN Web Docs'
+    year: 'n.d.'
+    title: 'Introduction to client-side frameworks'
+    source: 'Mozilla'
+    url: 'https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Frameworks_libraries/Introduction'
+  - id: angular
+    authors: 'Angular team'
+    year: 'n.d.'
+    title: 'What is Angular?'
+    source: 'Angular documentation'
+    url: 'https://angular.dev/overview'
+  - id: django
+    authors: 'Django Software Foundation'
+    year: 'n.d.'
+    title: 'Django at a glance'
+    source: 'Django documentation'
+    url: 'https://docs.djangoproject.com/en/stable/intro/overview/'
+  - id: laravel
+    authors: 'Laravel'
+    year: 'n.d.'
+    title: 'Laravel Documentation'
+    source: 'laravel.com'
+    url: 'https://laravel.com/docs'
+  - id: springboot
+    authors: 'Spring team'
+    year: 'n.d.'
+    title: 'Spring Boot reference documentation'
+    source: 'docs.spring.io'
+    url: 'https://docs.spring.io/spring-boot/index.html'
+  - id: react
+    authors: 'React team'
+    year: 'n.d.'
+    title: 'React'
+    source: 'react.dev'
+    url: 'https://react.dev/'
+---
+
+If you start learning web development, you'll hear the word *framework* almost immediately: "Build it with Django", "We use Angular at work", "Laravel makes this easy". But what exactly is a framework, and how is it different from the libraries you already import in your code? This article explains the idea from the ground up, with small examples and a look at four well-known frameworks.
+
+## First, what is a library?
+
+A **library** is a collection of ready-made code that solves a specific problem. You use it by *calling* it from your own program. A library for dates helps you format dates; a library for maths gives you functions such as square roots. You decide when to use it, and you can ignore the rest of it.
+
+Here is a library call in Python. The `math` module is part of Python's standard library:
+
+```python
+import math
+
+result = math.sqrt(16)  # your code calls the library
+print(result)           # 4.0
+```
+
+Your program is in charge from start to finish. The library is a tool you pick up and put down again.
+
+## So what is a framework?
+
+A **framework** is also ready-made code, but it works the other way round. Instead of you calling it, the framework provides the overall structure of an application and **calls your code** at the right moments. You fill in the parts that are specific to your project, such as what a web page should show or what happens when a form is submitted.
+
+A helpful comparison: a library is like a toolbox, and a framework is like the frame of a house. With a toolbox you build whatever you want, in whatever order. With a house frame, the walls, floors and doors already have their places; you decide how the rooms look, but within the shape the frame gives you.
+
+<FrameworkVsLibrary />
+
+## Inversion of control
+
+The key difference has a name: **inversion of control**. With a library, control flows from your code to the library. With a framework, it's *inverted*: the framework runs the main program and decides when your code is executed. This is often summarised as the "Hollywood Principle": *don't call us, we'll call you* [@fowler2005].
+
+You can see this in a tiny Django example. You write a function that handles a request, but you never call it yourself:
+
+```python
+# views.py
+from django.http import HttpResponse
+
+def hello(request):
+    return HttpResponse("Hello, world!")
+```
+
+```python
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("hello/", views.hello),
+]
+```
+
+When someone visits `/hello/`, Django receives the request, looks up the matching URL pattern and calls `hello` for you. Your job is to fill in the function; the framework handles the web server, the routing and the response [@django].
+
+<Callout type="definition" title="Key terms">
+  **Library:** reusable code you call when you need it. **Framework:** a reusable structure for a whole application that calls your code. **Inversion of control:** the framework, not your code, controls the flow of the program.
+</Callout>
+
+## Four popular frameworks
+
+Frameworks exist for almost every language and type of software. These four are widely used in web development and show how similar ideas appear in different languages.
+
+| Framework | Language | Mainly used for | Known for |
+| --- | --- | --- | --- |
+| Angular | TypeScript | Front end (in the browser) | Components, a clear project structure, many built-in tools |
+| Django | Python | Back end (on the server) | "Batteries included": admin site, database access, authentication |
+| Laravel | PHP | Back end | Readable syntax, routing, Eloquent for database access, Blade templates |
+| Spring Boot | Java | Back end | Quick setup of Spring applications, widely used in companies |
+
+### Angular
+
+Angular is a framework for building web applications that run in the browser. It is maintained by Google and uses TypeScript, a typed version of JavaScript. You build the interface from **components**, and Angular provides routing, forms and tools for talking to servers out of the box [@angular].
+
+### Django
+
+Django is a Python web framework. It follows a "batteries included" approach: many things a typical website needs, such as user accounts, an admin interface and a way to work with databases, are already there. You describe your data as Python classes, and Django handles much of the work around them [@django].
+
+### Laravel
+
+Laravel is a PHP framework for web applications. It is known for its readable code style and offers routing, a template system called Blade and an object-relational mapper called Eloquent for working with databases [@laravel].
+
+### Spring Boot
+
+Spring Boot is built on top of the Spring Framework for Java. Its aim is to make it quick to create a working Spring application with sensible defaults, so you don't have to configure everything by hand before you can start [@springboot]. It's especially common in larger companies.
+
+## Is React a framework?
+
+People often list React next to Angular, but React describes itself as a **library** for building user interfaces [@react]. It focuses on one job: turning your data into interface components and updating them when the data changes. Things like routing or data fetching are not part of React itself; you add other libraries for them or use a framework that is built around React.
+
+So when someone calls React a framework, they usually mean "React together with the tools around it". Strictly speaking, React is primarily a UI library [@mdn-frameworks].
+
+## Advantages of frameworks
+
+- **Less repeated work.** Common tasks such as routing, forms or database access are already solved.
+- **Structure.** Projects follow known conventions, so it's easier to find your way around, including in other people's code.
+- **Security.** Mature frameworks include protection against common attacks, for example cross-site request forgery.
+- **Community and documentation.** Popular frameworks have extensive documentation, tutorials and answers to common problems.
+
+## Disadvantages of frameworks
+
+- **Learning curve.** You need to learn the framework's concepts and conventions before you're productive.
+- **Less freedom.** The framework decides the structure. If your idea doesn't fit, you may have to work around it.
+- **Size and complexity.** A framework can be more than a small project needs.
+- **Dependency.** Your project depends on the framework's updates. Major new versions can require changes to your code.
+
+## When should you use a framework?
+
+A framework is usually a good choice when you are building a full application with common needs (pages, users, a database, forms) and want a proven structure. It's also useful in teams, because everyone follows the same conventions.
+
+A library, or plain code, can be the better choice for small scripts, for learning the basics of a language, or when you only need to solve one specific problem. Many developers recommend learning the fundamentals of a language first: once you understand what a framework does for you, it's much easier to learn.
+
+## Conclusion
+
+The difference between a library and a framework comes down to control. You call a library; a framework calls you. Frameworks such as Angular, Django, Laravel and Spring Boot save a lot of work by providing a tested structure, at the cost of some freedom and a learning curve. Knowing which one you're working with helps you understand why your code is organised the way it is.
+
+## Further reading
+
+- Martin Fowler's short article on inversion of control is a classic explanation of the idea [@fowler2005].
+- MDN's introduction to client-side frameworks explains why front-end frameworks exist [@mdn-frameworks].
+- The official tutorials of Angular, Django, Laravel and Spring Boot are the best place to try one yourself.

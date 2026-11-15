@@ -60,10 +60,28 @@ export const subjects = {
       de: 'Algorithmen, Systeme und die Theorie hinter alltäglichem Code.',
     },
   },
+  'artificial-intelligence': {
+    icon: 'spark',
+    name: { en: 'AI & Machine Learning', de: 'KI & Maschinelles Lernen' },
+    short: { en: 'AI & ML', de: 'KI & ML' },
+    description: {
+      en: 'How machines learn from data, what they can do and where they fall short.',
+      de: 'Wie Maschinen aus Daten lernen, was sie können und wo ihre Grenzen liegen.',
+    },
+  },
+  physics: {
+    icon: 'atom',
+    name: { en: 'Physics', de: 'Physik' },
+    short: { en: 'Physics', de: 'Physik' },
+    description: {
+      en: 'Motion, forces, energy and the basic laws that describe the physical world.',
+      de: 'Bewegung, Kräfte, Energie und die Grundgesetze, die die physikalische Welt beschreiben.',
+    },
+  },
 } satisfies Record<string, Subject>;
 
 export interface Subject {
-  icon: 'orbit' | 'mind' | 'speech' | 'column' | 'hourglass' | 'code' | 'spark';
+  icon: 'orbit' | 'mind' | 'speech' | 'column' | 'hourglass' | 'code' | 'spark' | 'atom';
   name: Localized<string>;
   short: Localized<string>;
   description: Localized<string>;

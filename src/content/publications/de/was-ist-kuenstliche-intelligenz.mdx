@@ -1,0 +1,155 @@
+---
+title: 'Was ist künstliche Intelligenz?'
+description: 'Eine verständliche Einführung in KI: was sie ist, wie maschinelles Lernen funktioniert, die drei wichtigsten Lernarten, neuronale Netze, Anwendungen im Alltag und wichtige Grenzen.'
+date: 2026-11-15
+lang: de
+type: explanation
+subjects: [artificial-intelligence, computer-science]
+tags: [KI, maschinelles Lernen, neuronale Netze, Deep Learning]
+difficulty: beginner
+draft: true
+aiAssisted: true
+translationKey: artificial-intelligence
+references:
+  - id: dartmouth1955
+    authors: 'McCarthy, J., Minsky, M. L., Rochester, N., & Shannon, C. E.'
+    year: 1955
+    title: 'A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence'
+    url: 'http://jmc.stanford.edu/articles/dartmouth/dartmouth.pdf'
+  - id: russell2020
+    authors: 'Russell, S., & Norvig, P.'
+    year: 2020
+    title: 'Artificial Intelligence: A Modern Approach'
+    source: '4. Auflage, Pearson'
+    url: 'https://aima.cs.berkeley.edu/'
+  - id: google-mlcc
+    authors: 'Google for Developers'
+    year: 'o. J.'
+    title: 'Machine Learning Crash Course'
+    url: 'https://developers.google.com/machine-learning/crash-course'
+  - id: sutton2018
+    authors: 'Sutton, R. S., & Barto, A. G.'
+    year: 2018
+    title: 'Reinforcement Learning: An Introduction'
+    source: '2. Auflage, MIT Press'
+    url: 'http://incompleteideas.net/book/the-book-2nd.html'
+  - id: goodfellow2016
+    authors: 'Goodfellow, I., Bengio, Y., & Courville, A.'
+    year: 2016
+    title: 'Deep Learning'
+    source: 'MIT Press'
+    url: 'https://www.deeplearningbook.org/'
+  - id: ibm-ai
+    authors: 'IBM'
+    year: 'o. J.'
+    title: 'What is artificial intelligence (AI)?'
+    source: 'IBM Think'
+    url: 'https://www.ibm.com/think/topics/artificial-intelligence'
+---
+
+Künstliche Intelligenz ist gerade überall: in den Nachrichten, in Apps und in Diskussionen über die Zukunft der Arbeit. Der Begriff wird für sehr unterschiedliche Dinge verwendet, von Chatbots bis zu selbstfahrenden Autos. Dieser Artikel erklärt, was KI eigentlich bedeutet, wie die meisten modernen KI-Systeme lernen und was sie können und was nicht.
+
+## Was ist KI?
+
+**Künstliche Intelligenz (KI)** ist das Teilgebiet der Informatik, das Systeme entwickelt, die Aufgaben erledigen, die wir normalerweise mit menschlicher Intelligenz verbinden: Bilder erkennen, Sprache verstehen, Vorhersagen treffen oder Entscheidungen fällen und aus Erfahrung lernen [@ibm-ai].
+
+Der Begriff ist älter, als viele denken. Er stammt aus einem Antrag von 1955 für einen Forschungsworkshop am Dartmouth College im Jahr 1956. Darin wurde vorgeschlagen zu untersuchen, wie Maschinen Sprache verwenden, Abstraktionen und Konzepte bilden und sich selbst verbessern können [@dartmouth1955].
+
+Zwei Begriffe helfen bei der Einordnung:
+
+- **Schwache KI** (englisch *narrow AI*) ist für bestimmte Aufgaben gebaut, etwa um Texte zu übersetzen oder Musik zu empfehlen. Alle heute eingesetzten KI-Systeme sind in diesem Sinne «schwach», auch wenn manche ein breites Spektrum an Aufgaben bewältigen.
+- **Allgemeine KI** (oft AGI genannt) wäre ein System mit flexibler Intelligenz auf menschlichem Niveau für fast jede Aufgabe. Es gibt sie noch nicht, und Fachleute sind sich uneinig, ob und wann es sie geben könnte.
+
+## Wie funktionieren KI-Systeme?
+
+Es gibt zwei grundsätzliche Wege, einen Computer intelligent handeln zu lassen.
+
+Der erste ist, **Regeln von Hand zu schreiben**. Ein einfaches Schachprogramm enthält etwa Regeln wie «ein Läufer zieht diagonal» und Anweisungen, wie Stellungen zu bewerten sind. Das funktioniert gut, wenn die Regeln klar sind. Viele echte Probleme sind aber zu kompliziert, um sie in Regeln zu fassen. Versuch einmal, exakte Regeln dafür aufzuschreiben, wie man eine Katze auf einem Foto erkennt.
+
+Der zweite Weg ist, den Computer die Regeln **aus Beispielen lernen** zu lassen. Das nennt man **maschinelles Lernen** (englisch *machine learning*), und es steckt hinter dem Grossteil der heutigen KI [@russell2020].
+
+## Maschinelles Lernen
+
+Beim maschinellen Lernen bekommt ein Programm **Daten** und ein Ziel und passt ein internes Modell so lange an, bis es dieses Ziel möglichst gut erreicht. Das Ergebnis ist ein **Modell**: eine mathematische Funktion, die eine Eingabe (zum Beispiel eine E-Mail) in eine Ausgabe umwandelt (zum Beispiel «Spam» oder «kein Spam») [@google-mlcc].
+
+Das Lernen läuft typischerweise in zwei Phasen ab:
+
+1. **Training:** Das Modell sieht viele Beispiele und passt nach und nach seine internen Einstellungen an, die **Parameter**, um weniger Fehler zu machen.
+2. **Anwendung** (*Inferenz*): Das trainierte Modell wird auf neue Daten angewendet, die es noch nie gesehen hat.
+
+Es gibt drei wichtige Arten, wie ein Modell lernen kann.
+
+### Überwachtes Lernen
+
+Beim **überwachten Lernen** (*supervised learning*) gehört zu jedem Trainingsbeispiel die richtige Antwort, das sogenannte **Label**. Das Modell lernt den Zusammenhang zwischen Eingaben und Labels.
+
+*Beispiel:* Ein Spamfilter wird mit Tausenden E-Mails trainiert, die jeweils als «Spam» oder «kein Spam» markiert sind. Danach kann er neue E-Mails selbstständig einordnen. Auch die Vorhersage von Wohnungspreisen aus Grösse und Lage ist ein Beispiel; hier ist das Label eine Zahl statt einer Kategorie.
+
+### Unüberwachtes Lernen
+
+Beim **unüberwachten Lernen** (*unsupervised learning*) haben die Daten **keine Labels**. Das Modell sucht selbst nach Strukturen, etwa nach Gruppen ähnlicher Dinge.
+
+*Beispiel:* Ein Onlineshop gruppiert seine Kundschaft nach dem Kaufverhalten, ohne vorher festzulegen, welche Gruppen es gibt. So entdeckt der Shop vielleicht eine Gruppe, die vor allem am Wochenende Bücher kauft.
+
+### Bestärkendes Lernen
+
+Beim **bestärkenden Lernen** (*reinforcement learning*) lernt ein **Agent** durch Ausprobieren. Er führt in einer Umgebung Aktionen aus und erhält **Belohnungen** oder Strafen. Mit der Zeit lernt er, welche Aktionen insgesamt zur höchsten Belohnung führen [@sutton2018].
+
+*Beispiel:* Ein Programm lernt ein Videospiel. Zuerst drückt es zufällig Tasten; die Punkte dienen als Belohnung. Nach vielen Runden findet es Strategien, die viele Punkte bringen. Bestärkendes Lernen wird auch in der Robotik eingesetzt und war ein zentraler Teil von AlphaGo, dem Programm von DeepMind, das 2016 den Go-Profi Lee Sedol besiegte.
+
+| Lernart | Daten | Ziel | Beispiel |
+| --- | --- | --- | --- |
+| Überwacht | Beispiele mit richtigen Antworten | Antworten für neue Beispiele vorhersagen | Spamfilter |
+| Unüberwacht | Beispiele ohne Antworten | Strukturen oder Gruppen finden | Kundengruppen |
+| Bestärkend | Belohnungen aus einer Umgebung | Die besten Aktionen lernen | Spielender Agent |
+
+## Neuronale Netze
+
+Viele moderne KI-Systeme verwenden **künstliche neuronale Netze**, die lose vom Gehirn inspiriert sind. Ein Netz besteht aus einfachen Einheiten, den **Neuronen**, die in **Schichten** angeordnet sind [@goodfellow2016].
+
+Jedes künstliche Neuron führt eine kleine Rechnung aus. Es nimmt mehrere Eingabezahlen, multipliziert jede mit einem **Gewicht**, addiert alles zusammen mit einem **Bias** und gibt das Ergebnis an eine **Aktivierungsfunktion** $f$ weiter:
+
+$$
+y = f(w_1 x_1 + w_2 x_2 + \dots + w_n x_n + b)
+$$
+
+Die Gewichte bestimmen, wie wichtig jede Eingabe ist. Ein einzelnes Neuron kann wenig. Werden aber Tausende oder Milliarden davon in vielen Schichten verbunden, kann das Netz sehr komplexe Muster abbilden, etwa die Formen eines Gesichts oder den Aufbau eines Satzes. Netze mit vielen Schichten heissen **tiefe** neuronale Netze; das Gebiet nennt man **Deep Learning**.
+
+Beim Training macht das Netz eine Vorhersage, misst, wie falsch sie ist, und passt alle Gewichte ein kleines bisschen an, um den Fehler zu verringern. Das wird millionenfach wiederholt. Die Gewichte sind die Parameter, die das Netz lernt.
+
+<Callout type="note" title="Und was ist mit Chatbots?">
+  Chatbots wie ChatGPT beruhen auf **grossen Sprachmodellen** (*Large Language Models*). Das sind sehr grosse neuronale Netze, die mit riesigen Textmengen darauf trainiert werden, vorherzusagen, welches Wort (oder Wortteil) wahrscheinlich als Nächstes kommt. Mit weiterem Training entstehen aus diesem einfachen Ziel Modelle, die Fragen beantworten, Texte zusammenfassen und Code schreiben können.
+</Callout>
+
+## KI im Alltag
+
+Du nutzt KI wahrscheinlich mehrmals täglich, ohne es zu merken:
+
+- **Empfehlungen** für Videos, Musik und Produkte.
+- **Spamfilter** und das Sortieren deines Posteingangs.
+- **Navigations-Apps**, die Verkehr und Ankunftszeiten vorhersagen.
+- **Übersetzung** und **Spracherkennung**, zum Beispiel bei Sprachassistenten.
+- **Foto-Apps**, die Gesichter erkennen oder Bilder verbessern.
+- **Chatbots und Schreibassistenten.**
+- **Medizin**, wo KI Ärztinnen und Ärzte bei der Auswertung von Bildern wie Röntgenaufnahmen unterstützt.
+
+## Grenzen von KI
+
+KI ist leistungsfähig, hat aber wichtige Grenzen, die man kennen sollte:
+
+- **Sie hängt von Daten ab.** Ein Modell ist nur so gut wie die Daten, aus denen es gelernt hat. Sind die Daten unvollständig oder verzerrt, sind es die Ergebnisse auch. Ein Bewerbungstool, das mit voreingenommenen früheren Entscheidungen trainiert wurde, kann diese Voreingenommenheit wiederholen.
+- **Sie kann überzeugt falsch liegen.** Sprachmodelle können Texte erzeugen, die glaubwürdig klingen, aber falsch sind. Man spricht von **Halluzinationen**. Deshalb sollte man wichtige Informationen immer überprüfen.
+- **Sie versteht die Welt nicht wie wir.** Modelle finden statistische Muster. Ob das als «Verstehen» gilt, ist umstritten, aber sie können in Situationen scheitern, die für Menschen offensichtlich sind.
+- **Sie ist schwer zu erklären.** Grosse neuronale Netze haben Millionen oder Milliarden Parameter. Oft lässt sich kaum sagen, warum ein Modell eine bestimmte Entscheidung getroffen hat.
+- **Sie hat Kosten.** Das Training grosser Modelle braucht viel Rechenleistung und Energie, und das Sammeln von Daten wirft Fragen zu Datenschutz und Urheberrecht auf.
+
+## Fazit
+
+KI ist weder Magie noch eine einzelne Technologie. Der Grossteil der heutigen KI ist maschinelles Lernen: Modelle, die Muster aus Daten lernen, entweder aus Beispielen mit Labels, aus Daten ohne Labels oder aus Belohnungen. Neuronale Netze haben grosse Fortschritte möglich gemacht, besonders bei Sprache und Bildern. Gleichzeitig hängen KI-Systeme von ihren Daten ab, können überzeugt Fehler machen und brauchen menschliches Urteilsvermögen. Wer diese Grundlagen kennt, kann KI-Werkzeuge sinnvoller nutzen und Diskussionen darüber besser einordnen.
+
+## Weiterführende Literatur
+
+- Der kostenlose Machine Learning Crash Course von Google ist ein praktischer nächster Schritt (auf Englisch) [@google-mlcc].
+- *Artificial Intelligence: A Modern Approach* ist das Standardlehrbuch an Universitäten [@russell2020].
+- *Deep Learning* von Goodfellow, Bengio und Courville ist online frei lesbar [@goodfellow2016].
+- Das Buch von Sutton und Barto ist die klassische Einführung ins bestärkende Lernen, ebenfalls frei online [@sutton2018].

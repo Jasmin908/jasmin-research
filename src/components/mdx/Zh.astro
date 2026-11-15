@@ -1,0 +1,17 @@
+---
+// Chinese text (simplified characters) inside an article, e.g. <Zh>你好</Zh>.
+// The lang attribute makes browsers pick Chinese glyph shapes and lets
+// screen readers switch voice; Han characters look different in Japanese.
+---
+
+<span class="cjk" lang="zh-Hans"><slot /></span>
+
+<style>
+  .cjk {
+    font-family: 'PingFang SC', 'Noto Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei', 'Source Han Sans SC', sans-serif;
+    font-size: 1.05em;
+    letter-spacing: 0.02em;
+    /* Keep short words like 你好 together in narrow table cells. */
+    word-break: keep-all;
+  }
+</style>

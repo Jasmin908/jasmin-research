@@ -227,6 +227,37 @@
   font-size: 1.15em;
 }
 
+/* Chinese and Japanese text: a CJK font stack per language, so Han
+   characters get the right regional glyph shapes. */
+.prose :lang(zh) {
+  font-family: 'PingFang SC', 'Noto Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei', 'Source Han Sans SC', sans-serif;
+}
+
+.prose :lang(zh-Hant) {
+  font-family: 'PingFang TC', 'Noto Sans TC', 'Noto Sans CJK TC', 'Microsoft JhengHei', sans-serif;
+}
+
+.prose :lang(ja) {
+  font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Noto Sans CJK JP', 'Yu Gothic', 'Meiryo', sans-serif;
+}
+
+/* A single highlighted sentence in a language guide. */
+.prose .example-sentence {
+  margin-block: 1.5em 0.5em;
+  padding: 0.9em 1.1em;
+  border-radius: var(--r-s);
+  border-left: 2px solid var(--violet);
+  background: rgb(139 92 246 / 0.06);
+  font-size: 1.35em;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.prose ruby rt {
+  font-size: 0.55em;
+  color: var(--violet-soft);
+}
+
 /* Citation markers from [@key]. */
 .prose .citation {
   font-style: normal;

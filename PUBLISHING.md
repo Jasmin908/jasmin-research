@@ -18,8 +18,8 @@ This creates `src/content/publications/en/the-title-of-my-paper.md` as a
 | Option | Values |
 | --- | --- |
 | `--lang` | `en`, `de` |
-| `--type` | `paper`, `review`, `summary`, `notes`, `language`, `investigation` |
-| `--subject` | `astronomy`, `psychology`, `linguistics`, `philosophy`, `history`, `computer-science` |
+| `--type` | `paper`, `review`, `summary`, `notes`, `language`, `investigation`, `explanation`, `guide` |
+| `--subject` | `astronomy`, `psychology`, `linguistics`, `philosophy`, `history`, `computer-science`, `artificial-intelligence`, `physics` |
 | `--mdx` | create an `.mdx` file (allows components such as `<Callout>`) |
 
 You can also copy [`src/content/publications/_template.md`](src/content/publications/_template.md)
@@ -47,6 +47,8 @@ featured: false           # true = shown under “Featured” on the home page (
 draft: true               # drafts only appear in `npm run dev`
 pdf: /papers/my-paper.pdf # optional – put the file in public/papers/
 translationKey: my-paper  # optional – same value in both language versions
+difficulty: beginner      # optional – beginner | intermediate | advanced, shown as “Level”
+aiAssisted: true          # optional – shows a short note that AI helped write the article
 references:               # optional – cite with [@id] in the text
   - id: sagan1980
     authors: 'Sagan, C.'
@@ -76,7 +78,21 @@ In `.mdx` files you can also use, without importing:
 ```mdx
 <Callout type="note" title="Key idea">…</Callout>   {/* note | definition | warning */}
 <Figure src="/images/chart.png" alt="…" caption="Figure 1. …" />
+<Zh>你好</Zh>  <Ja>日本語</Ja>                      {/* Chinese / Japanese text with the right glyphs */}
+<KanaChart script="hiragana" />                    {/* or "katakana": the 46 basic kana */}
+<FrameworkVsLibrary />                             {/* the library-vs-framework diagram */}
+
+<Exercise>
+1. A question…
+
+<Fragment slot="answers">
+1. The answer… (hidden until the reader opens it)
+</Fragment>
+</Exercise>
 ```
+
+The labels of `<Exercise>`, `<KanaChart>` and `<FrameworkVsLibrary>` follow the
+language of the page automatically.
 
 Images go in `public/images/` and are referenced as `/images/name.png`.
 

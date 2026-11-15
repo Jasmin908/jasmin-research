@@ -2,7 +2,7 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { subjectIds } from './data/subjects';
-import { publicationTypeIds } from './data/types';
+import { difficultyIds, publicationTypeIds } from './data/types';
 
 /**
  * Publications: one Markdown (.md) or MDX (.mdx) file each, in
@@ -29,6 +29,10 @@ const publications = defineCollection({
     draft: z.boolean().default(false),
     /** Marks placeholder content with a visible notice. */
     example: z.boolean().default(false),
+    /** Optional level, shown in the article header. */
+    difficulty: z.enum(difficultyIds).optional(),
+    /** Shows a short note that AI helped write the article. */
+    aiAssisted: z.boolean().default(false),
     /** Same value in both language versions links them as translations. */
     translationKey: z.string().optional(),
     /** Path of a PDF in /public, e.g. /papers/my-paper.pdf */

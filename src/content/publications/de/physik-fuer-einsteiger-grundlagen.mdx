@@ -1,0 +1,210 @@
+---
+title: 'Physik für Einsteiger: Die Grundlagen'
+description: 'Physikalische Grössen und SI-Einheiten, Bewegung, Geschwindigkeit und Beschleunigung, Kräfte und die drei newtonschen Gesetze, kinetische und potenzielle Energie sowie Energieerhaltung, mit Rechenbeispielen und Übungen.'
+date: 2026-11-15
+lang: de
+type: guide
+subjects: [physics]
+tags: [Mechanik, SI-Einheiten, newtonsche Gesetze, Energie]
+difficulty: beginner
+draft: true
+aiAssisted: true
+translationKey: physics-fundamentals
+references:
+  - id: bipm2019
+    authors: 'Bureau International des Poids et Mesures (BIPM)'
+    year: 2019
+    title: 'The International System of Units (SI Brochure)'
+    source: '9. Auflage'
+    url: 'https://www.bipm.org/en/publications/si-brochure'
+  - id: openstax
+    authors: 'Urone, P. P., & Hinrichs, R.'
+    year: 2022
+    title: 'College Physics 2e'
+    source: 'OpenStax, Rice University'
+    url: 'https://openstax.org/details/books/college-physics-2e'
+  - id: nist-gn
+    authors: 'National Institute of Standards and Technology (NIST)'
+    year: 'o. J.'
+    title: 'CODATA value: standard acceleration of gravity'
+    url: 'https://physics.nist.gov/cgi-bin/cuu/Value?gn'
+---
+
+Die Physik versucht, mit wenigen präzisen Ideen zu beschreiben, wie die Welt funktioniert. Viele der wichtigsten drehen sich um **Bewegung** und **Energie**: warum Dinge schneller werden, warum sie fallen und warum Energie nie einfach verschwindet. Dieser Leitfaden führt Schritt für Schritt in diese Grundlagen ein, mit Formeln, Rechenbeispielen und Übungen. Du brauchst nur Grundkenntnisse in Algebra.
+
+## Physikalische Grössen und SI-Einheiten
+
+Eine **physikalische Grösse** ist etwas, das man messen kann, etwa Länge, Zeit oder Masse. Jede Grösse besteht aus einem **Zahlenwert** und einer **Einheit**: Bei «5 m» ist 5 der Zahlenwert und Meter die Einheit.
+
+Damit es keine Missverständnisse gibt, verwenden Fachleute weltweit das **Internationale Einheitensystem (SI)**. Es legt sieben Basiseinheiten fest, aus denen alle anderen aufgebaut sind [@bipm2019]:
+
+| Grösse | Einheit | Zeichen |
+| --- | --- | --- |
+| Zeit | Sekunde | s |
+| Länge | Meter | m |
+| Masse | Kilogramm | kg |
+| Elektrische Stromstärke | Ampere | A |
+| Temperatur | Kelvin | K |
+| Stoffmenge | Mol | mol |
+| Lichtstärke | Candela | cd |
+
+Andere Einheiten sind Kombinationen daraus. Geschwindigkeit misst man zum Beispiel in Meter pro Sekunde (m/s), Kraft in Newton, wobei $1\,\text{N} = 1\,\text{kg}\cdot\text{m/s}^2$.
+
+<Callout type="note" title="Von km/h in m/s umrechnen">
+  Im Alltag werden Geschwindigkeiten oft in km/h angegeben. Weil 1 km = 1000 m und 1 h = 3600 s, teilst du durch 3,6, um m/s zu erhalten: $90\,\text{km/h} = 90 / 3{,}6 = 25\,\text{m/s}$.
+</Callout>
+
+## Bewegung: Geschwindigkeit
+
+Die **Geschwindigkeit** sagt, welche Strecke etwas in einer bestimmten Zeit zurücklegt. Die **Durchschnittsgeschwindigkeit** ist die Strecke $s$ geteilt durch die Zeit $t$:
+
+$$
+v = \frac{s}{t}
+$$
+
+In der Physik ist die Geschwindigkeit eine Grösse **mit Richtung**, zum Beispiel «20 m/s nach Norden». Den reinen Betrag ohne Richtung nennt man auch **Tempo** oder Schnelligkeit. Die Richtung ist wichtig: Ein Auto, das mit konstantem Tempo durch einen Kreisel fährt, ändert seine Geschwindigkeit, weil sich die Richtung ändert.
+
+**Rechenbeispiel.** Ein Zug legt 150 km in 2 Stunden zurück. Wie gross ist seine Durchschnittsgeschwindigkeit?
+
+$$
+v = \frac{150\,\text{km}}{2\,\text{h}} = 75\,\text{km/h} \approx 20{,}8\,\text{m/s}
+$$
+
+## Beschleunigung
+
+Die **Beschleunigung** beschreibt, wie schnell sich die Geschwindigkeit ändert. Ändert sich die Geschwindigkeit um $\Delta v$ (gelesen «Delta v», also «Änderung von v») in der Zeit $\Delta t$, beträgt die durchschnittliche Beschleunigung:
+
+$$
+a = \frac{\Delta v}{\Delta t} = \frac{v_\text{Ende} - v_\text{Anfang}}{\Delta t}
+$$
+
+Ihre Einheit ist Meter pro Sekunde im Quadrat, $\text{m/s}^2$. Eine Beschleunigung von $3\,\text{m/s}^2$ bedeutet, dass die Geschwindigkeit jede Sekunde um 3 m/s zunimmt. Wird etwas langsamer, ist die Beschleunigung negativ.
+
+**Rechenbeispiel.** Ein Auto beschleunigt in 9 Sekunden von 0 auf 27 m/s (etwa 97 km/h).
+
+$$
+a = \frac{27\,\text{m/s} - 0\,\text{m/s}}{9\,\text{s}} = 3\,\text{m/s}^2
+$$
+
+## Kräfte und die drei newtonschen Gesetze
+
+Eine **Kraft** ist ein Ziehen oder Drücken. Kräfte haben einen Betrag und eine Richtung und werden in **Newton (N)** gemessen. Isaac Newton beschrieb den Zusammenhang zwischen Kräften und Bewegung in drei Gesetzen, die er 1687 veröffentlichte [@openstax].
+
+### Erstes newtonsches Gesetz: Trägheit
+
+> Ein Körper bleibt in Ruhe oder bewegt sich geradlinig mit konstanter Geschwindigkeit weiter, solange keine resultierende Kraft auf ihn wirkt.
+
+Diese Neigung, den bisherigen Zustand beizubehalten, nennt man **Trägheit**. Bremst ein Bus plötzlich, bewegt sich dein Körper weiter nach vorne: Das ist Trägheit. Ein rollender Ball bleibt irgendwann liegen, nicht weil die Bewegung «aufgebraucht» ist, sondern weil Reibung auf ihn wirkt.
+
+### Zweites newtonsches Gesetz: Kraft und Beschleunigung
+
+> Die resultierende Kraft auf einen Körper ist gleich seiner Masse mal seiner Beschleunigung.
+
+$$
+F = m \cdot a
+$$
+
+Je mehr Kraft du aufwendest, desto stärker wird ein Körper beschleunigt. Je grösser seine Masse, desto schwerer lässt er sich beschleunigen. Deshalb lässt sich ein leerer Einkaufswagen leichter schieben als ein voller.
+
+**Rechenbeispiel.** Welche Kraft braucht ein Auto mit 1200 kg Masse für die Beschleunigung aus dem Beispiel oben, $3\,\text{m/s}^2$?
+
+$$
+F = 1200\,\text{kg} \cdot 3\,\text{m/s}^2 = 3600\,\text{N}
+$$
+
+Ein Spezialfall ist die **Gewichtskraft**, die Kraft der Schwerkraft auf eine Masse. In der Nähe der Erdoberfläche fallen Körper mit einer Beschleunigung von etwa $g \approx 9{,}81\,\text{m/s}^2$ (der Normwert ist exakt als $9{,}80665\,\text{m/s}^2$ festgelegt [@nist-gn]). Die Gewichtskraft einer Masse $m$ ist also:
+
+$$
+F_\text{G} = m \cdot g
+$$
+
+Eine Person mit 60 kg Masse hat eine Gewichtskraft von etwa $60 \cdot 9{,}81 \approx 589\,\text{N}$. Beachte den Unterschied: Die **Masse** (kg) ist die Menge an Materie und überall gleich; die **Gewichtskraft** (N) ist eine Kraft und wäre auf dem Mond kleiner.
+
+### Drittes newtonsches Gesetz: Actio und Reactio
+
+> Übt ein Körper eine Kraft auf einen zweiten Körper aus, übt der zweite eine gleich grosse, entgegengesetzte Kraft auf den ersten aus.
+
+Drückst du gegen eine Wand, drückt die Wand genauso stark zurück. Eine Rakete stösst Gas nach hinten aus, und das Gas drückt die Rakete nach vorne. Die beiden Kräfte wirken immer auf *verschiedene* Körper; deshalb heben sie sich nicht gegenseitig auf.
+
+## Energie
+
+**Energie** ist die Fähigkeit, Arbeit zu verrichten oder etwas zu verändern. Sie wird in **Joule (J)** gemessen. Energie gibt es in vielen Formen; zwei der wichtigsten in der Mechanik sind kinetische und potenzielle Energie.
+
+### Kinetische Energie
+
+Die **kinetische Energie** (Bewegungsenergie) ist die Energie der Bewegung:
+
+$$
+E_\text{kin} = \frac{1}{2} m v^2
+$$
+
+Weil die Geschwindigkeit quadriert wird, bedeutet doppelte Geschwindigkeit *vierfache* kinetische Energie. Das ist ein Grund, warum der Bremsweg bei höherem Tempo so schnell wächst.
+
+**Rechenbeispiel.** Ein Auto mit 1000 kg Masse fährt mit 20 m/s (72 km/h):
+
+$$
+E_\text{kin} = \frac{1}{2} \cdot 1000\,\text{kg} \cdot (20\,\text{m/s})^2 = 200\,000\,\text{J} = 200\,\text{kJ}
+$$
+
+### Potenzielle Energie (Lageenergie)
+
+Die **potenzielle Energie** im Schwerefeld ist Energie, die ein Körper wegen seiner Höhe über einem Bezugsniveau, etwa dem Boden, gespeichert hat:
+
+$$
+E_\text{pot} = m \cdot g \cdot h
+$$
+
+Hebst du einen 5-kg-Sack Mehl auf ein 2 m hohes Regal, speicherst du $5 \cdot 9{,}81 \cdot 2 \approx 98\,\text{J}$ potenzielle Energie.
+
+## Energieerhaltung
+
+Eines der wichtigsten Prinzipien der gesamten Physik ist die **Energieerhaltung**: Energie kann weder erzeugt noch vernichtet werden, sondern nur von einer Form in eine andere umgewandelt werden [@openstax].
+
+Ein fallender Ball ist ein gutes Beispiel. Oben hat er potenzielle Energie. Beim Fallen wird diese in kinetische Energie umgewandelt. Ohne Luftwiderstand bleibt die Summe gleich:
+
+$$
+m g h = \frac{1}{2} m v^2
+$$
+
+Die Masse kürzt sich heraus, also gilt für die Geschwindigkeit nach einer Fallhöhe $h$:
+
+$$
+v = \sqrt{2 g h}
+$$
+
+**Rechenbeispiel.** Ein Ball fällt aus 5 m Höhe. Wie schnell ist er kurz vor dem Aufprall?
+
+$$
+v = \sqrt{2 \cdot 9{,}81\,\text{m/s}^2 \cdot 5\,\text{m}} = \sqrt{98{,}1\,\text{m}^2/\text{s}^2} \approx 9{,}9\,\text{m/s}
+$$
+
+In der Realität wird durch Luftwiderstand und Aufprall ein Teil der Energie in Wärme und Schall umgewandelt, deshalb springt der Ball nicht wieder auf die ursprüngliche Höhe. Die Energie ist nicht verschwunden; sie hat nur ihre Form geändert.
+
+<Exercise>
+Verwende bei Bedarf $g = 9{,}81\,\text{m/s}^2$.
+
+1. Eine Läuferin legt 400 m in 80 s zurück. Wie gross ist ihre Durchschnittsgeschwindigkeit?
+2. Ein Velofahrer beschleunigt in 3 s von 2 m/s auf 8 m/s. Wie gross ist die Beschleunigung?
+3. Welche Kraft ist nötig, um eine Kiste mit 50 kg mit $2\,\text{m/s}^2$ zu beschleunigen?
+4. Ein Buch mit 2 kg liegt auf einem Regal 1,5 m über dem Boden. Wie viel potenzielle Energie hat es gegenüber dem Boden?
+5. Wie gross ist die kinetische Energie eines Balls mit 0,15 kg, der mit 30 m/s geworfen wird?
+6. Ein Apfel fällt ohne Luftwiderstand 20 m tief. Wie schnell ist er unten?
+
+<Fragment slot="answers">
+1. $v = \dfrac{400\,\text{m}}{80\,\text{s}} = 5\,\text{m/s}$
+2. $a = \dfrac{8\,\text{m/s} - 2\,\text{m/s}}{3\,\text{s}} = 2\,\text{m/s}^2$
+3. $F = 50\,\text{kg} \cdot 2\,\text{m/s}^2 = 100\,\text{N}$
+4. $E_\text{pot} = 2 \cdot 9{,}81 \cdot 1{,}5 \approx 29{,}4\,\text{J}$
+5. $E_\text{kin} = \tfrac{1}{2} \cdot 0{,}15 \cdot 30^2 = 67{,}5\,\text{J}$
+6. $v = \sqrt{2 \cdot 9{,}81 \cdot 20} = \sqrt{392{,}4} \approx 19{,}8\,\text{m/s}$
+</Fragment>
+</Exercise>
+
+## Fazit
+
+Mit wenigen Ideen lässt sich bereits viel Alltagsphysik beschreiben. Geschwindigkeit und Beschleunigung beschreiben, *wie* sich Dinge bewegen; die drei newtonschen Gesetze erklären, *warum* sie sich so bewegen; und die Energie, die immer erhalten bleibt, verbindet alles. Einheiten sind bei jedem Schritt wichtig: Schreib sie in deinen Rechnungen mit, dann zeigen sie dir oft, wenn etwas nicht stimmt.
+
+## Weiterführende Literatur
+
+- *College Physics 2e* von OpenStax ist ein vollständiges, kostenloses Lehrbuch, das diese Themen vertieft (auf Englisch) [@openstax].
+- Die SI-Broschüre des BIPM ist die offizielle Referenz für Einheiten [@bipm2019].

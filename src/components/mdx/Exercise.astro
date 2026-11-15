@@ -1,0 +1,117 @@
+---
+// A practice box with hidden answers, usable in .mdx without importing:
+//
+//   <Exercise>
+//   1. A question…
+//
+//   <Fragment slot="answers">
+//   1. The answer…
+//   </Fragment>
+//   </Exercise>
+//
+// The labels follow the language of the page (English under /en/).
+import { useTranslations } from '../../i18n/ui';
+
+interface Props {
+  title?: string;
+}
+
+const t = useTranslations(Astro.url.pathname.startsWith('/en/') ? 'en' : 'de');
+const { title = t.article.exercises } = Astro.props;
+const answersLabel = t.article.solutions;
+const hasAnswers = Astro.slots.has('answers');
+---
+
+<section class="exercise">
+  <p class="exercise-title">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 2.5h7.5L13 5v8.5H3z M10.5 2.5V5H13 M5.5 8h5M5.5 10.5h3.5" stroke-linejoin="round" stroke-linecap="round"></path></svg>
+    {title}
+  </p>
+  <div class="exercise-body"><slot /></div>
+  {
+    hasAnswers && (
+      <details class="answers">
+        <summary>{answersLabel}</summary>
+        <div class="answers-body">
+          <slot name="answers" />
+        </div>
+      </details>
+    )
+  }
+</section>
+
+<style>
+  .exercise {
+    margin-block: 2em;
+    padding: 1.25em 1.4em;
+    border-radius: var(--r-m);
+    border: 1px solid rgb(182 243 106 / 0.28);
+    background: rgb(182 243 106 / 0.035);
+  }
+
+  .exercise-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.75em;
+    font-family: var(--font-mono);
+    font-size: 0.7em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lime);
+  }
+
+  .exercise-title svg {
+    width: 1.1em;
+    height: 1.1em;
+  }
+
+  .exercise-body > :global(* + *),
+  .answers-body > :global(* + *) {
+    margin-top: 0.75em;
+  }
+
+  .answers {
+    margin-top: 1.25em;
+    border-top: 1px dashed var(--line-strong);
+    padding-top: 1em;
+  }
+
+  summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.35em 0.9em;
+    border-radius: var(--pill);
+    border: 1px solid var(--line-strong);
+    font-family: var(--font-body);
+    font-size: 0.75em;
+    font-weight: 560;
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+    transition: border-color 0.3s var(--ease);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::before {
+    content: '+';
+    font-family: var(--font-mono);
+    color: var(--lime);
+  }
+
+  .answers[open] summary::before {
+    content: '−';
+  }
+
+  summary:hover {
+    border-color: var(--lime);
+  }
+
+  .answers-body {
+    margin-top: 1em;
+  }
+</style>

@@ -1,0 +1,155 @@
+---
+title: 'What Is Artificial Intelligence?'
+description: 'A clear introduction to AI: what it is, how machine learning works, the three main ways machines learn, neural networks, everyday uses and important limitations.'
+date: 2026-11-15
+lang: en
+type: explanation
+subjects: [artificial-intelligence, computer-science]
+tags: [AI, machine learning, neural networks, deep learning]
+difficulty: beginner
+draft: true
+aiAssisted: true
+translationKey: artificial-intelligence
+references:
+  - id: dartmouth1955
+    authors: 'McCarthy, J., Minsky, M. L., Rochester, N., & Shannon, C. E.'
+    year: 1955
+    title: 'A Proposal for the Dartmouth Summer Research Project on Artificial Intelligence'
+    url: 'http://jmc.stanford.edu/articles/dartmouth/dartmouth.pdf'
+  - id: russell2020
+    authors: 'Russell, S., & Norvig, P.'
+    year: 2020
+    title: 'Artificial Intelligence: A Modern Approach'
+    source: '4th edition, Pearson'
+    url: 'https://aima.cs.berkeley.edu/'
+  - id: google-mlcc
+    authors: 'Google for Developers'
+    year: 'n.d.'
+    title: 'Machine Learning Crash Course'
+    url: 'https://developers.google.com/machine-learning/crash-course'
+  - id: sutton2018
+    authors: 'Sutton, R. S., & Barto, A. G.'
+    year: 2018
+    title: 'Reinforcement Learning: An Introduction'
+    source: '2nd edition, MIT Press'
+    url: 'http://incompleteideas.net/book/the-book-2nd.html'
+  - id: goodfellow2016
+    authors: 'Goodfellow, I., Bengio, Y., & Courville, A.'
+    year: 2016
+    title: 'Deep Learning'
+    source: 'MIT Press'
+    url: 'https://www.deeplearningbook.org/'
+  - id: ibm-ai
+    authors: 'IBM'
+    year: 'n.d.'
+    title: 'What is artificial intelligence (AI)?'
+    source: 'IBM Think'
+    url: 'https://www.ibm.com/think/topics/artificial-intelligence'
+---
+
+Artificial intelligence is everywhere at the moment: in the news, in apps and in conversations about the future of work. The term is used for many different things, from chatbots to self-driving cars. This article explains what AI actually means, how most modern AI systems learn, and what they can and can't do.
+
+## What is AI?
+
+**Artificial intelligence (AI)** is the field of computer science that builds systems able to perform tasks we normally associate with human intelligence: recognising images, understanding language, making predictions or decisions, and learning from experience [@ibm-ai].
+
+The term itself is older than most people expect. It was introduced in a 1955 proposal for a research workshop held at Dartmouth College in 1956, which suggested studying how to make machines "use language, form abstractions and concepts" and "improve themselves" [@dartmouth1955].
+
+It helps to separate two ideas:
+
+- **Narrow AI** is designed for specific tasks, such as translating text or recommending songs. All AI systems in use today are narrow in this sense, even if some can handle a wide range of tasks.
+- **General AI** (often called AGI) would be a system with flexible, human-level intelligence across almost any task. It doesn't exist yet, and researchers disagree about if and when it might.
+
+## How do AI systems work?
+
+There are two broad ways to make a computer behave intelligently.
+
+The first is to **write the rules by hand**. A simple chess program might contain rules such as "a bishop moves diagonally" plus instructions for evaluating positions. This works well when the rules are clear, but many real problems are too complicated to describe with rules. Try writing exact rules for recognising a cat in a photo.
+
+The second is to let the computer **learn the rules from examples**. This is called **machine learning**, and it's the approach behind most of today's AI [@russell2020].
+
+## Machine learning
+
+In machine learning, a program is given **data** and a goal, and it adjusts an internal model until it reaches that goal as well as possible. The result is a **model**: a mathematical function that takes an input (for example an email) and produces an output (for example "spam" or "not spam") [@google-mlcc].
+
+Learning typically happens in two phases:
+
+1. **Training:** the model sees many examples and gradually adjusts its internal settings, called **parameters**, to make fewer mistakes.
+2. **Inference:** the trained model is used on new data it has never seen before.
+
+There are three main ways a model can learn.
+
+### Supervised learning
+
+In **supervised learning**, every training example comes with the correct answer, called a **label**. The model learns the connection between inputs and labels.
+
+*Example:* a spam filter is trained on thousands of emails, each labelled as "spam" or "not spam". Afterwards, it can classify new emails on its own. Predicting house prices from size and location is another example; here the label is a number instead of a category.
+
+### Unsupervised learning
+
+In **unsupervised learning**, the data has **no labels**. The model looks for structure by itself, for example groups of similar items.
+
+*Example:* an online shop groups customers by their buying behaviour without being told in advance which groups exist. The shop can then discover that there is, say, a group of customers who mainly buy books on weekends.
+
+### Reinforcement learning
+
+In **reinforcement learning**, an **agent** learns by trial and error. It takes actions in an environment and receives **rewards** or penalties. Over time, it learns which actions lead to the highest total reward [@sutton2018].
+
+*Example:* a program learns to play a video game. At first it presses buttons randomly; points act as the reward. After many games, it discovers strategies that score well. Reinforcement learning is also used in robotics and was a key part of DeepMind's AlphaGo, which beat professional Go player Lee Sedol in 2016.
+
+| Type of learning | Data | Goal | Example |
+| --- | --- | --- | --- |
+| Supervised | Examples with correct answers | Predict the answer for new examples | Spam filter |
+| Unsupervised | Examples without answers | Find structure or groups | Customer groups |
+| Reinforcement | Rewards from an environment | Learn the best actions | Game-playing agent |
+
+## Neural networks
+
+Many modern AI systems use **artificial neural networks**, which are loosely inspired by the brain. A network is made of simple units called **neurons**, arranged in **layers** [@goodfellow2016].
+
+Each artificial neuron does a small calculation. It takes several input numbers, multiplies each by a **weight**, adds them up together with a **bias**, and passes the result through an **activation function** $f$:
+
+$$
+y = f(w_1 x_1 + w_2 x_2 + \dots + w_n x_n + b)
+$$
+
+The weights decide how important each input is. On its own, one neuron can do very little. But when thousands or billions of them are connected in many layers, the network can represent very complex patterns, such as the shapes that make up a face or the structure of a sentence. Networks with many layers are called **deep** neural networks, and the field is known as **deep learning**.
+
+During training, the network makes a prediction, measures how wrong it is, and adjusts all its weights a tiny bit to reduce the error. This is repeated millions of times. The weights are the parameters the network learns.
+
+<Callout type="note" title="How do chatbots fit in?">
+  Chatbots such as ChatGPT are based on **large language models**. These are very large neural networks trained on huge amounts of text to predict which word (or part of a word) is likely to come next. With further training, this simple goal leads to models that can answer questions, summarise texts and write code.
+</Callout>
+
+## AI in everyday life
+
+You probably use AI several times a day without noticing:
+
+- **Recommendations** for videos, music and products.
+- **Spam filters** and sorting in your email inbox.
+- **Navigation apps** that predict traffic and arrival times.
+- **Translation** and **speech recognition**, for example voice assistants.
+- **Photo apps** that recognise faces or improve images.
+- **Chatbots and writing assistants.**
+- **Medicine**, where AI helps analyse images such as X-rays, alongside doctors.
+
+## Limitations of AI
+
+AI is powerful, but it has important limits that are worth understanding:
+
+- **It depends on data.** A model can only be as good as the data it learned from. If the data is incomplete or biased, the model's results will be too. A hiring tool trained on biased past decisions can repeat that bias.
+- **It can be confidently wrong.** Language models can produce text that sounds convincing but is false. This is often called **hallucination**, which is why important information should always be checked.
+- **It doesn't understand the world like we do.** Models find statistical patterns. Whether that counts as "understanding" is debated, but they can fail in situations that are obvious to humans.
+- **It's hard to explain.** Large neural networks have millions or billions of parameters. It is often difficult to say exactly why a model made a particular decision.
+- **It has costs.** Training large models needs a lot of computing power and energy, and collecting data raises questions about privacy and copyright.
+
+## Conclusion
+
+AI is not magic and not a single technology. Most of today's AI is machine learning: models that learn patterns from data, either from labelled examples, from unlabelled data or from rewards. Neural networks made huge progress possible, especially in language and images. At the same time, AI systems depend on their data, can make confident mistakes, and need human judgement around them. Understanding these basics makes it much easier to use AI tools sensibly and to follow discussions about them.
+
+## Further reading
+
+- Google's free Machine Learning Crash Course is a practical next step [@google-mlcc].
+- *Artificial Intelligence: A Modern Approach* is the standard university textbook [@russell2020].
+- *Deep Learning* by Goodfellow, Bengio and Courville is available to read online [@goodfellow2016].
+- Sutton and Barto's book is the classic introduction to reinforcement learning, also free online [@sutton2018].

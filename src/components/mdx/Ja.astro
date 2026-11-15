@@ -1,0 +1,17 @@
+---
+// Japanese text inside an article, e.g. <Ja>日本語</Ja>.
+// The lang attribute makes browsers pick Japanese glyph shapes and lets
+// screen readers switch voice; Han characters look different in Chinese.
+---
+
+<span class="cjk" lang="ja"><slot /></span>
+
+<style>
+  .cjk {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Noto Sans CJK JP', 'Yu Gothic', 'Meiryo', sans-serif;
+    font-size: 1.05em;
+    letter-spacing: 0.02em;
+    /* Keep short words like ひらがな together in narrow table cells. */
+    word-break: keep-all;
+  }
+</style>

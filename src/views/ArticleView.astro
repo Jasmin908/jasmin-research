@@ -7,11 +7,16 @@ import Arrow from '../components/Arrow.astro';
 import PublicationCard from '../components/PublicationCard.astro';
 import Callout from '../components/mdx/Callout.astro';
 import Figure from '../components/mdx/Figure.astro';
+import Exercise from '../components/mdx/Exercise.astro';
+import FrameworkVsLibrary from '../components/mdx/FrameworkVsLibrary.astro';
+import KanaChart from '../components/mdx/KanaChart.astro';
+import Zh from '../components/mdx/Zh.astro';
+import Ja from '../components/mdx/Ja.astro';
 import { formatDate, localeCodes, locales, sectionPath, topicPath, type Locale } from '../i18n/config';
 import { fill, useTranslations } from '../i18n/ui';
 import { site } from '../data/site';
 import { subjects } from '../data/subjects';
-import { publicationTypes } from '../data/types';
+import { difficulties, publicationTypes } from '../data/types';
 import { forLocale, readingTime, relatedTo, translationsOf, urlOf, type Publication } from '../lib/publications';
 
 interface Props {
@@ -99,6 +104,7 @@ const schema = {
         {data.updated && <div><dt>{t.article.updated}</dt><dd><time datetime={data.updated.toISOString()}>{formatDate(data.updated, locale)}</time></dd></div>}
         <div><dt>{t.article.readingTime}</dt><dd>{fill(t.article.minutes, { n: minutes })}</dd></div>
         <div><dt>{t.article.language}</dt><dd>{locales[locale].name}</dd></div>
+        {data.difficulty && <div><dt>{t.article.difficulty}</dt><dd>{difficulties[data.difficulty][locale]}</dd></div>}
       </dl>
 
       {
@@ -117,6 +123,12 @@ const schema = {
               </a>
             ))}
           </div>
+        )
+      }
+
+      {
+        data.draft && (
+          <p class="example draft" role="note">{t.article.draft}</p>
         )
       }
 
@@ -161,8 +173,17 @@ const schema = {
 
       <div class="body">
         <div class="prose" data-prose>
-          <Content components={{ Callout, Figure }} />
+          <Content components={{ Callout, Figure, Exercise, FrameworkVsLibrary, KanaChart, Zh, Ja }} />
         </div>
+
+        {
+          data.aiAssisted && (
+            <aside class="ai-note" aria-labelledby="ai-note-title">
+              <h2 id="ai-note-title">{t.article.aiTitle}</h2>
+              <p>{t.article.ai}</p>
+            </aside>
+          )
+        }
 
         {
           data.references.length > 0 && (
@@ -367,6 +388,36 @@ const schema = {
     border-radius: var(--r-s);
     border: 1px dashed rgb(182 243 106 / 0.35);
     background: rgb(182 243 106 / 0.04);
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  /* Only ever rendered in `astro dev`: drafts are left out of the build. */
+  .draft {
+    border-color: rgb(251 191 36 / 0.45);
+    background: rgb(251 191 36 / 0.06);
+    color: #fcd34d;
+  }
+
+  .ai-note {
+    margin-top: 3rem;
+    padding: 1.1rem 1.3rem;
+    border-radius: var(--r-m);
+    border: 1px dashed var(--line-strong);
+    background: rgb(139 92 246 / 0.06);
+  }
+
+  .ai-note h2 {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--violet-soft);
+  }
+
+  .ai-note p {
+    margin-top: 0.5rem;
     font-size: 0.9375rem;
     color: var(--muted);
   }

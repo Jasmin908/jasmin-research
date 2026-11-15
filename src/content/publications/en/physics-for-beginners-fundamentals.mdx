@@ -1,0 +1,210 @@
+---
+title: 'Physics for Beginners: The Fundamentals'
+description: 'Physical quantities and SI units, motion, speed and acceleration, forces and Newton’s three laws, kinetic and potential energy, and conservation of energy, with worked examples and exercises.'
+date: 2026-11-15
+lang: en
+type: guide
+subjects: [physics]
+tags: [mechanics, SI units, Newton's laws, energy]
+difficulty: beginner
+draft: true
+aiAssisted: true
+translationKey: physics-fundamentals
+references:
+  - id: bipm2019
+    authors: 'Bureau International des Poids et Mesures (BIPM)'
+    year: 2019
+    title: 'The International System of Units (SI Brochure)'
+    source: '9th edition'
+    url: 'https://www.bipm.org/en/publications/si-brochure'
+  - id: openstax
+    authors: 'Urone, P. P., & Hinrichs, R.'
+    year: 2022
+    title: 'College Physics 2e'
+    source: 'OpenStax, Rice University'
+    url: 'https://openstax.org/details/books/college-physics-2e'
+  - id: nist-gn
+    authors: 'National Institute of Standards and Technology (NIST)'
+    year: 'n.d.'
+    title: 'CODATA value: standard acceleration of gravity'
+    url: 'https://physics.nist.gov/cgi-bin/cuu/Value?gn'
+---
+
+Physics tries to describe how the world works with a small number of precise ideas. Many of the most important ones are about **motion** and **energy**: why things speed up, why they fall, and why energy never simply disappears. This guide introduces these fundamentals step by step, with formulas, worked examples and exercises. You only need basic algebra.
+
+## Physical quantities and SI units
+
+A **physical quantity** is something you can measure, such as length, time or mass. Every quantity has a **value** and a **unit**: in "5 m", the value is 5 and the unit is metres.
+
+To avoid confusion, scientists worldwide use the **International System of Units (SI)**. It defines seven base units, from which all others are built [@bipm2019]:
+
+| Quantity | Unit | Symbol |
+| --- | --- | --- |
+| Time | second | s |
+| Length | metre | m |
+| Mass | kilogram | kg |
+| Electric current | ampere | A |
+| Temperature | kelvin | K |
+| Amount of substance | mole | mol |
+| Luminous intensity | candela | cd |
+
+Other units are combinations of these. Speed, for example, is measured in metres per second (m/s), and force in newtons, where $1\,\text{N} = 1\,\text{kg}\cdot\text{m/s}^2$.
+
+<Callout type="note" title="Converting km/h to m/s">
+  Everyday speeds are often given in km/h. Since 1 km = 1000 m and 1 h = 3600 s, divide by 3.6 to get m/s: $90\,\text{km/h} = 90 / 3.6 = 25\,\text{m/s}$.
+</Callout>
+
+## Motion: speed and velocity
+
+**Speed** tells you how far something travels in a certain time. The **average speed** is the distance $d$ divided by the time $t$:
+
+$$
+v = \frac{d}{t}
+$$
+
+**Velocity** is speed *with a direction*, for example "20 m/s to the north". In everyday language the two words are often used the same way, but in physics the direction matters: a car driving around a roundabout at constant speed is changing its velocity, because its direction changes.
+
+**Worked example.** A train travels 150 km in 2 hours. What is its average speed?
+
+$$
+v = \frac{150\,\text{km}}{2\,\text{h}} = 75\,\text{km/h} \approx 20.8\,\text{m/s}
+$$
+
+## Acceleration
+
+**Acceleration** describes how quickly velocity changes. If the velocity changes by $\Delta v$ (read "delta v", meaning "change in v") during the time $\Delta t$, the average acceleration is:
+
+$$
+a = \frac{\Delta v}{\Delta t} = \frac{v_\text{end} - v_\text{start}}{\Delta t}
+$$
+
+Its unit is metres per second per second, written $\text{m/s}^2$. An acceleration of $3\,\text{m/s}^2$ means the velocity increases by 3 m/s every second. If something slows down, its acceleration is negative.
+
+**Worked example.** A car speeds up from 0 to 27 m/s (about 97 km/h) in 9 seconds.
+
+$$
+a = \frac{27\,\text{m/s} - 0\,\text{m/s}}{9\,\text{s}} = 3\,\text{m/s}^2
+$$
+
+## Forces and Newton’s three laws
+
+A **force** is a push or a pull. Forces have a size and a direction and are measured in **newtons (N)**. Isaac Newton described how forces and motion are related in three laws, published in 1687 [@openstax].
+
+### Newton’s first law: inertia
+
+> An object stays at rest, or keeps moving in a straight line at constant speed, unless a net force acts on it.
+
+This tendency to keep doing what it's already doing is called **inertia**. When a bus brakes suddenly, your body keeps moving forwards: that's inertia. A ball rolling on the ground eventually stops not because motion "runs out", but because friction acts on it.
+
+### Newton’s second law: force and acceleration
+
+> The net force on an object equals its mass times its acceleration.
+
+$$
+F = m \cdot a
+$$
+
+The more force you apply, the more an object accelerates. The more mass it has, the harder it is to accelerate. This is why pushing an empty shopping trolley is easier than pushing a full one.
+
+**Worked example.** What force is needed to give a car of mass 1200 kg the acceleration from the example above, $3\,\text{m/s}^2$?
+
+$$
+F = 1200\,\text{kg} \cdot 3\,\text{m/s}^2 = 3600\,\text{N}
+$$
+
+A special case is **weight**, the force of gravity on a mass. Near the Earth's surface, objects fall with an acceleration of about $g \approx 9.81\,\text{m/s}^2$ (the standard value is defined as exactly $9.80665\,\text{m/s}^2$ [@nist-gn]). The weight of a mass $m$ is therefore:
+
+$$
+F_\text{G} = m \cdot g
+$$
+
+A 60 kg person has a weight of about $60 \cdot 9.81 \approx 589\,\text{N}$. Note the difference: **mass** (kg) is the amount of matter and is the same everywhere; **weight** (N) is a force and would be smaller on the Moon.
+
+### Newton’s third law: action and reaction
+
+> When one object exerts a force on a second object, the second object exerts an equal and opposite force on the first.
+
+When you push against a wall, the wall pushes back on you just as hard. A rocket pushes gas out backwards, and the gas pushes the rocket forwards. The two forces always act on *different* objects, which is why they don't cancel each other out.
+
+## Energy
+
+**Energy** is the ability to do work or cause change. It is measured in **joules (J)**. Energy comes in many forms; two of the most important in mechanics are kinetic and potential energy.
+
+### Kinetic energy
+
+**Kinetic energy** is the energy of motion:
+
+$$
+E_\text{k} = \frac{1}{2} m v^2
+$$
+
+Because the speed is squared, doubling the speed means *four times* the kinetic energy. This is one reason why braking distances grow so quickly at higher speeds.
+
+**Worked example.** A car with a mass of 1000 kg drives at 20 m/s (72 km/h):
+
+$$
+E_\text{k} = \frac{1}{2} \cdot 1000\,\text{kg} \cdot (20\,\text{m/s})^2 = 200\,000\,\text{J} = 200\,\text{kJ}
+$$
+
+### Gravitational potential energy
+
+**Gravitational potential energy** is energy stored because of an object's height above a reference level, for example the floor:
+
+$$
+E_\text{p} = m \cdot g \cdot h
+$$
+
+Lifting a 5 kg bag of flour onto a 2 m high shelf stores $5 \cdot 9.81 \cdot 2 \approx 98\,\text{J}$ of potential energy.
+
+## Conservation of energy
+
+One of the most important principles in all of physics is the **conservation of energy**: energy cannot be created or destroyed, only converted from one form into another [@openstax].
+
+A falling ball is a good example. At the top, it has potential energy. As it falls, the potential energy becomes kinetic energy. If we ignore air resistance, the total stays the same:
+
+$$
+m g h = \frac{1}{2} m v^2
+$$
+
+The mass cancels out, so the speed after falling a height $h$ is:
+
+$$
+v = \sqrt{2 g h}
+$$
+
+**Worked example.** A ball is dropped from a height of 5 m. How fast is it just before it hits the ground?
+
+$$
+v = \sqrt{2 \cdot 9.81\,\text{m/s}^2 \cdot 5\,\text{m}} = \sqrt{98.1\,\text{m}^2/\text{s}^2} \approx 9.9\,\text{m/s}
+$$
+
+In real life, some energy is converted into heat and sound by air resistance and the impact, so the ball doesn't bounce back to its original height. The energy hasn't vanished; it has changed form.
+
+<Exercise>
+Use $g = 9.81\,\text{m/s}^2$ where needed.
+
+1. A runner completes 400 m in 80 s. What is her average speed?
+2. A cyclist speeds up from 2 m/s to 8 m/s in 3 s. What is the acceleration?
+3. What force is needed to accelerate a 50 kg box at $2\,\text{m/s}^2$?
+4. A 2 kg book lies on a shelf 1.5 m above the floor. How much potential energy does it have relative to the floor?
+5. What is the kinetic energy of a 0.15 kg ball thrown at 30 m/s?
+6. An apple falls 20 m without air resistance. How fast is it at the bottom?
+
+<Fragment slot="answers">
+1. $v = \dfrac{400\,\text{m}}{80\,\text{s}} = 5\,\text{m/s}$
+2. $a = \dfrac{8\,\text{m/s} - 2\,\text{m/s}}{3\,\text{s}} = 2\,\text{m/s}^2$
+3. $F = 50\,\text{kg} \cdot 2\,\text{m/s}^2 = 100\,\text{N}$
+4. $E_\text{p} = 2 \cdot 9.81 \cdot 1.5 \approx 29.4\,\text{J}$
+5. $E_\text{k} = \tfrac{1}{2} \cdot 0.15 \cdot 30^2 = 67.5\,\text{J}$
+6. $v = \sqrt{2 \cdot 9.81 \cdot 20} = \sqrt{392.4} \approx 19.8\,\text{m/s}$
+</Fragment>
+</Exercise>
+
+## Conclusion
+
+With a handful of ideas you can already describe a lot of everyday physics. Speed and acceleration describe *how* things move; Newton's three laws explain *why* they move that way; and energy, which is always conserved, connects it all. Units matter at every step: write them down in your calculations, and they'll often show you when something has gone wrong.
+
+## Further reading
+
+- *College Physics 2e* by OpenStax is a complete, free textbook that covers these topics in more depth [@openstax].
+- The SI Brochure from the BIPM is the official reference for units [@bipm2019].
