@@ -17,6 +17,7 @@ import GitWorkflow from '../components/mdx/GitWorkflow.astro';
 import BranchMerge from '../components/mdx/BranchMerge.astro';
 import RequestFlow from '../components/mdx/RequestFlow.astro';
 import DeployPipeline from '../components/mdx/DeployPipeline.astro';
+import DnsRecords from '../components/mdx/DnsRecords.astro';
 import { formatDate, localeCodes, locales, sectionPath, topicPath, type Locale } from '../i18n/config';
 import { fill, useTranslations } from '../i18n/ui';
 import { site } from '../data/site';
@@ -169,7 +170,7 @@ const schema = {
 
       <div class="body">
         <div class="prose" data-prose>
-          <Content components={{ Callout, Figure, Exercise, FrameworkVsLibrary, KanaChart, Zh, Ja, Screenshot, GitWorkflow, BranchMerge, RequestFlow, DeployPipeline }} />
+          <Content components={{ Callout, Figure, Exercise, FrameworkVsLibrary, KanaChart, Zh, Ja, Screenshot, GitWorkflow, BranchMerge, RequestFlow, DeployPipeline, DnsRecords }} />
         </div>
 
         {

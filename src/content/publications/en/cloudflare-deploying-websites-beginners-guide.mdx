@@ -88,7 +88,7 @@ You've built a website on your computer, and now you want other people to see it
 It's written for complete beginners. If Git and GitHub are new to you, read the companion guide *GitHub: A Beginner's Guide to Git and Version Control* first, because the tutorial here starts from a GitHub repository.
 
 <Callout type="note" title="Last verified: 16 November 2026">
-  The steps in this guide were checked against Cloudflare's official documentation on 16 November 2026. Cloudflare updates its dashboard regularly, so a button may have moved or been renamed by the time you read this. If something looks different, the linked documentation shows the current path.
+  The steps in this guide were checked against Cloudflare's official documentation and the live dashboard on 16 November 2026. Cloudflare updates its dashboard regularly, so a button may have moved or been renamed by the time you read this. If something looks different, the linked documentation shows the current path.
 </Callout>
 
 ## What happens when you open a website?
@@ -203,20 +203,18 @@ git push
 
 1. Sign in to the Cloudflare dashboard and open **Workers & Pages**.
 2. Select **Create application**.
-3. Choose **GitHub** as the Git provider [@cf-builds].
+3. Choose **Continue with GitHub** [@cf-builds].
 
 <Screenshot
   name="cloudflare-workers-overview"
-  alt="The Workers & Pages overview in the Cloudflare dashboard, with the Create application button and a list of existing projects."
-  caption="The Workers & Pages overview. All your Workers and Pages projects are listed here; Create application starts a new one."
-  capture="dash.cloudflare.com → Workers & Pages, in a practice account (or with real project names and the account name blurred). Window about 1280 × 800. Make sure the account ID and email address are not visible."
+  alt="The Workers & Pages overview in the Cloudflare dashboard with the Create application button and two projects: the Worker jasmin-research and the Pages project jasmin-loeffel, each with its address, connected GitHub repository and latest commit."
+  caption="The Workers & Pages overview, here with the projects behind this website. Each entry shows its address, the connected GitHub repository and the latest commit. The icons tell the two products apart: jasmin-research is a Worker, jasmin-loeffel a Pages project. Create application starts a new one."
 />
 
 <Screenshot
   name="cloudflare-create-application"
-  alt="The Create application page in the Cloudflare dashboard with options to import a repository from GitHub or GitLab."
-  caption="Creating an application. Choose GitHub to import an existing repository; Cloudflare will then build and deploy it automatically."
-  capture="Workers & Pages → Create application, showing the Git provider options. Window about 1280 × 800. No personal data should be visible."
+  alt="The Create an app page in the Cloudflare dashboard with the options Continue with GitHub, Connect with GitLab, Start with Hello World!, Select a template and Upload your static files, and below them a link to the legacy Pages workflow."
+  caption="Creating an application. Continue with GitHub imports an existing repository. Notice the line at the bottom: Cloudflare now calls Pages the legacy workflow."
 />
 
 The first time, Cloudflare sends you to GitHub. Two separate things happen there, and it's worth knowing the difference [@cf-github]:
@@ -224,14 +222,13 @@ The first time, Cloudflare sends you to GitHub. Two separate things happen there
 - **Install** the *Cloudflare Workers & Pages* app on your GitHub account. This decides **which repositories** Cloudflare can access. Choose **Only select repositories** and pick `my-first-website` instead of giving access to everything.
 - **Authorize** the app. This tells Cloudflare **who you are** on GitHub. Each person does it once.
 
+You can review or change this access at any time on GitHub under **Settings > Applications**, by selecting **Configure** next to *Cloudflare Workers and Pages*:
+
 <Screenshot
   name="cloudflare-github-authorize"
-  alt="GitHub’s page for installing the Cloudflare Workers & Pages app, with the option Only select repositories chosen and the repository my-first-website selected."
-  caption="Installing the Cloudflare app on GitHub. Choosing Only select repositories limits Cloudflare to the repositories you actually want to deploy."
-  capture="The GitHub install screen for the Cloudflare Workers & Pages app, reached from the Cloudflare dashboard, using a practice GitHub account with only my-first-website selected. Window about 1280 × 900. Crop out the GitHub account avatar and name if personal."
+  alt="The settings of the installed Cloudflare Workers and Pages app on GitHub: under Permissions, read access to metadata and read and write access to administration, checks, code, deployments and pull requests; under Repository access, the options All repositories (selected) and Only select repositories."
+  caption="The installed Cloudflare app on GitHub. Permissions shows what the app may do, Repository access which repositories it may use. This account gives it access to all repositories; for a new setup, Only select repositories is the safer choice."
 />
-
-You can review or remove this access later on GitHub under **Settings > Applications**.
 
 ## Step 3: Configure the build and deploy
 
@@ -244,14 +241,15 @@ Back in Cloudflare, select your repository and fill in the settings:
 | **Deploy command** | `npx wrangler deploy` | The default. Uploads the result and makes it live. |
 | **Root directory** | (empty) | Only needed if the website is in a subfolder of the repository. |
 
+Select **Save and Deploy**. Cloudflare now copies your repository, installs the packages, runs the build command and then the deploy command.
+
+You'll find the same settings again later on every build page of your Worker. Here they are for the Worker behind this website:
+
 <Screenshot
   name="cloudflare-build-settings"
-  alt="The Cloudflare project configuration form with the project name my-first-website, the build command npm run build and the deploy command npx wrangler deploy."
-  caption="The build settings. Notice that the project name matches the name in wrangler.jsonc; if they differ, the build fails."
-  capture="The configuration step after choosing the my-first-website repository, with the values from the table filled in, just before Save and Deploy. Window about 1280 × 1000."
+  alt="The details of a successful build of the Worker jasmin-research in Cloudflare: branch main, the connected repository and the build settings with build command npm run build, deploy command npx wrangler deploy, root directory /, the name of the build token and no build variables."
+  caption="The build settings on a build page: the same fields you fill in when creating the project. The build token is only listed by its name; the token itself is never shown."
 />
-
-Select **Save and Deploy**. Cloudflare now copies your repository, installs the packages, runs the build command and then the deploy command.
 
 ## Step 4: Watch the build and open your site
 
@@ -259,9 +257,8 @@ The build log shows each step as it runs. A typical first build takes a minute o
 
 <Screenshot
   name="cloudflare-build-log"
-  alt="A successful build in the Cloudflare dashboard, with the build log showing the steps cloning the repository, installing packages, building and deploying, and a green success status."
-  caption="A successful build. If something goes wrong, the log shows the exact error; the last lines before the failure are usually the most helpful."
-  capture="The build details of the first successful deployment of my-first-website, with the log expanded. Window about 1280 × 1000. No API tokens or account IDs may be visible in the log."
+  alt="The steps of a successful build in Cloudflare, Initializing, Cloning, Installing, Building and Deploying, each with a green tick and its duration, and below them the first lines of the build log."
+  caption="A successful build: all five steps have a green tick. Below them is the log. If something goes wrong, it shows the exact error, and the last lines before the failure are usually the most helpful."
 />
 
 When it's finished, your site is online at an address like:
@@ -270,7 +267,7 @@ When it's finished, your site is online at an address like:
 https://my-first-website.your-subdomain.workers.dev
 ```
 
-`your-subdomain` is chosen once for your Cloudflare account. You'll find the exact address on the Worker's overview page.
+`your-subdomain` is chosen once for your Cloudflare account. You'll find the exact address on the Worker's overview page and in its **Domains** tab.
 
 ## Automatic deployments
 
@@ -287,16 +284,15 @@ Your site is now connected to GitHub. From here on, you don't need to do anythin
 
 ### Seeing and undoing deployments
 
-The **Deployments** tab of your Worker lists the active version and earlier ones, together with the commit that produced them. The build history is at the bottom of that page.
+The **Deployments** tab of your Worker lists the active version and earlier ones, together with the commit that produced them. **Build** next to a version opens its build log.
 
 <Screenshot
   name="cloudflare-deployments"
-  alt="The Deployments tab of a Worker in the Cloudflare dashboard, showing the active deployment at the top and a list of earlier versions, each with its commit message and date."
-  caption="The Deployments tab. Each version is linked to a commit, so you can see exactly which change is live and roll back to an earlier version if needed."
-  capture="Deployments tab of my-first-website after at least three pushes, so that several versions are listed. Window about 1280 × 900."
+  alt="The Deployments tab of the Worker jasmin-research in Cloudflare: the active deployment with its version ID at the top, and below it five versions, each with commit message, status Ready, source (Build or Dashboard), branch, author and time, and a three-dot icon on the right."
+  caption="The Deployments tab of this website’s Worker. Each version shows the commit it was built from; versions marked Dashboard were uploaded by hand instead of being built from GitHub. The three-dot icon on the right of a version leads to Rollback."
 />
 
-If a new version has a problem, you can **roll back** to an earlier version from this page. A rollback makes the selected older version live again; it doesn't change your GitHub repository [@cf-rollbacks]. Fix the problem in your code afterwards and push again.
+If a new version has a problem, select the three-dot icon on the right of an earlier version and choose **Rollback**. A rollback makes the selected older version live again; it doesn't change your GitHub repository [@cf-rollbacks]. Fix the problem in your code afterwards and push again.
 
 ## Adding a custom domain
 
@@ -309,26 +305,20 @@ For a Custom Domain, Cloudflare needs to manage the domain's DNS: the domain mus
 - If you **buy the domain from Cloudflare**, this is already done.
 - If the domain is with **another registrar**, add it in the Cloudflare dashboard. Cloudflare shows you two nameservers. Log in at your registrar and replace its nameservers with Cloudflare's. If DNSSEC is turned on at the registrar, turn it off first; you can turn it on again through Cloudflare later [@cf-dns-setup].
 
-The change can take **up to 24 hours**. When it's done, the domain shows as **Active** in Cloudflare and you receive an email.
+The change can take **up to 24 hours**. When it's done, the domain shows as **Active** in Cloudflare and you receive an email. From then on, the domain's DNS records are managed in Cloudflare. This is what such records look like, and what the cloud icons next to them mean:
 
-<Screenshot
-  name="cloudflare-dns-records"
-  alt="The DNS records page of a domain in Cloudflare, listing records with their type, name, content and proxy status, one of them proxied with an orange cloud."
-  caption="The DNS records of a domain. The orange cloud means the record is proxied through Cloudflare; a grey cloud means DNS only."
-  capture="DNS → Records for a practice domain (or a real one with the IP addresses and any verification codes blurred). Window about 1280 × 800."
-/>
+<DnsRecords />
 
 ### Step 2: Connect the domain to your Worker
 
 1. Open **Workers & Pages** and select your Worker.
-2. Go to **Settings > Domains & Routes**, select **Add** and choose **Custom Domain**.
-3. Enter the domain, for example `example.com` or `www.example.com`, and confirm with **Add Custom Domain**.
+2. Open the **Domains** tab and select **Add Domain**. (In older versions of the dashboard, this was under **Settings > Domains & Routes**.)
+3. Search for your domain in the dialog, select it and confirm.
 
 <Screenshot
   name="cloudflare-custom-domain"
-  alt="The Domains & Routes section in a Worker’s settings in Cloudflare, with the dialog for adding a custom domain open and example.com entered."
-  caption="Adding a custom domain. Cloudflare creates the DNS record and the HTTPS certificate for you."
-  capture="Worker my-first-website → Settings → Domains & Routes → Add → Custom Domain, with a practice domain entered. Window about 1280 × 900."
+  alt="The Connect domain dialog in the Domains tab of a Worker in Cloudflare, with a search field for domains, the message No zones found and the buttons Cancel and Purchase Domain; behind it the empty list Custom Domains and Routes with the Add Domain button."
+  caption="Connecting a domain. The dialog only lists domains that are already in your Cloudflare account. This account has none yet, so it shows No zones found and offers to buy one; that’s why step 1 comes first."
 />
 
 Cloudflare creates the DNS record and the HTTPS certificate automatically [@cf-custom-domains]. After a few minutes, your site is available at your own domain, with the padlock in the address bar.

@@ -1,0 +1,301 @@
+---
+// Diagram: example DNS records (A, AAAA, CNAME) for example.com and the
+// difference between proxied (orange cloud) and DNS-only (grey cloud)
+// records. Original illustration, not a dashboard screenshot. Uses the
+// reserved documentation addresses 192.0.2.0/24 and 2001:db8::/32.
+// Labels follow the language of the page.
+const en = Astro.url.pathname.startsWith('/en/');
+
+const t = en
+  ? {
+      label: 'Diagram of example DNS records and of proxied versus DNS-only records',
+      heading: 'Example: DNS records for example.com',
+      cols: ['Type', 'Name', 'Points to', 'Proxy status'],
+      proxied: 'Proxied',
+      dnsOnly: 'DNS only',
+      notes: [
+        'The main address. A points to an IPv4 address.',
+        'The same name for IPv6. AAAA points to an IPv6 address.',
+        'An alias: www is another name for example.com.',
+        'An alias for an external service that must be reached directly.',
+      ],
+      proxiedTitle: 'Proxied (orange cloud)',
+      proxiedSteps: ['Visitor', 'Cloudflare: cache, protection, HTTPS', 'Your site'],
+      proxiedText: 'Visitors only see Cloudflare’s addresses. Your server’s real IP address stays hidden.',
+      dnsTitle: 'DNS only (grey cloud)',
+      dnsSteps: ['Visitor', 'Target server'],
+      dnsText: 'Cloudflare only answers the DNS question. Visitors connect directly, without caching or protection.',
+      caption:
+        'DNS records for an example domain. Each record has a type, a name and a target. The proxy status decides whether traffic goes through Cloudflare’s network or straight to the target.',
+    }
+  : {
+      label: 'Diagramm mit Beispiel-DNS-Einträgen und dem Unterschied zwischen proxied und DNS only',
+      heading: 'Beispiel: DNS-Einträge für example.com',
+      cols: ['Typ', 'Name', 'Zeigt auf', 'Proxy-Status'],
+      proxied: 'Proxied',
+      dnsOnly: 'DNS only',
+      notes: [
+        'Die Hauptadresse. A zeigt auf eine IPv4-Adresse.',
+        'Derselbe Name für IPv6. AAAA zeigt auf eine IPv6-Adresse.',
+        'Ein Alias: www ist ein anderer Name für example.com.',
+        'Ein Alias für einen externen Dienst, der direkt erreichbar sein muss.',
+      ],
+      proxiedTitle: 'Proxied (orange Wolke)',
+      proxiedSteps: ['Besucher', 'Cloudflare: Cache, Schutz, HTTPS', 'Deine Website'],
+      proxiedText: 'Besucherinnen und Besucher sehen nur Cloudflares Adressen. Die echte IP-Adresse deines Servers bleibt verborgen.',
+      dnsTitle: 'DNS only (graue Wolke)',
+      dnsSteps: ['Besucher', 'Zielserver'],
+      dnsText: 'Cloudflare beantwortet nur die DNS-Anfrage. Die Verbindung geht direkt zum Ziel, ohne Cache und Schutz.',
+      caption:
+        'DNS-Einträge einer Beispieldomain. Jeder Eintrag hat einen Typ, einen Namen und ein Ziel. Der Proxy-Status entscheidet, ob der Datenverkehr über Cloudflares Netzwerk läuft oder direkt zum Ziel.',
+    };
+
+const records = [
+  { type: 'A', name: 'example.com', target: '192.0.2.10', proxied: true },
+  { type: 'AAAA', name: 'example.com', target: '2001:db8::10', proxied: true },
+  { type: 'CNAME', name: 'www', target: 'example.com', proxied: true },
+  { type: 'CNAME', name: 'status', target: 'status.example.net', proxied: false },
+];
+---
+
+<figure class="dns" role="group" aria-label={t.label}>
+  <p class="dns-heading">{t.heading}</p>
+  <div class="records" role="table" aria-label={t.heading}>
+    <div class="row head" role="row">
+      {t.cols.map((c) => <span role="columnheader">{c}</span>)}
+    </div>
+    {
+      records.map((r, i) => (
+        <div class="row" role="row">
+          <span role="cell" class="type" data-label={t.cols[0]}><code>{r.type}</code></span>
+          <span role="cell" data-label={t.cols[1]}><code>{r.name}</code></span>
+          <span role="cell" data-label={t.cols[2]}><code>{r.target}</code></span>
+          <span role="cell" data-label={t.cols[3]} class:list={['proxy', r.proxied ? 'on' : 'off']}>
+            <span class="proxy-value">
+              <svg viewBox="0 0 24 16" aria-hidden="true"><path d="M19.4 6.6A6 6 0 0 0 7.8 4.9 4.5 4.5 0 0 0 5 13.5h14a3.5 3.5 0 0 0 .4-6.9Z" /></svg>
+              {r.proxied ? t.proxied : t.dnsOnly}
+            </span>
+          </span>
+          <span role="cell" class="note">{t.notes[i]}</span>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="modes">
+    <div class="mode mode--on">
+      <p class="mode-title">{t.proxiedTitle}</p>
+      <ol class="path">{t.proxiedSteps.map((s, i) => <li class:list={[i === 1 && 'cf']}>{s}</li>)}</ol>
+      <p class="mode-text">{t.proxiedText}</p>
+    </div>
+    <div class="mode mode--off">
+      <p class="mode-title">{t.dnsTitle}</p>
+      <ol class="path">{t.dnsSteps.map((s) => <li>{s}</li>)}</ol>
+      <p class="mode-text">{t.dnsText}</p>
+    </div>
+  </div>
+  <figcaption>{t.caption}</figcaption>
+</figure>
+
+<style>
+  .dns {
+    --orange: #f6821f;
+    --grey: #9a98ad;
+    margin-block: 2em;
+    padding: 1.1rem;
+    border-radius: var(--r-m);
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(120% 100% at 100% 0%, rgb(139 92 246 / 0.1), transparent 60%),
+      var(--surface);
+    font-family: var(--font-body);
+    container-type: inline-size;
+  }
+
+  .dns-heading,
+  .mode-title {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--violet-soft);
+  }
+
+  .records {
+    margin-top: 0.75rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-s);
+    overflow: hidden;
+    background: rgb(11 11 18 / 0.35);
+  }
+
+  /* Wide: a table with the explanation on its own line under each record. */
+  .row {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 1.3fr) 7.5rem;
+    gap: 0.25rem 0.75rem;
+    align-items: center;
+    padding: 0.65rem 0.85rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+    color: var(--text);
+  }
+
+  .row.head {
+    border-top: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .row code {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
+    background: none;
+    padding: 0;
+    border: 0;
+  }
+
+  .type code {
+    color: var(--violet-soft);
+    font-weight: 600;
+  }
+
+  .note {
+    grid-column: 2 / -1;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+
+  .proxy {
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .proxy-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .proxy svg {
+    width: 1.3rem;
+    height: auto;
+    flex: none;
+  }
+
+  .proxy.on svg {
+    fill: var(--orange);
+  }
+
+  .proxy.off svg {
+    fill: var(--grey);
+  }
+
+  .modes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.9rem;
+  }
+
+  .mode {
+    padding: 0.85rem 0.9rem;
+    border-radius: var(--r-s);
+    border: 1px solid var(--line-strong);
+    background: rgb(11 11 18 / 0.35);
+  }
+
+  .mode--on {
+    border-color: rgb(246 130 31 / 0.5);
+  }
+
+  .mode--on .mode-title {
+    color: var(--orange);
+  }
+
+  .mode--off .mode-title {
+    color: var(--grey);
+  }
+
+  .path {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0.7rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .path li {
+    margin: 0;
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--pill);
+    font-size: 0.78rem;
+    color: var(--text);
+  }
+
+  .path li.cf {
+    border-color: rgb(246 130 31 / 0.6);
+    color: var(--orange);
+  }
+
+  .path li + li::before {
+    content: '→';
+    margin-right: 0.5rem;
+    margin-left: -0.15rem;
+    color: var(--violet-soft);
+  }
+
+  .mode-text {
+    margin: 0.65rem 0 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  figcaption {
+    margin-top: 0.9em;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  /* Narrow: each record becomes a small card with labelled fields. */
+  @container (max-width: 34rem) {
+    .row.head {
+      display: none;
+    }
+
+    .row {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+
+    .row > [data-label] {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .row > [data-label]::before {
+      content: attr(data-label);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .note {
+      grid-column: auto;
+      margin-top: 0.15rem;
+    }
+
+    .modes {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
