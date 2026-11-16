@@ -1,0 +1,23 @@
+/*
+ * Newsreader has no glyphs for the Pinyin caron vowels (ǎ ǐ ǒ ǔ ǚ …), so
+ * browsers build them from a letter plus a misplaced caron. This face covers
+ * only those characters with Noto Serif; every other character still uses
+ * Newsreader. It comes first in --font-serif (see global.css).
+ */
+@font-face {
+  font-family: 'Pinyin Serif';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../../node_modules/@fontsource-variable/noto-serif/files/noto-serif-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+01CD-01DC, U+030C;
+}
+
+@font-face {
+  font-family: 'Pinyin Serif';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../../node_modules/@fontsource-variable/noto-serif/files/noto-serif-latin-ext-wght-italic.woff2') format('woff2-variations');
+  unicode-range: U+01CD-01DC, U+030C;
+}

@@ -27,8 +27,6 @@ const publications = defineCollection({
     featured: z.boolean().default(false),
     /** Drafts are left out of the build. */
     draft: z.boolean().default(false),
-    /** Marks placeholder content with a visible notice. */
-    example: z.boolean().default(false),
     /** Optional level, shown in the article header. */
     difficulty: z.enum(difficultyIds).optional(),
     /** Shows a short note that AI helped write the article. */

@@ -47,7 +47,6 @@ const searchText = [data.title, data.description, data.abstract ?? '', ...data.t
   <div class="top">
     <span class="kicker">{publicationTypes[data.type][locale]}</span>
     <span class="badges">
-      {data.example && <span class="chip chip--lime">{t.card.example}</span>}
       <span class="chip" lang={locales[data.lang].htmlLang} title={t.languages[data.lang]}>
         {locales[data.lang].label}
         {otherLanguages.map((code) => <span class="also">+{locales[code].label}</span>)}

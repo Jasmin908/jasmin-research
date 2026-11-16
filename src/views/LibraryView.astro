@@ -34,6 +34,15 @@ const usedTypes = publicationTypeIds.filter((id) => shown.some((e) => e.data.typ
     </div>
   </header>
 
+  {shown.length === 0 ? (
+    <div class="container">
+      <div class="none" role="status">
+        <h2 class="none-title">{t.library.noneTitle}</h2>
+        <p>{t.library.noneText}</p>
+        <a class="btn btn--ghost" href={sectionPath(locale, 'topics')}>{t.library.noneLink}</a>
+      </div>
+    </div>
+  ) : (
   <div class="container" data-library>
     <form class="controls" data-library-form role="search" hidden>
       <div class="search">
@@ -90,6 +99,7 @@ const usedTypes = publicationTypeIds.filter((id) => shown.some((e) => e.data.typ
       <button type="button" class="btn btn--ghost" data-library-reset>{t.library.reset}</button>
     </div>
   </div>
+  )}
 </Base>
 
 <style>
@@ -249,6 +259,29 @@ const usedTypes = publicationTypeIds.filter((id) => shown.some((e) => e.data.typ
 
   .empty[hidden] {
     display: none;
+  }
+
+  /* Shown instead of the controls while nothing is published. */
+  .none {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    padding: 4rem 1.25rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-m);
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .none-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 400;
+    color: var(--text);
+  }
+
+  .none p {
+    max-width: 36rem;
   }
 
   @media (max-width: 1000px) {

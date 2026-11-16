@@ -128,16 +128,7 @@ const schema = {
 
       {
         data.draft && (
-          <p class="example draft" role="note">{t.article.draft}</p>
-        )
-      }
-
-      {
-        data.example && (
-          <p class="example" role="note">
-            <span class="chip chip--lime">{useTranslations(locale).card.example}</span>
-            {t.article.example}
-          </p>
+          <p class="notice draft" role="note">{t.article.draft}</p>
         )
       }
 
@@ -378,7 +369,7 @@ const schema = {
     transform: none;
   }
 
-  .example {
+  .notice {
     display: flex;
     flex-wrap: wrap;
     align-items: center;

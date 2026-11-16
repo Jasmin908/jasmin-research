@@ -77,12 +77,14 @@ const en = {
     resultsOne: '1 publication',
     empty: 'No results found. Try changing your search or filters.',
     reset: 'Clear filters',
+    noneTitle: 'No publications yet',
+    noneText: 'I’m working on my first articles. They’ll appear here as soon as they’re published.',
+    noneLink: 'Explore the topics',
   },
   card: {
     read: 'Read',
     minutes: '{n} min read',
     alsoIn: 'Also in',
-    example: 'Example',
   },
   article: {
     by: 'By',
@@ -101,8 +103,6 @@ const en = {
     related: 'You might also be interested in',
     translation: 'Also available in {lang}',
     readTranslation: 'Read in {lang}',
-    example:
-      'This is an example article created to demonstrate the website’s layout and features. It is not part of my published research or study notes.',
     rights: '© {year} {author}. All rights reserved. This text is not covered by the MIT licence of the site’s code.',
     back: 'Library',
     subjects: 'Subjects',
@@ -215,12 +215,14 @@ const de: Dictionary = {
     resultsOne: '1 Publikation',
     empty: 'Keine Ergebnisse gefunden. Versuche, deine Suche oder die Filter anzupassen.',
     reset: 'Filter zurücksetzen',
+    noneTitle: 'Noch keine Publikationen',
+    noneText: 'Ich arbeite gerade an meinen ersten Artikeln. Sie erscheinen hier, sobald sie veröffentlicht sind.',
+    noneLink: 'Themen entdecken',
   },
   card: {
     read: 'Lesen',
     minutes: '{n} Min. Lesezeit',
     alsoIn: 'Auch auf',
-    example: 'Beispiel',
   },
   article: {
     by: 'Von',
@@ -239,8 +241,6 @@ const de: Dictionary = {
     related: 'Das könnte dich auch interessieren',
     translation: 'Auch auf {lang} verfügbar',
     readTranslation: 'Auf {lang} lesen',
-    example:
-      'Dies ist ein Beispielartikel, der die Gestaltung und Funktionen der Website zeigt. Er gehört nicht zu meinen eigenen veröffentlichten Recherchen oder Lernnotizen.',
     rights: '© {year} {author}. Alle Rechte vorbehalten. Dieser Text fällt nicht unter die MIT-Lizenz des Website-Codes.',
     back: 'Bibliothek',
     subjects: 'Themen',
