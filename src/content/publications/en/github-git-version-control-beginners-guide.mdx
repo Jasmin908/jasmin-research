@@ -171,7 +171,7 @@ In this tutorial, you create a repository on GitHub, copy it to your computer, c
 ### Step 1: Create the repository on GitHub
 
 1. Sign in to [github.com](https://github.com) and select **New repository** (the **+** menu in the top right corner).
-2. Enter a **repository name**, for example `my-first-website`.
+2. Enter a **repository name**, for example `my-first-website`. Optionally, add a short **description** of the project.
 3. Choose **Public** (anyone can see it) or **Private** (only you and people you invite).
 4. Turn on **Add README**. A README is the project's front page, and with it the repository isn't empty, so you can clone it straight away.
 5. Select **Create repository**.
@@ -214,9 +214,13 @@ cd my-first-website
 
 `git clone` downloads the files and the whole history and sets up GitHub as the remote called `origin`. Git now knows where to push.
 
+<Callout type="note" title="New to the terminal?">
+  A terminal is a window where you type commands instead of clicking. On Windows, use **Git Bash**, which was installed together with Git; you'll find it in the Start menu. On macOS, open the **Terminal** app. In VS Code, choose **Terminal > New Terminal**. The command `cd` ("change directory") moves into a folder: `cd my-first-website` moves into the folder that `git clone` has just created.
+</Callout>
+
 ### Step 4: Make a change and commit it
 
-Create a file called `index.html` in the folder with any content, for example:
+Create a file called `index.html` in the `my-first-website` folder, using VS Code or any other text editor, with any content, for example:
 
 ```html
 <!doctype html>
@@ -267,7 +271,7 @@ The first time, Git asks you to sign in (see [Signing in to GitHub](#3-signing-i
 <Screenshot
   name="github-pushed-commit"
   alt="The repository my-first-website on GitHub after the first push, with index.html in the file list and the commit message Add homepage shown above it."
-  caption="After git push, the new file and your commit message appear on GitHub."
+  caption="After git push, the new file and your commit message appear on GitHub. The repository in this screenshot has one extra commit, so its counter shows 3 instead of 2."
   capture="The my-first-website practice repository after pushing the Add homepage commit. Window about 1280 × 800. Hide or crop the account avatar if it shows a personal photo."
 />
 
@@ -283,7 +287,7 @@ The first time, Git asks you to sign in (see [Signing in to GitHub](#3-signing-i
   git push -u origin main
   ```
 
-  `git init` turns the folder into a repository, `git remote add` connects it to GitHub, and `-u` remembers the connection so that later a plain `git push` is enough.
+  `git init` turns the folder into a repository, `git branch -M main` names the branch `main`, `git remote add` connects it to GitHub, and `-u` remembers the connection so that later a plain `git push` is enough.
 </Callout>
 
 ## Branches: working on something new without breaking anything
@@ -300,7 +304,7 @@ Create a branch and switch to it:
 git switch -c add-contact-page
 ```
 
-`-c` means "create". Now make your changes and commit them as usual:
+`-c` means "create". Now create a second page, `contact.html` (for example a copy of `index.html` with a different heading), and commit it as usual:
 
 ```bash
 git add contact.html
@@ -375,7 +379,7 @@ git branch -d add-contact-page
 
 ## Merge conflicts
 
-Sometimes two branches change the **same lines** of the same file. Git can't decide which version is right, so it stops and asks you. This is called a **merge conflict**. It sounds alarming, but it's a normal part of working with Git [@gh-conflicts].
+Sometimes two branches change the **same lines** of the same file. Git can't decide which version is right, so it stops and asks you. This is called a **merge conflict**. It can happen when you run `git merge` or `git pull`, or in a pull request. It sounds alarming, but it's a normal part of working with Git [@gh-conflicts].
 
 Git marks the conflicting part directly in the file:
 
@@ -396,8 +400,10 @@ To resolve it, edit the file so that it contains the text you want, and **delete
 
 ```bash
 git add index.html
-git commit
+git commit --no-edit
 ```
+
+`--no-edit` keeps the commit message that Git has already prepared for the merge. A plain `git commit` would first open a text editor for the message, which can be confusing if you haven't used it before.
 
 In a pull request on GitHub, simple conflicts can also be resolved in the browser with the **Resolve conflicts** button.
 
@@ -463,7 +469,7 @@ A good commit contains **one** logical change and has a clear message. Small com
 | `fatal: not a git repository` | The terminal is not inside a repository folder. | Use `cd` to go to the project folder, or run `git init` if it's new. |
 | `Support for password authentication was removed` or `Authentication failed` | You tried to sign in with your GitHub password. | Sign in through Git Credential Manager or `gh auth login` instead. |
 | `! [rejected] main -> main (fetch first)` | GitHub has commits that your computer doesn't have yet. | Run `git pull`, fix any conflicts, then `git push` again. |
-| `CONFLICT (content): Merge conflict in …` | Two branches changed the same lines. | Edit the file, remove the markers, then `git add` and `git commit`. |
+| `CONFLICT (content): Merge conflict in …` | Two branches changed the same lines. | Edit the file, remove the markers, then `git add` and `git commit --no-edit`. |
 | `src refspec main does not match any` | There are no commits yet, or your branch has a different name (often `master`). | Make a first commit, or rename the branch with `git branch -M main`. |
 | `node_modules` or other large folders were committed | They were missing from `.gitignore`. | Add them to `.gitignore`, then run `git rm -r --cached node_modules` and commit. |
 | A password or API key was pushed | It is now in the history, even after you delete the file. | **Change or revoke the secret immediately**, then follow GitHub’s guide to remove it from the history [@gh-sensitive]. |
@@ -498,6 +504,7 @@ A good commit contains **one** logical change and has a clear message. Small com
 4. Which command creates a branch called `new-header` and switches to it?
 5. `git push` fails with `! [rejected] main -> main (fetch first)`. What happened, and how do you fix it?
 6. You accidentally pushed a file containing an API key and then deleted it. Is the key safe now?
+7. After `git pull`, a file contains lines starting with `<<<<<<<`, `=======` and `>>>>>>>`. What has happened, and what do you do?
 
 <Fragment slot="answers">
 1. Git is a program on your computer that records the history of a project. GitHub is an online service that stores Git repositories and adds features for sharing and teamwork, such as pull requests.
@@ -506,6 +513,7 @@ A good commit contains **one** logical change and has a clear message. Small com
 4. `git switch -c new-header`
 5. GitHub has commits that you don't have locally, for example from a merged pull request or another computer. Run `git pull`, resolve any conflicts, then `git push` again.
 6. No. The key is still in the history. Revoke or replace it immediately, then remove it from the history following GitHub's guide.
+7. A merge conflict: your version and the version from GitHub changed the same lines. Edit the file so it contains the text you want, delete the three marker lines, then run `git add` and `git commit --no-edit`.
 </Fragment>
 </Exercise>
 

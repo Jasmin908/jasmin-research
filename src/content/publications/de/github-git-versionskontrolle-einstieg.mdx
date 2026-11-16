@@ -174,7 +174,7 @@ In diesem Tutorial legst du ein Repository auf GitHub an, holst es auf deinen Co
 ### Schritt 1: Repository auf GitHub anlegen
 
 1. Melde dich auf [github.com](https://github.com) an und wähle **New repository** (im Menü **+** oben rechts).
-2. Gib einen **Namen** ein, zum Beispiel `my-first-website`.
+2. Gib einen **Namen** ein, zum Beispiel `my-first-website`. Wenn du magst, ergänzt du unter **Description** eine kurze Beschreibung des Projekts.
 3. Wähle **Public** (für alle sichtbar) oder **Private** (nur für dich und eingeladene Personen).
 4. Aktiviere **Add README**. Ein README ist die Startseite des Projekts, und mit ihm ist das Repository nicht leer, du kannst es also sofort klonen.
 5. Wähle **Create repository**.
@@ -219,9 +219,13 @@ cd my-first-website
 
 `git clone` lädt die Dateien samt Geschichte herunter und richtet GitHub als Remote mit dem Namen `origin` ein. Git weiss jetzt, wohin es pushen soll.
 
+<Callout type="note" title="Noch nie mit dem Terminal gearbeitet?">
+  Ein Terminal ist ein Fenster, in dem du Befehle eintippst, statt zu klicken. Unter Windows nimmst du **Git Bash**; es wurde zusammen mit Git installiert und steht im Startmenü. Unter macOS öffnest du die App **Terminal**. In VS Code wählst du **Terminal > Neues Terminal**. Mit `cd` («change directory») wechselst du in einen Ordner: `cd my-first-website` führt dich in den Ordner, den `git clone` gerade angelegt hat.
+</Callout>
+
 ### Schritt 4: Etwas ändern und committen
 
-Lege im Ordner eine Datei `index.html` an, mit beliebigem Inhalt, zum Beispiel:
+Lege im Ordner `my-first-website` mit VS Code oder einem anderen Texteditor eine Datei `index.html` an, mit beliebigem Inhalt, zum Beispiel:
 
 ```html
 <!doctype html>
@@ -272,7 +276,7 @@ Beim ersten Mal fragt Git nach deiner Anmeldung (siehe [Bei GitHub anmelden](#3-
 <Screenshot
   name="github-pushed-commit"
   alt="Das Repository my-first-website auf GitHub nach dem ersten Push, mit index.html in der Dateiliste und der Commit-Nachricht Add homepage darüber."
-  caption="Nach git push erscheinen die neue Datei und deine Commit-Nachricht auf GitHub."
+  caption="Nach git push erscheinen die neue Datei und deine Commit-Nachricht auf GitHub. Das Repository auf diesem Screenshot hat einen Commit mehr, deshalb zeigt der Zähler 3 statt 2."
   capture="Das Übungs-Repository my-first-website nach dem Push des Commits Add homepage. Fenster etwa 1280 × 800. Profilbild ausblenden oder wegschneiden, falls es ein persönliches Foto zeigt."
 />
 
@@ -288,7 +292,7 @@ Beim ersten Mal fragt Git nach deiner Anmeldung (siehe [Bei GitHub anmelden](#3-
   git push -u origin main
   ```
 
-  `git init` macht den Ordner zum Repository, `git remote add` verbindet ihn mit GitHub, und `-u` merkt sich die Verbindung, sodass später ein einfaches `git push` reicht.
+  `git init` macht den Ordner zum Repository, `git branch -M main` nennt den Branch `main`, `git remote add` verbindet ihn mit GitHub, und `-u` merkt sich die Verbindung, sodass später ein einfaches `git push` reicht.
 </Callout>
 
 ## Branches: Neues ausprobieren, ohne etwas kaputtzumachen
@@ -305,7 +309,7 @@ Branch erstellen und gleich zu ihm wechseln:
 git switch -c add-contact-page
 ```
 
-`-c` steht für «create», also erstellen. Jetzt änderst du Dateien und committest wie gewohnt:
+`-c` steht für «create», also erstellen. Lege jetzt eine zweite Seite an, `contact.html` (zum Beispiel eine Kopie von `index.html` mit anderer Überschrift), und committe sie wie gewohnt:
 
 ```bash
 git add contact.html
@@ -380,7 +384,7 @@ git branch -d add-contact-page
 
 ## Merge-Konflikte
 
-Manchmal ändern zwei Branches **dieselben Zeilen** derselben Datei. Git kann nicht entscheiden, welche Fassung stimmt, hält an und überlässt dir die Entscheidung. Das nennt man **Merge-Konflikt**. Klingt dramatisch, gehört aber ganz normal zur Arbeit mit Git [@gh-conflicts].
+Manchmal ändern zwei Branches **dieselben Zeilen** derselben Datei. Git kann nicht entscheiden, welche Fassung stimmt, hält an und überlässt dir die Entscheidung. Das nennt man **Merge-Konflikt**. Er kann bei `git merge` oder `git pull` auftreten oder in einem Pull Request. Klingt dramatisch, gehört aber ganz normal zur Arbeit mit Git [@gh-conflicts].
 
 Git markiert die betroffene Stelle direkt in der Datei:
 
@@ -401,8 +405,10 @@ Zum Lösen bearbeitest du die Datei so, dass sie den gewünschten Text enthält,
 
 ```bash
 git add index.html
-git commit
+git commit --no-edit
 ```
+
+`--no-edit` übernimmt die Commit-Nachricht, die Git für den Merge bereits vorbereitet hat. Ein einfaches `git commit` würde zuerst einen Texteditor für die Nachricht öffnen, was verwirrend sein kann, wenn du ihn nicht kennst.
 
 In einem Pull Request auf GitHub lassen sich einfache Konflikte auch im Browser lösen, über den Button **Resolve conflicts**.
 
@@ -472,7 +478,7 @@ Git gibt seine Meldungen meist auf Englisch aus. Die Tabelle zeigt sie deshalb i
 | `fatal: not a git repository` | Das Terminal befindet sich nicht in einem Repository-Ordner. | Mit `cd` in den Projektordner wechseln oder bei einem neuen Projekt `git init` ausführen. |
 | `Support for password authentication was removed` oder `Authentication failed` | Du hast versucht, dich mit deinem GitHub-Passwort anzumelden. | Stattdessen über den Git Credential Manager oder `gh auth login` anmelden. |
 | `! [rejected] main -> main (fetch first)` | Auf GitHub gibt es Commits, die dein Computer noch nicht hat. | `git pull` ausführen, allfällige Konflikte lösen, dann erneut `git push`. |
-| `CONFLICT (content): Merge conflict in …` | Zwei Branches haben dieselben Zeilen geändert. | Datei bearbeiten, Markierungen entfernen, dann `git add` und `git commit`. |
+| `CONFLICT (content): Merge conflict in …` | Zwei Branches haben dieselben Zeilen geändert. | Datei bearbeiten, Markierungen entfernen, dann `git add` und `git commit --no-edit`. |
 | `src refspec main does not match any` | Es gibt noch keinen Commit, oder dein Branch heisst anders (oft `master`). | Einen ersten Commit machen oder den Branch mit `git branch -M main` umbenennen. |
 | `node_modules` oder andere grosse Ordner wurden committet | Sie fehlten in der `.gitignore`. | In die `.gitignore` eintragen, dann `git rm -r --cached node_modules` ausführen und committen. |
 | Ein Passwort oder API-Schlüssel wurde gepusht | Er steht jetzt in der Geschichte, auch wenn du die Datei löschst. | **Das Geheimnis sofort ändern oder widerrufen**, dann mit GitHubs Anleitung aus der Geschichte entfernen [@gh-sensitive]. |
@@ -507,6 +513,7 @@ Git gibt seine Meldungen meist auf Englisch aus. Die Tabelle zeigt sie deshalb i
 4. Mit welchem Befehl erstellst du einen Branch namens `new-header` und wechselst gleich zu ihm?
 5. `git push` scheitert mit `! [rejected] main -> main (fetch first)`. Was ist passiert, und wie löst du es?
 6. Du hast versehentlich eine Datei mit einem API-Schlüssel gepusht und sie danach gelöscht. Ist der Schlüssel jetzt sicher?
+7. Nach `git pull` enthält eine Datei Zeilen, die mit `<<<<<<<`, `=======` und `>>>>>>>` beginnen. Was ist passiert, und was tust du?
 
 <Fragment slot="answers">
 1. Git ist ein Programm auf deinem Computer, das die Geschichte eines Projekts aufzeichnet. GitHub ist ein Onlinedienst, der Git-Repositorys speichert und Funktionen zum Teilen und Zusammenarbeiten bietet, etwa Pull Requests.
@@ -515,6 +522,7 @@ Git gibt seine Meldungen meist auf Englisch aus. Die Tabelle zeigt sie deshalb i
 4. `git switch -c new-header`
 5. Auf GitHub gibt es Commits, die du lokal nicht hast, zum Beispiel aus einem zusammengeführten Pull Request oder von einem anderen Computer. `git pull` ausführen, allfällige Konflikte lösen, dann erneut `git push`.
 6. Nein. Der Schlüssel steht weiterhin in der Geschichte. Sofort widerrufen oder ersetzen und dann nach GitHubs Anleitung aus der Geschichte entfernen.
+7. Ein Merge-Konflikt: Deine Fassung und die Fassung von GitHub haben dieselben Zeilen geändert. Bearbeite die Datei so, dass sie den gewünschten Text enthält, lösche die drei Markierungszeilen und führe dann `git add` und `git commit --no-edit` aus.
 </Fragment>
 </Exercise>
 

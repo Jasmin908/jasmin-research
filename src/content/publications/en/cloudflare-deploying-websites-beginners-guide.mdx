@@ -46,6 +46,11 @@ references:
     year: 'n.d.'
     title: 'Workers Builds: Configuration'
     url: 'https://developers.cloudflare.com/workers/ci-cd/builds/configuration/'
+  - id: cf-branches
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Build branches'
+    url: 'https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/'
   - id: cf-github
     authors: 'Cloudflare Docs'
     year: 'n.d.'
@@ -160,9 +165,9 @@ This guide uses **Workers**.
 
 You need:
 
-- A **GitHub account** and a repository with your website, for example `my-first-website`. Any static site works. For this guide, imagine an Astro site: `npm run build` writes the finished files to a folder called `dist`.
+- A **GitHub account** and a repository with your website, for example `my-first-website`. Any static site works: plain HTML files, like the ones from the GitHub guide, or a site built with a tool such as Astro, where `npm run build` writes the finished files to a folder called `dist`. The steps below cover both.
 - A free **Cloudflare account** from [dash.cloudflare.com](https://dash.cloudflare.com).
-- **Node.js** on your computer, if you want to test the build locally.
+- **Node.js** on your computer, only if your site has a build step and you want to test it locally.
 
 ## Step 1: Add a Wrangler configuration file
 
@@ -186,6 +191,10 @@ Cloudflare's tools are called **Wrangler**, and they read their settings from a 
 | `compatibility_date` | Tells Cloudflare which version of the runtime to use. Set it to today's date when you create the project. |
 | `assets.directory` | The folder your build writes the finished site to: `./dist` for Astro, often `./build` or `./public` for other tools. |
 | `assets.not_found_handling` | `"404-page"` shows your own `404.html` for addresses that don't exist [@cf-ssg]. |
+
+<Callout type="note" title="Just HTML files, no build step?">
+  If your site is a few HTML files, like `index.html` and `contact.html` from the GitHub guide, there is nothing to build. Move these files into a folder called `public` and set `"directory": "./public"` in `wrangler.jsonc`. Keep `wrangler.jsonc` and `README.md` outside that folder, so only your website's files are published. In step 3, leave the **Build command** empty.
+</Callout>
 
 Commit and push the file:
 
@@ -280,7 +289,7 @@ Your site is now connected to GitHub. From here on, you don't need to do anythin
 3. **Workers Builds** builds and deploys the new version [@cf-builds-config].
 4. After a minute or two, the change is live.
 
-**Pushes to other branches** can be built as **previews**. Each one gets its own preview URL, and if the branch belongs to a pull request, Cloudflare posts the link as a comment on GitHub [@cf-github]. You can open the preview and check the change before merging it into `main`.
+**Pushes to other branches** can be built as **previews**. Each one gets its own preview URL, and if the branch belongs to a pull request, Cloudflare posts the link as a comment on GitHub [@cf-github]. You can open the preview and check the change before merging it into `main`. Preview builds are switched on or off under **Settings > Build > Branch control** (**Enable Preview Builds**), where you also choose the production branch [@cf-branches].
 
 ### Seeing and undoing deployments
 
@@ -373,6 +382,7 @@ Most problems show up in the **build log**. Read the last lines before the error
 4. Your build fails with `The name in your Wrangler configuration file … must match the name of your Worker`. What do you change?
 5. Your build succeeds, but every page shows a 404. What do you check first?
 6. You push a change to a branch called `new-design`. What happens, and how can you look at the result before it goes live?
+7. You select **Add Domain**, and the dialog shows **No zones found**. What's missing?
 
 <Fragment slot="answers">
 1. DNS translates a domain name into the IP address of a server. A CDN keeps copies of the website in data centres around the world so that visitors get it from somewhere close by.
@@ -381,6 +391,7 @@ Most problems show up in the **build log**. Read the last lines before the error
 4. Make the project name in the dashboard and `name` in `wrangler.jsonc` identical, then push again.
 5. Whether `assets.directory` points to the folder the build creates (for Astro: `./dist`) and whether the build command is set.
 6. If preview builds are enabled, Cloudflare builds the branch as a preview with its own URL; for a pull request, the link also appears as a comment on GitHub. The live site only changes when the branch is merged into `main`.
+7. The domain isn't in your Cloudflare account yet. Add it to Cloudflare (or buy it there), change the nameservers at your registrar and wait until the domain shows as **Active**. Then it appears in the dialog.
 </Fragment>
 </Exercise>
 

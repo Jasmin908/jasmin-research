@@ -46,6 +46,11 @@ references:
     year: 'o. J.'
     title: 'Workers Builds: Configuration'
     url: 'https://developers.cloudflare.com/workers/ci-cd/builds/configuration/'
+  - id: cf-branches
+    authors: 'Cloudflare Docs'
+    year: 'o. J.'
+    title: 'Build branches'
+    url: 'https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/'
   - id: cf-github
     authors: 'Cloudflare Docs'
     year: 'o. J.'
@@ -158,9 +163,9 @@ Dieser Leitfaden verwendet **Workers**.
 
 ## Das brauchst du
 
-- Ein **GitHub-Konto** und ein Repository mit deiner Website, zum Beispiel `my-first-website`. Jede statische Website eignet sich. Für diesen Leitfaden nehmen wir eine Astro-Website an: `npm run build` legt die fertigen Dateien im Ordner `dist` ab.
+- Ein **GitHub-Konto** und ein Repository mit deiner Website, zum Beispiel `my-first-website`. Jede statische Website eignet sich: einfache HTML-Dateien wie die aus dem GitHub-Leitfaden oder eine Website, die mit einem Werkzeug wie Astro gebaut wird; dort legt `npm run build` die fertigen Dateien im Ordner `dist` ab. Die Schritte unten decken beides ab.
 - Ein kostenloses **Cloudflare-Konto** auf [dash.cloudflare.com](https://dash.cloudflare.com).
-- **Node.js** auf deinem Computer, falls du den Build lokal testen willst.
+- **Node.js** auf deinem Computer, nur falls deine Website einen Build-Schritt hat und du ihn lokal testen willst.
 
 ## Schritt 1: Wrangler-Konfiguration anlegen
 
@@ -184,6 +189,10 @@ Die Werkzeuge von Cloudflare heissen **Wrangler** und lesen ihre Einstellungen a
 | `compatibility_date` | Legt fest, welche Version der Laufzeitumgebung Cloudflare verwendet. Trag beim Anlegen des Projekts das heutige Datum ein. |
 | `assets.directory` | Der Ordner, in den dein Build die fertige Website schreibt: `./dist` bei Astro, bei anderen Werkzeugen oft `./build` oder `./public`. |
 | `assets.not_found_handling` | `"404-page"` zeigt bei Adressen, die es nicht gibt, deine eigene `404.html` [@cf-ssg]. |
+
+<Callout type="note" title="Nur HTML-Dateien, ohne Build?">
+  Besteht deine Website aus ein paar HTML-Dateien, etwa `index.html` und `contact.html` aus dem GitHub-Leitfaden, gibt es nichts zu bauen. Verschiebe diese Dateien in einen Ordner `public` und trage in `wrangler.jsonc` `"directory": "./public"` ein. `wrangler.jsonc` und `README.md` bleiben ausserhalb dieses Ordners, damit nur die Dateien deiner Website veröffentlicht werden. In Schritt 3 lässt du den **Build command** leer.
+</Callout>
 
 Committe und pushe die Datei:
 
@@ -278,7 +287,7 @@ Deine Website ist jetzt mit GitHub verbunden. Um Änderungen zu veröffentlichen
 3. **Workers Builds** baut und veröffentlicht die neue Version [@cf-builds-config].
 4. Nach ein, zwei Minuten ist die Änderung live.
 
-**Pushes auf andere Branches** lassen sich als **Vorschau** (*Preview*) bauen. Jede bekommt eine eigene Vorschau-URL, und gehört der Branch zu einem Pull Request, schreibt Cloudflare den Link als Kommentar auf GitHub [@cf-github]. So kannst du die Änderung ansehen, bevor du sie in `main` zusammenführst.
+**Pushes auf andere Branches** lassen sich als **Vorschau** (*Preview*) bauen. Jede bekommt eine eigene Vorschau-URL, und gehört der Branch zu einem Pull Request, schreibt Cloudflare den Link als Kommentar auf GitHub [@cf-github]. So kannst du die Änderung ansehen, bevor du sie in `main` zusammenführst. Vorschau-Builds schaltest du unter **Settings > Build > Branch control** (**Enable Preview Builds**) ein oder aus; dort legst du auch den Produktions-Branch fest [@cf-branches].
 
 ### Deployments ansehen und rückgängig machen
 
@@ -371,6 +380,7 @@ Die meisten Probleme zeigen sich im **Build-Protokoll**. Lies zuerst die letzten
 4. Dein Build scheitert mit `The name in your Wrangler configuration file … must match the name of your Worker`. Was änderst du?
 5. Der Build klappt, aber jede Seite zeigt einen 404-Fehler. Was prüfst du zuerst?
 6. Du pushst eine Änderung auf einen Branch namens `new-design`. Was passiert, und wie siehst du dir das Ergebnis an, bevor es live geht?
+7. Du wählst **Add Domain**, und der Dialog zeigt **No zones found**. Was fehlt?
 
 <Fragment slot="answers">
 1. DNS übersetzt einen Domainnamen in die IP-Adresse eines Servers. Ein CDN hält Kopien der Website in Rechenzentren auf der ganzen Welt bereit, sodass Besucherinnen und Besucher sie aus der Nähe bekommen.
@@ -379,6 +389,7 @@ Die meisten Probleme zeigen sich im **Build-Protokoll**. Lies zuerst die letzten
 4. Den Projektnamen im Dashboard und `name` in `wrangler.jsonc` angleichen und erneut pushen.
 5. Ob `assets.directory` auf den Ordner zeigt, den der Build erzeugt (bei Astro `./dist`), und ob der Build-Befehl gesetzt ist.
 6. Sind Vorschau-Builds aktiviert, baut Cloudflare den Branch als Vorschau mit eigener URL; bei einem Pull Request erscheint der Link auch als Kommentar auf GitHub. Die Live-Website ändert sich erst, wenn der Branch in `main` zusammengeführt wird.
+7. Die Domain liegt noch nicht in deinem Cloudflare-Konto. Füge sie bei Cloudflare hinzu (oder kaufe sie dort), ändere die Nameserver beim Registrar und warte, bis die Domain auf **Active** steht. Dann erscheint sie im Dialog.
 </Fragment>
 </Exercise>
 
