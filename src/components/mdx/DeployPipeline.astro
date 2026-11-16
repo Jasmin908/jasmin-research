@@ -1,0 +1,76 @@
+---
+// Diagram: push to GitHub → Workers Builds builds and deploys → the site is
+// live (production branch) or gets a preview URL (any other branch).
+// Labels follow the language of the page.
+import Flow, { type Step } from './diagrams/Flow.astro';
+
+const en = Astro.url.pathname.startsWith('/en/');
+
+const steps: Step[] = en
+  ? [
+      { tag: '1 · you', title: 'Push a commit', note: 'From VS Code or the terminal.' },
+      { tag: '2 · github.com', title: 'GitHub', note: 'Notifies Cloudflare that the repository changed.' },
+      { tag: '3 · Workers Builds', title: 'Build', note: 'Installs packages and runs your build command, e.g. npm run build.' },
+      { tag: '4 · Workers Builds', title: 'Deploy', note: 'Runs npx wrangler deploy and uploads the result.' },
+      { tag: '5 · online', title: 'Live site', note: 'Production branch: your workers.dev address and custom domain.', accent: true },
+    ]
+  : [
+      { tag: '1 · du', title: 'Commit pushen', note: 'Aus VS Code oder dem Terminal.' },
+      { tag: '2 · github.com', title: 'GitHub', note: 'Meldet Cloudflare, dass sich das Repository geändert hat.' },
+      { tag: '3 · Workers Builds', title: 'Build', note: 'Installiert Pakete und führt deinen Build-Befehl aus, z. B. npm run build.' },
+      { tag: '4 · Workers Builds', title: 'Deploy', note: 'Führt npx wrangler deploy aus und lädt das Ergebnis hoch.' },
+      { tag: '5 · online', title: 'Live-Website', note: 'Produktions-Branch: deine workers.dev-Adresse und eigene Domain.', accent: true },
+    ];
+
+const t = en
+  ? {
+      label: 'Diagram of automatic deployments from GitHub to Cloudflare',
+      arrows: ['git push', 'webhook', 'success', 'done'],
+      preview: 'Other branches',
+      previewText: 'are built the same way but get a separate preview URL, so you can check changes before they reach the live site.',
+      caption:
+        'Automatic deployments. Every push starts a build on Cloudflare. If the build fails, nothing changes on the live site; the previous version stays online.',
+    }
+  : {
+      label: 'Diagramm: Automatische Deployments von GitHub zu Cloudflare',
+      arrows: ['git push', 'Webhook', 'erfolgreich', 'fertig'],
+      preview: 'Andere Branches',
+      previewText: 'werden genauso gebaut, bekommen aber eine eigene Vorschau-URL. So kannst du Änderungen prüfen, bevor sie live gehen.',
+      caption:
+        'Automatische Deployments. Jeder Push startet einen Build bei Cloudflare. Schlägt der Build fehl, ändert sich an der Live-Website nichts; die bisherige Version bleibt online.',
+    };
+---
+
+<Flow steps={steps} arrows={t.arrows} caption={t.caption} label={t.label}>
+  <p class="preview">
+    <span class="dot" aria-hidden="true"></span>
+    <span><strong>{t.preview}</strong> {t.previewText}</span>
+  </p>
+</Flow>
+
+<style>
+  .preview {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    margin-top: 0.9rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed var(--line-strong);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .preview strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .dot {
+    flex: none;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--violet-soft);
+  }
+</style>

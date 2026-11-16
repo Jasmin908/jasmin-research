@@ -1,0 +1,73 @@
+---
+// Diagram: the four places a change passes through in Git, with the command
+// that moves it to the next one. Labels follow the language of the page.
+import Flow, { type Step } from './diagrams/Flow.astro';
+
+const en = Astro.url.pathname.startsWith('/en/');
+
+const steps: Step[] = en
+  ? [
+      { tag: '1 · your computer', title: 'Working directory', note: 'The files you edit. Changes here are not saved in Git yet.' },
+      { tag: '2 · your computer', title: 'Staging area', note: 'The changes you have selected for the next commit.' },
+      { tag: '3 · your computer', title: 'Local repository', note: 'Your commits: saved snapshots with a message.' },
+      { tag: '4 · github.com', title: 'GitHub (remote)', note: 'A copy of the repository online, for backup and teamwork.', accent: true },
+    ]
+  : [
+      { tag: '1 · dein Computer', title: 'Arbeitsverzeichnis', note: 'Die Dateien, die du bearbeitest. Änderungen sind hier noch nicht in Git gespeichert.' },
+      { tag: '2 · dein Computer', title: 'Staging-Bereich', note: 'Die Änderungen, die du für den nächsten Commit ausgewählt hast.' },
+      { tag: '3 · dein Computer', title: 'Lokales Repository', note: 'Deine Commits: gespeicherte Momentaufnahmen mit einer Nachricht.' },
+      { tag: '4 · github.com', title: 'GitHub (Remote)', note: 'Eine Kopie des Repositorys im Netz, als Sicherung und für die Zusammenarbeit.', accent: true },
+    ];
+
+const t = en
+  ? {
+      label: 'Diagram of the Git workflow',
+      back: 'The way back:',
+      backText: 'brings new commits from GitHub to your computer (git clone does this once, at the start).',
+      caption:
+        'The Git workflow. git add moves changes to the staging area, git commit saves them as a snapshot in your local repository, and git push uploads your commits to GitHub.',
+    }
+  : {
+      label: 'Diagramm des Git-Arbeitsablaufs',
+      back: 'Der Rückweg:',
+      backText: 'holt neue Commits von GitHub auf deinen Computer (git clone macht das einmal, am Anfang).',
+      caption:
+        'Der Git-Arbeitsablauf. git add legt Änderungen in den Staging-Bereich, git commit speichert sie als Momentaufnahme im lokalen Repository, und git push lädt deine Commits auf GitHub hoch.',
+    };
+---
+
+<Flow steps={steps} arrows={['git add', 'git commit', 'git push']} caption={t.caption} label={t.label}>
+  <p class="back">
+    <span class="back-arrow" aria-hidden="true">←</span>
+    <span><strong>{t.back}</strong> <code>git pull</code> {t.backText}</span>
+  </p>
+</Flow>
+
+<style>
+  .back {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    margin-top: 0.9rem;
+    padding-top: 0.8rem;
+    border-top: 1px dashed var(--line-strong);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .back strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .back code {
+    font-family: var(--font-mono);
+    font-size: 0.95em;
+    color: var(--violet-soft);
+  }
+
+  .back-arrow {
+    color: var(--violet-soft);
+  }
+</style>

@@ -5,6 +5,7 @@ import { unified } from '@astrojs/markdown-remark';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkCitations, { rehypeFootnoteLabel } from './src/plugins/remark-citations.mjs';
+import pruneUnusedScreenshots from './src/plugins/prune-unused-screenshots.mjs';
 
 // The public address, used for canonical links, hreflang, RSS and the sitemap.
 // - SITE_URL, if set, wins (e.g. for a custom domain later).
@@ -19,6 +20,8 @@ export default defineConfig({
     sitemap({
       filter: (page) => !page.includes('/404'),
     }),
+    // Keeps screenshots that only drafts use out of the published site.
+    pruneUnusedScreenshots(),
   ],
   markdown: {
     // The unified (remark/rehype) pipeline, so KaTeX and the citation plugin

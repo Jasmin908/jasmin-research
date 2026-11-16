@@ -1,0 +1,406 @@
+---
+title: 'Cloudflare: A Beginner’s Guide to Deploying Websites'
+description: 'How hosting, DNS and CDNs work, the difference between Cloudflare Workers and Pages, and how to deploy a website from GitHub with automatic deployments and a custom domain, step by step.'
+date: 2026-11-16
+lang: en
+type: guide
+subjects: [computer-science]
+tags: [Cloudflare, Workers, deployment, DNS, hosting, beginner]
+difficulty: beginner
+draft: true
+aiAssisted: true
+translationKey: cloudflare-deploy-guide
+references:
+  - id: cf-how
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'How Cloudflare works'
+    url: 'https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/'
+  - id: cf-pages
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Cloudflare Pages'
+    url: 'https://developers.cloudflare.com/pages/'
+  - id: cf-assets
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Static Assets'
+    url: 'https://developers.cloudflare.com/workers/static-assets/'
+  - id: cf-ssg
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Static Site Generation (SSG) and custom 404 pages'
+    url: 'https://developers.cloudflare.com/workers/static-assets/routing/static-site-generation/'
+  - id: cf-wrangler-config
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Wrangler configuration'
+    url: 'https://developers.cloudflare.com/workers/wrangler/configuration/'
+  - id: cf-builds
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Workers Builds'
+    url: 'https://developers.cloudflare.com/workers/ci-cd/builds/'
+  - id: cf-builds-config
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Workers Builds: Configuration'
+    url: 'https://developers.cloudflare.com/workers/ci-cd/builds/configuration/'
+  - id: cf-github
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'GitHub integration'
+    url: 'https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/'
+  - id: cf-astro
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Astro on Cloudflare Workers'
+    url: 'https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/'
+  - id: cf-rollbacks
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Rollbacks'
+    url: 'https://developers.cloudflare.com/workers/configuration/versions-and-deployments/rollbacks/'
+  - id: cf-dns-setup
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Full setup: change your nameservers'
+    url: 'https://developers.cloudflare.com/dns/zone-setups/full-setup/setup/'
+  - id: cf-custom-domains
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Custom Domains'
+    url: 'https://developers.cloudflare.com/workers/configuration/routing/custom-domains/'
+  - id: cf-builds-troubleshoot
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'Troubleshooting builds'
+    url: 'https://developers.cloudflare.com/workers/ci-cd/builds/troubleshoot/'
+  - id: cf-redirects
+    authors: 'Cloudflare Docs'
+    year: 'n.d.'
+    title: 'ERR_TOO_MANY_REDIRECTS'
+    url: 'https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/'
+---
+
+You've built a website on your computer, and now you want other people to see it. This guide explains what "putting a website online" actually involves (hosting, domains, DNS and CDNs) and then shows, step by step, how to publish a site with Cloudflare so that it updates automatically every time you push a change to GitHub.
+
+It's written for complete beginners. If Git and GitHub are new to you, read the companion guide *GitHub: A Beginner's Guide to Git and Version Control* first, because the tutorial here starts from a GitHub repository.
+
+<Callout type="note" title="Last verified: 16 November 2026">
+  The steps in this guide were checked against Cloudflare's official documentation on 16 November 2026. Cloudflare updates its dashboard regularly, so a button may have moved or been renamed by the time you read this. If something looks different, the linked documentation shows the current path.
+</Callout>
+
+## What happens when you open a website?
+
+When someone types `example.com` into a browser, three things are needed:
+
+1. **A domain name**, the human-friendly address, such as `example.com`. You rent it from a **registrar** for a yearly fee.
+2. **DNS** (Domain Name System), which translates the name into the numeric **IP address** of a computer on the internet. It works much like a phone book.
+3. **Hosting**: a computer that stores your website's files and sends them to the browser.
+
+Large services add a fourth piece: a **CDN** (Content Delivery Network). A CDN is a network of data centres around the world that keep copies of your files close to your visitors. A reader in Tokyo then gets your page from a nearby data centre instead of from a server in Zurich, which makes it faster and spreads the load [@cf-how].
+
+<RequestFlow />
+
+Cloudflare can take on all of these roles: it runs DNS, operates one of the largest CDNs, and with **Workers** it can also host your site directly in its data centres. You don't need a separate server.
+
+### Static and dynamic websites
+
+- A **static** website consists of finished files (HTML, CSS, JavaScript, images) that are the same for every visitor. Many personal sites, blogs and documentation sites are static, including sites built with tools such as Astro, Hugo or Eleventy. They're simple, fast and cheap to host.
+- A **dynamic** website creates pages on request, for example to show a user's account or search results. It needs code running on a server.
+
+This guide focuses on static sites, the most common starting point. Workers can also run server code later, if you need it.
+
+## Key terms
+
+| Term | Meaning |
+| --- | --- |
+| **Domain** | A name such as `example.com`. A **subdomain** adds a part in front: `www.example.com`, `blog.example.com`. |
+| **Registrar** | The company where you register (rent) a domain. Cloudflare is also a registrar. |
+| **Nameservers** | The servers responsible for a domain's DNS. Whoever runs them controls where the domain points. |
+| **DNS record** | One entry in a domain's DNS. The common types are listed below. |
+| **Proxied** (orange cloud) | Traffic goes through Cloudflare's network, with caching and protection. |
+| **DNS only** (grey cloud) | Cloudflare only answers the DNS question; traffic goes directly to the target. |
+| **Edge** | Cloudflare's data centres close to visitors, where requests are answered. |
+| **SSL/TLS** (HTTPS) | Encryption between browser and website, shown by the padlock. Cloudflare issues the certificates automatically. |
+| **Deployment** | Publishing a new version of your site. |
+
+The most common DNS record types:
+
+| Type | Points to | Example |
+| --- | --- | --- |
+| `A` | An IPv4 address | `example.com → 192.0.2.10` |
+| `AAAA` | An IPv6 address | `example.com → 2001:db8::10` |
+| `CNAME` | Another name (an alias) | `www.example.com → example.com` |
+| `TXT` | Free text, often used to prove you own a domain | `"google-site-verification=…"` |
+| `MX` | The mail server for the domain | `mail.example.com` |
+
+## Workers or Pages?
+
+Cloudflare has two products for websites, and older tutorials mostly use the second one:
+
+- **Workers** started as a way to run code on Cloudflare's network. With **static assets**, a Worker can also serve the files of a whole website, with or without additional code [@cf-assets].
+- **Pages** was built specifically for hosting websites from a Git repository.
+
+Cloudflare now recommends **Workers for new projects**. Its documentation states that Workers supports most Pages use cases, offers more features, and is Cloudflare's main platform for applications [@cf-pages]. Pages still works and existing Pages projects keep running, but new features arrive in Workers first.
+
+| | Workers (with static assets) | Pages |
+| --- | --- | --- |
+| Status | Recommended for new projects | Supported; mainly for existing projects |
+| Static websites | Yes | Yes |
+| Server code | Yes, in the Worker | Yes, with Pages Functions |
+| Automatic deployments from Git | Workers Builds | Built into Pages |
+| Free address | `name.your-subdomain.workers.dev` | `name.pages.dev` |
+| Configuration | `wrangler.jsonc` file in the repository | Mostly in the dashboard |
+
+This guide uses **Workers**.
+
+## Before you start
+
+You need:
+
+- A **GitHub account** and a repository with your website, for example `my-first-website`. Any static site works. For this guide, imagine an Astro site: `npm run build` writes the finished files to a folder called `dist`.
+- A free **Cloudflare account** from [dash.cloudflare.com](https://dash.cloudflare.com).
+- **Node.js** on your computer, if you want to test the build locally.
+
+## Step 1: Add a Wrangler configuration file
+
+Cloudflare's tools are called **Wrangler**, and they read their settings from a file in your repository. Cloudflare recommends the JSON format, `wrangler.jsonc`, for new projects [@cf-wrangler-config]. Create it in the root folder of your project:
+
+```jsonc
+// wrangler.jsonc
+{
+  "name": "my-first-website",
+  "compatibility_date": "2026-11-16",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}
+```
+
+| Setting | What it does |
+| --- | --- |
+| `name` | The name of your Worker. It becomes part of the address and **must match** the name in the dashboard. |
+| `compatibility_date` | Tells Cloudflare which version of the runtime to use. Set it to today's date when you create the project. |
+| `assets.directory` | The folder your build writes the finished site to: `./dist` for Astro, often `./build` or `./public` for other tools. |
+| `assets.not_found_handling` | `"404-page"` shows your own `404.html` for addresses that don't exist [@cf-ssg]. |
+
+Commit and push the file:
+
+```bash
+git add wrangler.jsonc
+git commit -m "Add Cloudflare configuration"
+git push
+```
+
+<Callout type="note" title="No configuration file?">
+  If you connect a repository without a Wrangler configuration file, Cloudflare tries to detect your framework, creates the configuration for you and opens a pull request in your repository with the changes. Once you merge it, the project deploys normally [@cf-builds]. Writing the file yourself, as above, means you know exactly what's in it.
+</Callout>
+
+## Step 2: Connect GitHub and create the Worker
+
+1. Sign in to the Cloudflare dashboard and open **Workers & Pages**.
+2. Select **Create application**.
+3. Choose **GitHub** as the Git provider [@cf-builds].
+
+<Screenshot
+  name="cloudflare-workers-overview"
+  alt="The Workers & Pages overview in the Cloudflare dashboard, with the Create application button and a list of existing projects."
+  caption="The Workers & Pages overview. All your Workers and Pages projects are listed here; Create application starts a new one."
+  capture="dash.cloudflare.com → Workers & Pages, in a practice account (or with real project names and the account name blurred). Window about 1280 × 800. Make sure the account ID and email address are not visible."
+/>
+
+<Screenshot
+  name="cloudflare-create-application"
+  alt="The Create application page in the Cloudflare dashboard with options to import a repository from GitHub or GitLab."
+  caption="Creating an application. Choose GitHub to import an existing repository; Cloudflare will then build and deploy it automatically."
+  capture="Workers & Pages → Create application, showing the Git provider options. Window about 1280 × 800. No personal data should be visible."
+/>
+
+The first time, Cloudflare sends you to GitHub. Two separate things happen there, and it's worth knowing the difference [@cf-github]:
+
+- **Install** the *Cloudflare Workers & Pages* app on your GitHub account. This decides **which repositories** Cloudflare can access. Choose **Only select repositories** and pick `my-first-website` instead of giving access to everything.
+- **Authorize** the app. This tells Cloudflare **who you are** on GitHub. Each person does it once.
+
+<Screenshot
+  name="cloudflare-github-authorize"
+  alt="GitHub’s page for installing the Cloudflare Workers & Pages app, with the option Only select repositories chosen and the repository my-first-website selected."
+  caption="Installing the Cloudflare app on GitHub. Choosing Only select repositories limits Cloudflare to the repositories you actually want to deploy."
+  capture="The GitHub install screen for the Cloudflare Workers & Pages app, reached from the Cloudflare dashboard, using a practice GitHub account with only my-first-website selected. Window about 1280 × 900. Crop out the GitHub account avatar and name if personal."
+/>
+
+You can review or remove this access later on GitHub under **Settings > Applications**.
+
+## Step 3: Configure the build and deploy
+
+Back in Cloudflare, select your repository and fill in the settings:
+
+| Field | Value for this example | Explanation |
+| --- | --- | --- |
+| **Project name** | `my-first-website` | Must match `name` in `wrangler.jsonc`. |
+| **Build command** | `npm run build` | Builds the site. Leave it empty if your repository already contains the finished files. |
+| **Deploy command** | `npx wrangler deploy` | The default. Uploads the result and makes it live. |
+| **Root directory** | (empty) | Only needed if the website is in a subfolder of the repository. |
+
+<Screenshot
+  name="cloudflare-build-settings"
+  alt="The Cloudflare project configuration form with the project name my-first-website, the build command npm run build and the deploy command npx wrangler deploy."
+  caption="The build settings. Notice that the project name matches the name in wrangler.jsonc; if they differ, the build fails."
+  capture="The configuration step after choosing the my-first-website repository, with the values from the table filled in, just before Save and Deploy. Window about 1280 × 1000."
+/>
+
+Select **Save and Deploy**. Cloudflare now copies your repository, installs the packages, runs the build command and then the deploy command.
+
+## Step 4: Watch the build and open your site
+
+The build log shows each step as it runs. A typical first build takes a minute or two.
+
+<Screenshot
+  name="cloudflare-build-log"
+  alt="A successful build in the Cloudflare dashboard, with the build log showing the steps cloning the repository, installing packages, building and deploying, and a green success status."
+  caption="A successful build. If something goes wrong, the log shows the exact error; the last lines before the failure are usually the most helpful."
+  capture="The build details of the first successful deployment of my-first-website, with the log expanded. Window about 1280 × 1000. No API tokens or account IDs may be visible in the log."
+/>
+
+When it's finished, your site is online at an address like:
+
+```text
+https://my-first-website.your-subdomain.workers.dev
+```
+
+`your-subdomain` is chosen once for your Cloudflare account. You'll find the exact address on the Worker's overview page.
+
+## Automatic deployments
+
+Your site is now connected to GitHub. From here on, you don't need to do anything in Cloudflare to publish changes:
+
+<DeployPipeline />
+
+1. Change something on your computer, commit and `git push` to `main`.
+2. GitHub notifies Cloudflare.
+3. **Workers Builds** builds and deploys the new version [@cf-builds-config].
+4. After a minute or two, the change is live.
+
+**Pushes to other branches** can be built as **previews**. Each one gets its own preview URL, and if the branch belongs to a pull request, Cloudflare posts the link as a comment on GitHub [@cf-github]. You can open the preview and check the change before merging it into `main`.
+
+### Seeing and undoing deployments
+
+The **Deployments** tab of your Worker lists the active version and earlier ones, together with the commit that produced them. The build history is at the bottom of that page.
+
+<Screenshot
+  name="cloudflare-deployments"
+  alt="The Deployments tab of a Worker in the Cloudflare dashboard, showing the active deployment at the top and a list of earlier versions, each with its commit message and date."
+  caption="The Deployments tab. Each version is linked to a commit, so you can see exactly which change is live and roll back to an earlier version if needed."
+  capture="Deployments tab of my-first-website after at least three pushes, so that several versions are listed. Window about 1280 × 900."
+/>
+
+If a new version has a problem, you can **roll back** to an earlier version from this page. A rollback makes the selected older version live again; it doesn't change your GitHub repository [@cf-rollbacks]. Fix the problem in your code afterwards and push again.
+
+## Adding a custom domain
+
+The `workers.dev` address is fine for testing, but for a real website you'll want your own domain, such as `example.com`. There are two steps.
+
+### Step 1: Move the domain's DNS to Cloudflare
+
+For a Custom Domain, Cloudflare needs to manage the domain's DNS: the domain must be an **active zone** in your Cloudflare account [@cf-custom-domains].
+
+- If you **buy the domain from Cloudflare**, this is already done.
+- If the domain is with **another registrar**, add it in the Cloudflare dashboard. Cloudflare shows you two nameservers. Log in at your registrar and replace its nameservers with Cloudflare's. If DNSSEC is turned on at the registrar, turn it off first; you can turn it on again through Cloudflare later [@cf-dns-setup].
+
+The change can take **up to 24 hours**. When it's done, the domain shows as **Active** in Cloudflare and you receive an email.
+
+<Screenshot
+  name="cloudflare-dns-records"
+  alt="The DNS records page of a domain in Cloudflare, listing records with their type, name, content and proxy status, one of them proxied with an orange cloud."
+  caption="The DNS records of a domain. The orange cloud means the record is proxied through Cloudflare; a grey cloud means DNS only."
+  capture="DNS → Records for a practice domain (or a real one with the IP addresses and any verification codes blurred). Window about 1280 × 800."
+/>
+
+### Step 2: Connect the domain to your Worker
+
+1. Open **Workers & Pages** and select your Worker.
+2. Go to **Settings > Domains & Routes**, select **Add** and choose **Custom Domain**.
+3. Enter the domain, for example `example.com` or `www.example.com`, and confirm with **Add Custom Domain**.
+
+<Screenshot
+  name="cloudflare-custom-domain"
+  alt="The Domains & Routes section in a Worker’s settings in Cloudflare, with the dialog for adding a custom domain open and example.com entered."
+  caption="Adding a custom domain. Cloudflare creates the DNS record and the HTTPS certificate for you."
+  capture="Worker my-first-website → Settings → Domains & Routes → Add → Custom Domain, with a practice domain entered. Window about 1280 × 900."
+/>
+
+Cloudflare creates the DNS record and the HTTPS certificate automatically [@cf-custom-domains]. After a few minutes, your site is available at your own domain, with the padlock in the address bar.
+
+<Callout type="warning" title="Existing records get in the way">
+  A Custom Domain can't be added to a hostname that already has a `CNAME` record. If you've set up the domain for another service before, delete the old record on the DNS page first.
+</Callout>
+
+## Alternative: deploying from the command line
+
+Instead of the dashboard, you can create and deploy a project from the terminal. To start a new Astro project that's ready for Cloudflare [@cf-astro]:
+
+```bash
+npm create cloudflare@latest -- my-first-website --framework=astro
+```
+
+To deploy an existing project manually:
+
+```bash
+npx wrangler login     # opens the browser once to sign in
+npm run build          # builds the site into ./dist
+npx wrangler deploy    # uploads it and makes it live
+```
+
+This is handy for quick tests. For a real website, the GitHub connection is usually better: every version is linked to a commit, and nobody has to remember to deploy by hand.
+
+## If you already use Pages
+
+Existing Pages projects keep working, and the ideas in this guide are the same: connect a repository, set a build command and an output folder, and every push deploys. The main differences are that a Pages project gets a `pages.dev` address and is configured mostly in the dashboard. If you want to move a Pages project to Workers, Cloudflare provides a migration guide, linked from the Pages documentation [@cf-pages].
+
+## Troubleshooting
+
+Most problems show up in the **build log**. Read the last lines before the error first.
+
+| Problem | Likely cause | What to do |
+| --- | --- | --- |
+| `The name in your Wrangler configuration file … must match the name of your Worker` | The project name in the dashboard and `name` in `wrangler.jsonc` differ. | Make them the same, commit and push again [@cf-builds-troubleshoot]. |
+| `Missing entry-point` | Cloudflare can't find `wrangler.jsonc`. | Check that the file is in the repository's root folder, or set the **Root directory** in **Settings > Build**. |
+| Build succeeds, but the site shows a 404 or a blank page | `assets.directory` doesn't point to the folder your build creates, or the build command is missing. | Compare `assets.directory` with your framework's output folder and check the build command [@cf-builds-troubleshoot]. |
+| Unknown addresses show an empty page instead of your 404 page | `not_found_handling` isn't set. | Add `"not_found_handling": "404-page"` to `assets` [@cf-ssg]. |
+| `npm ci` says `package.json` and `package-lock.json` are out of sync | The lock file wasn't updated or committed. | Run `npm install` locally and commit `package-lock.json`. |
+| The build uses the wrong Node.js version | The build image uses its default version. | Add a `.node-version` or `.nvmrc` file, or set the build variable `NODE_VERSION`. |
+| A variable is missing during the build | It was set as a runtime variable. | **Build** variables go under **Settings > Build**; runtime variables under **Settings > Variables & Secrets**. |
+| The domain stays **Pending** | The nameservers haven't been changed yet, or the change is still in progress. | Check the nameservers at your registrar and wait up to 24 hours [@cf-dns-setup]. |
+| `ERR_TOO_MANY_REDIRECTS` | Usually the SSL/TLS encryption mode conflicts with redirects on your own server. | Follow Cloudflare's guide to this error [@cf-redirects]. A site served entirely by a Worker is rarely affected. |
+| The old version still appears | The browser shows a cached copy, or the latest build failed. | Reload with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> (<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> on macOS) and check the status of the latest build. |
+
+<Exercise>
+1. What is the job of DNS, and what is the job of a CDN?
+2. What's the difference between a proxied record (orange cloud) and a DNS-only record (grey cloud)?
+3. Which product does Cloudflare recommend for new website projects, Workers or Pages?
+4. Your build fails with `The name in your Wrangler configuration file … must match the name of your Worker`. What do you change?
+5. Your build succeeds, but every page shows a 404. What do you check first?
+6. You push a change to a branch called `new-design`. What happens, and how can you look at the result before it goes live?
+
+<Fragment slot="answers">
+1. DNS translates a domain name into the IP address of a server. A CDN keeps copies of the website in data centres around the world so that visitors get it from somewhere close by.
+2. With a proxied record, traffic goes through Cloudflare's network (caching, protection, HTTPS). With a DNS-only record, Cloudflare just answers the DNS question and the visitor connects directly to the target.
+3. Workers. Pages still works, but Cloudflare recommends starting new projects with Workers.
+4. Make the project name in the dashboard and `name` in `wrangler.jsonc` identical, then push again.
+5. Whether `assets.directory` points to the folder the build creates (for Astro: `./dist`) and whether the build command is set.
+6. If preview builds are enabled, Cloudflare builds the branch as a preview with its own URL; for a pull request, the link also appears as a comment on GitHub. The live site only changes when the branch is merged into `main`.
+</Fragment>
+</Exercise>
+
+## Conclusion
+
+Putting a website online means combining a domain, DNS and hosting, and Cloudflare can handle all three. For new projects, Cloudflare recommends Workers: a small `wrangler.jsonc` file describes your site, the GitHub connection builds and deploys every push automatically, and a custom domain takes a few clicks once your DNS is on Cloudflare. When something goes wrong, the build log and the Deployments tab tell you what happened, and a rollback brings back an earlier version while you fix the problem.
+
+## Further reading
+
+- Workers Builds explains automatic deployments from Git in detail [@cf-builds].
+- The Static Assets documentation covers every option for hosting files with Workers [@cf-assets].
+- Cloudflare's guide to Astro shows the recommended setup for this framework [@cf-astro].
+- The troubleshooting page for builds lists further errors and their solutions [@cf-builds-troubleshoot].

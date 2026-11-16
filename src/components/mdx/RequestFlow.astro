@@ -1,0 +1,38 @@
+---
+// Diagram: what happens when someone opens a website served by Cloudflare —
+// DNS lookup, the nearest Cloudflare data centre (CDN cache) and your site.
+// Labels follow the language of the page.
+import Flow, { type Step } from './diagrams/Flow.astro';
+
+const en = Astro.url.pathname.startsWith('/en/');
+
+const steps: Step[] = en
+  ? [
+      { tag: '1', title: 'Browser', note: 'Someone types example.com.' },
+      { tag: '2 · DNS', title: 'Name lookup', note: 'DNS turns the name into an IP address, like a phone book.' },
+      { tag: '3 · CDN', title: 'Nearest Cloudflare data centre', note: 'If a fresh copy is in the cache, it is sent back straight away.' },
+      { tag: '4 · hosting', title: 'Your site', note: 'Your Worker and its files, or your own server (the “origin”).', accent: true },
+    ]
+  : [
+      { tag: '1', title: 'Browser', note: 'Jemand tippt example.com ein.' },
+      { tag: '2 · DNS', title: 'Namensauflösung', note: 'DNS übersetzt den Namen in eine IP-Adresse, wie ein Telefonbuch.' },
+      { tag: '3 · CDN', title: 'Nächstes Cloudflare-Rechenzentrum', note: 'Liegt eine aktuelle Kopie im Cache, kommt sie sofort zurück.' },
+      { tag: '4 · Hosting', title: 'Deine Website', note: 'Dein Worker mit seinen Dateien oder dein eigener Server (der «Origin»).', accent: true },
+    ];
+
+const t = en
+  ? {
+      label: 'Diagram of how a website request travels',
+      arrows: ['example.com?', 'IP address', 'not cached'],
+      caption:
+        'How a request travels. DNS finds the address, Cloudflare’s network answers from a nearby data centre, and only asks your site when it has no fresh copy. The answer takes the same way back to the browser.',
+    }
+  : {
+      label: 'Diagramm: Der Weg einer Anfrage an eine Website',
+      arrows: ['example.com?', 'IP-Adresse', 'nicht im Cache'],
+      caption:
+        'Der Weg einer Anfrage. DNS findet die Adresse, Cloudflares Netzwerk antwortet aus einem nahen Rechenzentrum und fragt deine Website nur, wenn es keine aktuelle Kopie hat. Die Antwort nimmt denselben Weg zurück zum Browser.',
+    };
+---
+
+<Flow steps={steps} arrows={t.arrows} caption={t.caption} label={t.label} />

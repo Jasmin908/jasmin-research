@@ -1,0 +1,520 @@
+---
+title: 'GitHub: A Beginner’s Guide to Git and Version Control'
+description: 'What version control is, how Git and GitHub differ, and how to create a repository, commit, branch, push, open pull requests and use Git in VS Code, with step-by-step tutorials.'
+date: 2026-11-16
+lang: en
+type: guide
+subjects: [computer-science]
+tags: [Git, GitHub, version control, VS Code, beginner]
+difficulty: beginner
+draft: true
+aiAssisted: true
+translationKey: github-git-guide
+references:
+  - id: progit
+    authors: 'Chacon, S., & Straub, B.'
+    year: 2014
+    title: 'Pro Git'
+    source: '2nd edition, Apress (free online)'
+    url: 'https://git-scm.com/book/en/v2'
+  - id: gh-about-git
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'About Git'
+    url: 'https://docs.github.com/en/get-started/using-git/about-git'
+  - id: gh-setup
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'Set up Git'
+    url: 'https://docs.github.com/en/get-started/git-basics/set-up-git'
+  - id: gh-credentials
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'Caching your GitHub credentials in Git'
+    url: 'https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git'
+  - id: gh-auth
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'About authentication to GitHub'
+    url: 'https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github'
+  - id: gh-repo-quickstart
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'Quickstart for repositories'
+    url: 'https://docs.github.com/en/repositories/creating-and-managing-repositories/quickstart-for-repositories'
+  - id: gh-pr
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'Creating a pull request'
+    url: 'https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request'
+  - id: gh-conflicts
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'Resolving a merge conflict using the command line'
+    url: 'https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line'
+  - id: gh-ignore
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'Ignoring files'
+    url: 'https://docs.github.com/en/get-started/git-basics/ignoring-files'
+  - id: gh-sensitive
+    authors: 'GitHub Docs'
+    year: 'n.d.'
+    title: 'Removing sensitive data from a repository'
+    url: 'https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository'
+  - id: vscode-scm
+    authors: 'Visual Studio Code Docs'
+    year: 'n.d.'
+    title: 'Source Control in VS Code'
+    url: 'https://code.visualstudio.com/docs/sourcecontrol/overview'
+---
+
+Have you ever saved files as `essay-final.docx`, `essay-final-2.docx` and `essay-really-final.docx`? Version control solves exactly that problem, and Git is the tool almost every software project uses for it. This guide starts with the ideas behind Git and GitHub and then walks you through your first repository, step by step: from the first commit to your first pull request, in the terminal and in VS Code.
+
+You don't need any previous experience. The examples use a small practice project called `my-first-website` and the placeholder username `your-username`: replace it with your own.
+
+## Why version control?
+
+A **version control system** records changes to files over time. Instead of keeping many copies of a project, you keep one folder, and the system remembers every saved state. That gives you:
+
+- **A complete history.** You can see what changed, when, and why.
+- **A safety net.** If something breaks, you can go back to a version that worked.
+- **Parallel work.** You can try out an idea without touching the working version, and several people can work on the same project without overwriting each other's changes.
+
+## Git vs GitHub
+
+These two names are often mixed up, but they are different things:
+
+- **Git** is a program that runs on your computer. It does the actual version control: it records changes, keeps the history and manages branches. Git works completely offline [@gh-about-git].
+- **GitHub** is a website and service that stores Git repositories online. It adds what you need to share and work together: a web interface, pull requests, issues and access control.
+
+You can use Git without GitHub (only on your computer, or with another hosting service such as GitLab). GitHub, on the other hand, is built on Git.
+
+| Tool | What it is | Where it runs | What you use it for |
+| --- | --- | --- | --- |
+| Git | Version control program | Your computer | Recording and managing changes |
+| GitHub | Hosting service for Git repositories | github.com | Backup, sharing, pull requests, teamwork |
+| GitHub Desktop | Graphical app for Git and GitHub | Your computer | Using Git without typing commands |
+| VS Code | Code editor with built-in Git support | Your computer | Editing code and using Git in one place |
+
+## Key terms
+
+| Term | Meaning |
+| --- | --- |
+| **Repository** (repo) | A project folder whose history Git tracks. It contains your files plus a hidden `.git` folder with the history. |
+| **Commit** | A saved snapshot of your changes, with a short message describing them. |
+| **Branch** | An independent line of work. The main branch is usually called `main`. |
+| **Remote** | A copy of the repository somewhere else, usually on GitHub. By default it's called `origin`. |
+| **Clone** | Downloading a repository from GitHub to your computer, including its history. |
+| **Push** | Uploading your new commits to the remote. |
+| **Pull** | Downloading new commits from the remote and adding them to your branch. |
+| **Pull request** (PR) | A request on GitHub to merge the changes from one branch into another, with room for review and discussion. |
+
+## How Git works: the three local areas
+
+Before typing any command, it helps to know where your changes are at each moment. Git uses three areas on your computer, plus the remote copy on GitHub:
+
+<GitWorkflow />
+
+1. You edit files in your **working directory**, the normal project folder.
+2. With `git add`, you choose which changes belong in the next snapshot. They move to the **staging area**.
+3. With `git commit`, you save those staged changes as a commit in your **local repository**.
+4. With `git push`, you upload your commits to **GitHub**.
+
+The staging area may seem like an extra step, but it's useful: if you've changed five files and only three belong together, you can commit those three first and the other two separately. Each commit then tells one clear story [@progit].
+
+## Setting up Git
+
+### 1. Install Git
+
+- **Windows:** download the installer from [git-scm.com](https://git-scm.com/downloads). The default options are fine for beginners. It also installs **Git Credential Manager**, which handles signing in to GitHub.
+- **macOS:** open the Terminal and type `git --version`. If Git isn't installed, macOS offers to install the developer tools, which include Git.
+- **Linux:** use your package manager, for example `sudo apt install git` on Ubuntu.
+
+Check that it worked:
+
+```bash
+git --version
+# git version 2.x.x
+```
+
+### 2. Tell Git who you are
+
+Every commit records an author. Set your name and email once:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+
+Use the email address of your GitHub account so that GitHub can link your commits to your profile. If you don't want to make your email public, GitHub offers a private `noreply` address in your account's email settings [@gh-setup].
+
+New repositories on GitHub use `main` as the name of the main branch. To make Git use the same name for repositories you create on your computer, run:
+
+```bash
+git config --global init.defaultBranch main
+```
+
+### 3. Signing in to GitHub
+
+When you push for the first time, Git needs to prove that you're allowed to write to the repository. GitHub no longer accepts your account password for this [@gh-auth]. Instead, GitHub recommends one of these [@gh-credentials]:
+
+- **Git Credential Manager** (included with Git for Windows): the first time you push, a browser window opens, you sign in to GitHub there, and Git remembers it.
+- **GitHub CLI**: install the `gh` tool and run `gh auth login`, then follow the prompts.
+
+Either way, you only need to do this once per computer.
+
+## Tutorial 1: Your first repository
+
+In this tutorial, you create a repository on GitHub, copy it to your computer, change a file and send the change back.
+
+### Step 1: Create the repository on GitHub
+
+1. Sign in to [github.com](https://github.com) and select **New repository** (the **+** menu in the top right corner).
+2. Enter a **repository name**, for example `my-first-website`.
+3. Choose **Public** (anyone can see it) or **Private** (only you and people you invite).
+4. Turn on **Add README**. A README is the project's front page, and with it the repository isn't empty, so you can clone it straight away.
+5. Select **Create repository**.
+
+<Screenshot
+  name="github-new-repository"
+  alt="GitHub’s Create a new repository form with the repository name my-first-website, visibility set to Public and the Add README option turned on."
+  caption="Creating a repository. The repository name becomes part of its address: github.com/your-username/my-first-website."
+  capture="github.com/new, signed in with a practice account. Fill in my-first-website, choose Public, turn on Add README. Browser window about 1280 × 900. Crop out the account menu if it shows a personal name or photo."
+/>
+
+### Step 2: Find your way around the repository
+
+Every repository on GitHub has the same layout. Here is a public example repository that GitHub provides for practice:
+
+<Screenshot
+  name="github-repository-page"
+  alt="The GitHub page of the public example repository octocat/Hello-World, showing the tabs Code, Issues and Pull requests, the branch selector, the green Code button, the file list with a README and the About section on the right."
+  caption="A repository page (here GitHub’s example repository octocat/Hello-World). Notice the tabs at the top, the branch selector on the left, the green Code button with the clone address, and the latest commit above the file list. This old repository still uses master as its main branch; new repositories use main."
+/>
+
+The most important parts:
+
+| Part | What it does |
+| --- | --- |
+| **Code** tab | Shows the files and folders. Click a file to read it. |
+| **Branch selector** | Switches between branches, for example `main`. |
+| **Commits** link | Opens the history: every commit with its message, author and date. |
+| **Green Code button** | Shows the address you need to clone the repository. |
+| **Pull requests** tab | Lists proposed changes waiting to be reviewed and merged. |
+
+### Step 3: Clone the repository
+
+Click the green **Code** button, choose **HTTPS** and copy the address. Then open a terminal in the folder where you keep your projects:
+
+```bash
+git clone https://github.com/your-username/my-first-website.git
+cd my-first-website
+```
+
+`git clone` downloads the files and the whole history and sets up GitHub as the remote called `origin`. Git now knows where to push.
+
+### Step 4: Make a change and commit it
+
+Create a file called `index.html` in the folder with any content, for example:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>My first website</title>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+  </body>
+</html>
+```
+
+Now ask Git what has changed. `git status` is the command you'll use most often; it's always safe to run:
+
+```bash
+git status
+# Untracked files:
+#   index.html
+```
+
+Add the file to the staging area and commit it:
+
+```bash
+git add index.html
+git commit -m "Add homepage"
+```
+
+The text after `-m` is the **commit message**. Write it as a short instruction that describes what the commit does: "Add homepage", "Fix typo in contact form", "Update colours". You'll thank yourself later when reading the history.
+
+To see the history, use:
+
+```bash
+git log --oneline
+# 3f2c1a9 (HEAD -> main) Add homepage
+# a81b0e4 (origin/main) Initial commit
+```
+
+### Step 5: Push to GitHub
+
+```bash
+git push
+```
+
+The first time, Git asks you to sign in (see [Signing in to GitHub](#3-signing-in-to-github)). Refresh the repository page on GitHub: `index.html` is there, and the latest commit shows your message.
+
+<Screenshot
+  name="github-pushed-commit"
+  alt="The repository my-first-website on GitHub after the first push, with index.html in the file list and the commit message Add homepage shown above it."
+  caption="After git push, the new file and your commit message appear on GitHub."
+  capture="The my-first-website practice repository after pushing the Add homepage commit. Window about 1280 × 800. Hide or crop the account avatar if it shows a personal photo."
+/>
+
+<Callout type="note" title="Already have a project on your computer?">
+  You can also start from an existing folder instead of cloning. Create an **empty** repository on GitHub (without README), then run these commands in your project folder:
+
+  ```bash
+  git init
+  git add .
+  git commit -m "Initial commit"
+  git branch -M main
+  git remote add origin https://github.com/your-username/my-first-website.git
+  git push -u origin main
+  ```
+
+  `git init` turns the folder into a repository, `git remote add` connects it to GitHub, and `-u` remembers the connection so that later a plain `git push` is enough.
+</Callout>
+
+## Branches: working on something new without breaking anything
+
+So far, every commit has gone directly onto `main`. That's fine for a small personal project, but as soon as a change takes longer or other people are involved, you'll want to work on a **branch**.
+
+A branch is a separate line of commits. You can experiment there while `main` stays unchanged. When the work is finished, you **merge** the branch back into `main`.
+
+<BranchMerge />
+
+Create a branch and switch to it:
+
+```bash
+git switch -c add-contact-page
+```
+
+`-c` means "create". Now make your changes and commit them as usual:
+
+```bash
+git add contact.html
+git commit -m "Add contact page"
+```
+
+To see all branches and which one you're on (marked with `*`):
+
+```bash
+git branch
+# * add-contact-page
+#   main
+```
+
+To switch back and forth, use `git switch main` and `git switch add-contact-page`. Git swaps the files in your folder accordingly, so don't be surprised if `contact.html` disappears on `main`: it only exists on the branch until you merge.
+
+<Callout type="note" title="git switch or git checkout?">
+  Older tutorials use `git checkout` for switching branches. It still works, but `git switch` was added to Git specifically for branches and is easier to understand. This guide uses `git switch`.
+</Callout>
+
+## Pull requests: proposing and reviewing changes
+
+You could merge your branch on your own computer with `git merge`. On GitHub, the usual way is a **pull request**: you propose the merge, it can be reviewed and discussed, and then it's merged on GitHub [@gh-pr]. Even when you work alone, pull requests are a useful habit, because they give you one place to see all the changes of a piece of work before it reaches `main`.
+
+### Step 1: Push the branch
+
+```bash
+git push -u origin add-contact-page
+```
+
+The first push of a new branch needs `-u origin <branch-name>` so that Git knows where it belongs on GitHub. After that, `git push` is enough.
+
+### Step 2: Open the pull request
+
+On GitHub, a yellow banner appears with **Compare & pull request**. (You can also open the **Pull requests** tab and select **New pull request**.)
+
+1. Check the two branches at the top: **base** is where the changes should go (`main`), **compare** is your branch (`add-contact-page`).
+2. Write a title and a short description: what does the change do, and why?
+3. Select **Create pull request**.
+
+<Screenshot
+  name="github-compare-pull-request"
+  alt="GitHub’s Open a pull request page comparing the branch add-contact-page with main, with a title field, a description field and a list of the changed files below."
+  caption="Opening a pull request. Check that base is main and compare is your branch; below the form, GitHub shows exactly which lines will change."
+  capture="In the practice repository, push a branch add-contact-page with one new file, then click Compare & pull request. Capture the form with the base/compare selectors and the start of the file diff. Window about 1280 × 1000."
+/>
+
+### Step 3: Review and merge
+
+The pull request page has several tabs. **Files changed** shows every changed line: green for added lines, red for removed ones. Others can comment on specific lines here.
+
+When everything is fine, select **Merge pull request** and confirm. GitHub then offers to **delete the branch**, which you can safely do: its commits are now part of `main`.
+
+<Screenshot
+  name="github-pull-request-merge"
+  alt="The Conversation tab of an open pull request on GitHub, with the description at the top, a list of commits and the green Merge pull request button at the bottom."
+  caption="A pull request ready to merge. The green Merge pull request button appears when there are no conflicts with main."
+  capture="The pull request from the previous screenshot, Conversation tab, scrolled so that the merge box is visible. Window about 1280 × 1000."
+/>
+
+### Step 4: Update your computer
+
+The merge happened on GitHub, so your local `main` doesn't know about it yet:
+
+```bash
+git switch main
+git pull
+git branch -d add-contact-page
+```
+
+`git pull` brings the merged commits to your computer, and `git branch -d` deletes the local copy of the branch you no longer need.
+
+## Merge conflicts
+
+Sometimes two branches change the **same lines** of the same file. Git can't decide which version is right, so it stops and asks you. This is called a **merge conflict**. It sounds alarming, but it's a normal part of working with Git [@gh-conflicts].
+
+Git marks the conflicting part directly in the file:
+
+```text
+<h1>
+<<<<<<< HEAD
+Welcome to my website
+=======
+Hello, and welcome!
+>>>>>>> add-contact-page
+</h1>
+```
+
+- Between `<<<<<<< HEAD` and `=======` is the version on your current branch.
+- Between `=======` and `>>>>>>>` is the version from the other branch.
+
+To resolve it, edit the file so that it contains the text you want, and **delete all three marker lines**. Then save the file and finish the merge:
+
+```bash
+git add index.html
+git commit
+```
+
+In a pull request on GitHub, simple conflicts can also be resolved in the browser with the **Resolve conflicts** button.
+
+## Git in VS Code
+
+VS Code has Git built in, so you can do everything from this guide without the terminal [@vscode-scm]. Open your project folder in VS Code (**File > Open Folder**), then open the **Source Control** view: it's the icon with three connected circles in the left sidebar, or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd> (<kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd> on macOS).
+
+<Screenshot
+  name="vscode-source-control"
+  alt="The Source Control view in VS Code with a commit message box at the top, a Commit button, a Staged Changes section containing index.html and a Changes section containing contact.html."
+  caption="The Source Control view. Changed files are listed under Changes; the + next to a file stages it, and the Commit button commits everything under Staged Changes with the message above."
+  capture="VS Code with the my-first-website folder open, one staged and one unstaged change, and a commit message typed in. Default dark theme, window about 1280 × 800. Make sure no personal file paths or other projects are visible."
+/>
+
+| In VS Code | Git command | What it does |
+| --- | --- | --- |
+| Letter **U**, **M** or **D** next to a file | `git status` | Untracked (new), modified or deleted file |
+| **+** next to a file | `git add <file>` | Stages the file |
+| **Commit** button | `git commit -m "…"` | Commits the staged changes |
+| **Sync Changes** button | `git pull` and `git push` | Downloads and uploads commits |
+| Branch name in the status bar | `git switch` | Click to switch or create a branch |
+| **Publish Branch** button | `git push -u origin <branch>` | Pushes a new branch for the first time |
+
+<Screenshot
+  name="vscode-status-bar"
+  alt="The lower left corner of VS Code, showing the current branch name add-contact-page and the synchronise icon with the number of commits to push and pull."
+  caption="The status bar shows the current branch (click it to switch or create a branch) and, next to it, how many commits are waiting to be pulled and pushed."
+  capture="Bottom left corner of VS Code on the branch add-contact-page with one unpushed commit. Crop to the status bar area, about 600 × 120, but take it at full resolution."
+/>
+
+Clicking a changed file in the Source Control view opens a side-by-side comparison of the old and new version. During a merge conflict, VS Code highlights the conflicting blocks and offers buttons such as **Accept Current Change**, **Accept Incoming Change** and **Accept Both Changes**, which edit the markers for you.
+
+## Good habits
+
+### Keep files out of Git with `.gitignore`
+
+Some files don't belong in a repository: installed packages (`node_modules/`), build output (`dist/`), system files (`.DS_Store`) and, above all, **passwords, API keys and other secrets**. List them in a file called `.gitignore` in the project folder, and Git ignores them [@gh-ignore]:
+
+```text
+# Dependencies and build output
+node_modules/
+dist/
+
+# Local settings and secrets
+.env
+
+# System files
+.DS_Store
+Thumbs.db
+```
+
+When you create a repository on GitHub, you can choose a ready-made `.gitignore` template for your language.
+
+### Commit small and often
+
+A good commit contains **one** logical change and has a clear message. Small commits are easier to understand, review and, if necessary, undo. Commit when something works, not only at the end of the day.
+
+## Common mistakes and how to fix them
+
+| Message or problem | What it means | What to do |
+| --- | --- | --- |
+| `Author identity unknown` | Git doesn't know your name and email yet. | Run the two `git config --global` commands from the setup section. |
+| `fatal: not a git repository` | The terminal is not inside a repository folder. | Use `cd` to go to the project folder, or run `git init` if it's new. |
+| `Support for password authentication was removed` or `Authentication failed` | You tried to sign in with your GitHub password. | Sign in through Git Credential Manager or `gh auth login` instead. |
+| `! [rejected] main -> main (fetch first)` | GitHub has commits that your computer doesn't have yet. | Run `git pull`, fix any conflicts, then `git push` again. |
+| `CONFLICT (content): Merge conflict in …` | Two branches changed the same lines. | Edit the file, remove the markers, then `git add` and `git commit`. |
+| `src refspec main does not match any` | There are no commits yet, or your branch has a different name (often `master`). | Make a first commit, or rename the branch with `git branch -M main`. |
+| `node_modules` or other large folders were committed | They were missing from `.gitignore`. | Add them to `.gitignore`, then run `git rm -r --cached node_modules` and commit. |
+| A password or API key was pushed | It is now in the history, even after you delete the file. | **Change or revoke the secret immediately**, then follow GitHub’s guide to remove it from the history [@gh-sensitive]. |
+
+<Callout type="warning" title="Secrets don’t disappear by deleting the file">
+  A commit is a permanent snapshot. If you push a file with a password or key and delete it in the next commit, it's still in the history and anyone with access can find it. Treat a pushed secret as compromised: replace it first, then clean up.
+</Callout>
+
+## Command cheat sheet
+
+| Command | What it does |
+| --- | --- |
+| `git clone <url>` | Copies a repository from GitHub to your computer |
+| `git status` | Shows changed, staged and untracked files |
+| `git add <file>` / `git add .` | Stages one file / all changes in the folder |
+| `git commit -m "message"` | Saves the staged changes as a commit |
+| `git log --oneline` | Shows the history, one commit per line |
+| `git push` | Uploads your commits to GitHub |
+| `git pull` | Downloads and merges new commits from GitHub |
+| `git switch -c <name>` | Creates a new branch and switches to it |
+| `git switch <name>` | Switches to an existing branch |
+| `git branch` | Lists branches; `*` marks the current one |
+| `git merge <name>` | Merges another branch into the current one |
+| `git restore <file>` | Discards uncommitted changes to a file |
+| `git restore --staged <file>` | Removes a file from the staging area but keeps the changes |
+| `git diff` | Shows unstaged changes line by line |
+
+<Exercise>
+1. Explain in one sentence each: what is Git, and what is GitHub?
+2. Put these in the right order: `git push`, `git add`, `git commit`. What does each one do?
+3. You changed `index.html` and `style.css`, but only want to commit `style.css`. Which commands do you use?
+4. Which command creates a branch called `new-header` and switches to it?
+5. `git push` fails with `! [rejected] main -> main (fetch first)`. What happened, and how do you fix it?
+6. You accidentally pushed a file containing an API key and then deleted it. Is the key safe now?
+
+<Fragment slot="answers">
+1. Git is a program on your computer that records the history of a project. GitHub is an online service that stores Git repositories and adds features for sharing and teamwork, such as pull requests.
+2. `git add` (stage the changes), `git commit` (save them as a snapshot in the local repository), `git push` (upload the commits to GitHub).
+3. `git add style.css`, then `git commit -m "…"`. `index.html` stays changed but uncommitted.
+4. `git switch -c new-header`
+5. GitHub has commits that you don't have locally, for example from a merged pull request or another computer. Run `git pull`, resolve any conflicts, then `git push` again.
+6. No. The key is still in the history. Revoke or replace it immediately, then remove it from the history following GitHub's guide.
+</Fragment>
+</Exercise>
+
+## Conclusion
+
+Git records the history of your project on your computer; GitHub stores it online and makes collaboration easy. The everyday cycle is short: change files, `git add`, `git commit`, `git push`. Branches let you work on something new without risking the working version, and pull requests give every change a place to be reviewed before it's merged. Whether you type commands or click in VS Code, the ideas are the same, and once they make sense, the rest is practice.
+
+## Further reading
+
+- *Pro Git*, the official Git book, is free online and explains everything in this guide in more depth [@progit].
+- GitHub's quickstart for repositories is a good companion for the first steps on the website [@gh-repo-quickstart].
+- The VS Code documentation describes every Git feature of the editor [@vscode-scm].

@@ -12,6 +12,11 @@ import FrameworkVsLibrary from '../components/mdx/FrameworkVsLibrary.astro';
 import KanaChart from '../components/mdx/KanaChart.astro';
 import Zh from '../components/mdx/Zh.astro';
 import Ja from '../components/mdx/Ja.astro';
+import Screenshot from '../components/mdx/Screenshot.astro';
+import GitWorkflow from '../components/mdx/GitWorkflow.astro';
+import BranchMerge from '../components/mdx/BranchMerge.astro';
+import RequestFlow from '../components/mdx/RequestFlow.astro';
+import DeployPipeline from '../components/mdx/DeployPipeline.astro';
 import { formatDate, localeCodes, locales, sectionPath, topicPath, type Locale } from '../i18n/config';
 import { fill, useTranslations } from '../i18n/ui';
 import { site } from '../data/site';
@@ -164,7 +169,7 @@ const schema = {
 
       <div class="body">
         <div class="prose" data-prose>
-          <Content components={{ Callout, Figure, Exercise, FrameworkVsLibrary, KanaChart, Zh, Ja }} />
+          <Content components={{ Callout, Figure, Exercise, FrameworkVsLibrary, KanaChart, Zh, Ja, Screenshot, GitWorkflow, BranchMerge, RequestFlow, DeployPipeline }} />
         </div>
 
         {

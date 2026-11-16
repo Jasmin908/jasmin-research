@@ -1,0 +1,166 @@
+---
+// Diagram: a feature branch splits off main, gets its own commits and is
+// merged back. Labels follow the language of the page.
+const en = Astro.url.pathname.startsWith('/en/');
+const t = en
+  ? {
+      label: 'Diagram of a branch being created and merged',
+      main: 'main',
+      feature: 'add-contact-page',
+      split: 'git switch -c',
+      merge: 'merge',
+      steps: [
+        'You create the branch add-contact-page from main.',
+        'You commit on the branch. main stays unchanged and keeps working.',
+        'Meanwhile, someone else adds a commit to main.',
+        'When the work is ready, the branch is merged into main, usually through a pull request.',
+      ],
+      caption:
+        'Branching and merging. Each circle is a commit. The branch is a separate line of work that rejoins main in a merge commit (M).',
+    }
+  : {
+      label: 'Diagramm: Ein Branch wird erstellt und zusammengeführt',
+      main: 'main',
+      feature: 'add-contact-page',
+      split: 'git switch -c',
+      merge: 'Merge',
+      steps: [
+        'Du erstellst den Branch add-contact-page aus main.',
+        'Du machst Commits auf dem Branch. main bleibt unverändert und funktioniert weiter.',
+        'In der Zwischenzeit kommt auf main ein Commit von jemand anderem dazu.',
+        'Ist die Arbeit fertig, wird der Branch in main zusammengeführt, meist über einen Pull Request.',
+      ],
+      caption:
+        'Branches und Merges. Jeder Kreis ist ein Commit. Der Branch ist ein eigener Arbeitsstrang, der in einem Merge-Commit (M) wieder in main mündet.',
+    };
+---
+
+<figure class="branch-diagram" role="group" aria-label={t.label}>
+  <svg viewBox="0 0 400 170" role="img" aria-labelledby="branch-desc">
+    <desc id="branch-desc">{t.steps.join(' ')}</desc>
+    <!-- main -->
+    <line x1="20" y1="50" x2="380" y2="50" class="line-main" />
+    <!-- branch out and back -->
+    <path d="M110 50 C 135 50, 135 120, 160 120 L 270 120 C 295 120, 295 50, 320 50" class="line-feature" />
+
+    <text x="20" y="28" class="branch-label branch-label--main">{t.main}</text>
+    <text x="160" y="152" class="branch-label branch-label--feature">{t.feature}</text>
+
+    <!-- commits on main -->
+    <circle cx="50" cy="50" r="9" class="c-main" />
+    <circle cx="110" cy="50" r="9" class="c-main" />
+    <circle cx="230" cy="50" r="9" class="c-main" />
+    <!-- commits on the branch -->
+    <circle cx="180" cy="120" r="9" class="c-feature" />
+    <circle cx="250" cy="120" r="9" class="c-feature" />
+    <!-- merge commit -->
+    <circle cx="320" cy="50" r="13" class="c-merge" />
+    <text x="320" y="55" class="m">M</text>
+
+    <!-- step numbers -->
+    <text x="110" y="28" class="num">1</text>
+    <text x="215" y="102" class="num">2</text>
+    <text x="230" y="28" class="num">3</text>
+    <text x="320" y="24" class="num">4</text>
+  </svg>
+  <ol class="legend">
+    {t.steps.map((step) => <li>{step}</li>)}
+  </ol>
+  <figcaption>{t.caption}</figcaption>
+</figure>
+
+<style>
+  .branch-diagram {
+    margin-block: 2em;
+    padding: 1.1rem;
+    border-radius: var(--r-m);
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(120% 100% at 100% 0%, rgb(139 92 246 / 0.1), transparent 60%),
+      var(--surface);
+    font-family: var(--font-body);
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    max-width: 34rem;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .line-main {
+    stroke: var(--violet-soft);
+    stroke-width: 3;
+  }
+
+  .line-feature {
+    fill: none;
+    stroke: var(--lime);
+    stroke-width: 3;
+  }
+
+  .c-main {
+    fill: var(--bg);
+    stroke: var(--violet-soft);
+    stroke-width: 3;
+  }
+
+  .c-feature {
+    fill: var(--bg);
+    stroke: var(--lime);
+    stroke-width: 3;
+  }
+
+  .c-merge {
+    fill: var(--violet);
+    stroke: var(--violet-soft);
+    stroke-width: 3;
+  }
+
+  .m {
+    fill: #fff;
+    font: 700 13px var(--font-body);
+    text-anchor: middle;
+  }
+
+  .branch-label {
+    font: 500 15px var(--font-mono);
+  }
+
+  .branch-label--main {
+    fill: var(--violet-soft);
+  }
+
+  .branch-label--feature {
+    fill: var(--lime);
+  }
+
+  .num {
+    fill: var(--muted);
+    font: 600 13px var(--font-mono);
+    text-anchor: middle;
+  }
+
+  .legend {
+    display: grid;
+    gap: 0.35rem;
+    margin: 1rem 0 0;
+    padding-left: 1.3rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  .legend li::marker {
+    font-family: var(--font-mono);
+    color: var(--violet-soft);
+  }
+
+  figcaption {
+    margin-top: 0.9em;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+</style>

@@ -91,8 +91,35 @@ In `.mdx` files you can also use, without importing:
 </Exercise>
 ```
 
-The labels of `<Exercise>`, `<KanaChart>` and `<FrameworkVsLibrary>` follow the
-language of the page automatically.
+Diagrams for the GitHub and Cloudflare guides: `<GitWorkflow />`, `<BranchMerge />`,
+`<RequestFlow />` and `<DeployPipeline />`.
+
+The labels of `<Exercise>`, `<KanaChart>`, `<FrameworkVsLibrary>` and the diagrams
+follow the language of the page automatically.
+
+### Screenshots
+
+```mdx
+<Screenshot
+  name="github-new-repository"
+  alt="What the image shows, for screen readers"
+  caption="What readers should notice"
+  capture="Instructions for taking the screenshot"
+/>
+```
+
+The image is looked up by `name` in `src/assets/screenshots/` (`.png`, `.jpg` or
+`.webp`). To add or replace a screenshot, save the file there under that name;
+the article does not change. Images are converted to WebP in several sizes, and
+readers can click them to see the full-size version.
+
+- While the file is missing, `npm run dev` shows a placeholder with the capture
+  instructions, and `npm run build` **fails** for a published article, so a
+  placeholder can never go live. Drafts are not built, so they are not affected.
+- Screenshots used only by drafts are removed from the build output
+  automatically (`src/plugins/prune-unused-screenshots.mjs`).
+- Before saving a screenshot, crop or blur personal data: names, email
+  addresses, account IDs, tokens.
 
 Images go in `public/images/` and are referenced as `/images/name.png`.
 
