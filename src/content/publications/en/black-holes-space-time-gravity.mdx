@@ -1,0 +1,161 @@
+---
+title: 'Black Holes: Where Space, Time, and Gravity Meet'
+description: 'What a black hole is, how Einstein’s general relativity describes gravity as the geometry of spacetime, what happens to time and light near a horizon, and how Sagittarius A*, the black hole at the centre of the Milky Way, was found and imaged.'
+date: 2026-11-19
+lang: en
+type: explanation
+subjects: [astronomy, physics]
+tags: [black holes, general relativity, spacetime, event horizon, Sagittarius A*, Event Horizon Telescope]
+difficulty: intermediate
+draft: false
+aiAssisted: true
+translationKey: black-holes
+references:
+  - id: nasa-bh
+    authors: 'NASA'
+    year: 'n.d.'
+    title: 'Black Holes'
+    source: 'NASA Science'
+    url: 'https://science.nasa.gov/universe/black-holes/'
+  - id: nasa-anatomy
+    authors: 'NASA'
+    year: 'n.d.'
+    title: 'Anatomy of a Black Hole'
+    source: 'NASA Science'
+    url: 'https://science.nasa.gov/universe/black-holes/anatomy/'
+  - id: eso2022
+    authors: 'European Southern Observatory (ESO)'
+    year: 2022
+    title: 'Astronomers reveal first image of the black hole at the heart of our galaxy'
+    source: 'Press release eso2208, 12 May 2022'
+    url: 'https://www.eso.org/public/news/eso2208-eht-mw/'
+  - id: eht2022
+    authors: 'Event Horizon Telescope Collaboration et al.'
+    year: 2022
+    title: 'First Sagittarius A* Event Horizon Telescope Results. I. The Shadow of the Supermassive Black Hole in the Center of the Milky Way'
+    source: 'The Astrophysical Journal Letters, 930(2), L12'
+    url: 'https://doi.org/10.3847/2041-8213/ac6674'
+  - id: eso2020
+    authors: 'European Southern Observatory (ESO)'
+    year: 2020
+    title: 'ESO Telescope Sees Star Dance Around Supermassive Black Hole, Proves Einstein Right'
+    source: 'Press release eso2006, 16 April 2020'
+    url: 'https://www.eso.org/public/news/eso2006/'
+  - id: nobel2020
+    authors: 'Nobel Prize Outreach'
+    year: 2020
+    title: 'The Nobel Prize in Physics 2020'
+    source: 'NobelPrize.org'
+    url: 'https://www.nobelprize.org/prizes/physics/2020/summary/'
+---
+
+Black holes are regions of spacetime bounded by an **event horizon**: a boundary beyond which light and other signals can no longer escape to distant observers. Their existence is one of the most remarkable consequences of Albert Einstein's general theory of relativity. Black holes emit no light from inside their horizons, but astronomers can still study them through the motion of nearby stars, radiation from surrounding gas, gravitational waves and high-resolution radio observations [@nasa-bh].
+
+One of the most compelling examples is **Sagittarius A\*** (Sgr A\*), the supermassive black hole at the centre of our own Milky Way. To understand why it matters, we first need to understand what a black hole is, and what Einstein changed about gravity.
+
+## What is a black hole?
+
+A black hole is not a hollow object or a cosmic vacuum cleaner. It is a region of spacetime with an event horizon. Outside that horizon, its gravitational influence can resemble that of any other body with the same mass, especially at large distances. Objects can orbit black holes without falling in.
+
+If the Sun were hypothetically replaced by a black hole of exactly one solar mass, Earth's orbit would stay approximately the same, although the missing sunlight would be catastrophic for life. This thought experiment shows that what makes a black hole special is not unusually strong gravity at every distance, but how much mass is concentrated in a very small region.
+
+### Important features
+
+**Event horizon.** A causal boundary: once something has crossed it inwards, no light signal it sends can reach distant space. It is not a solid surface.
+
+**Singularity.** Classical solutions of general relativity predict that their own description breaks down at the centre of an idealised black hole. Whether a physical singularity exists is unknown; a quantum theory of gravity may change this picture. Singularities are a prediction and a limit of the theory, not something that has been observed.
+
+**Accretion disc.** Some black holes are surrounded by gas that heats up as it spirals inwards and produces radiation. A bright disc is not a feature of every black hole.
+
+**Photon sphere and shadow.** In the non-rotating Schwarzschild model, light can follow unstable circular orbits at one particular radius. Strong bending of light produces a dark apparent **shadow** that looks larger than the event horizon itself, roughly twice its size [@nasa-anatomy].
+
+## How do black holes form?
+
+One established route to a **stellar-mass black hole** begins with the collapse of the core of a massive star. During its life, the star is held up against gravity by the pressure of its hot interior, powered by nuclear fusion. Once the core can no longer support itself, it collapses. Depending on its properties, the remnant can be a neutron star or a black hole. The collapse may be accompanied by a supernova, but not every black hole forms in a bright explosion.
+
+Astronomers distinguish **stellar-mass black holes**, **intermediate-mass candidates** and **supermassive black holes** with millions or billions of solar masses. How the earliest supermassive black holes formed is still an open research question: accretion of gas, mergers and different kinds of initial black-hole "seeds" may all play a role.
+
+## Einstein's general theory of relativity
+
+Newton's law of gravity describes many everyday and astronomical motions extremely well. Einstein's **general relativity**, published in 1915, gives a deeper account: gravity is associated with the geometry of four-dimensional **spacetime**. Matter and energy shape this geometry, and freely moving bodies follow the straightest possible paths in it, called **geodesics**.
+
+The familiar picture of a heavy ball pressing into a rubber sheet is only an analogy. Real spacetime includes time as well as three spatial dimensions, and a rubber sheet cannot capture all of its geometry.
+
+Einstein's field equations can be written as
+
+$$
+G_{\mu\nu}+\Lambda g_{\mu\nu}=\frac{8\pi G}{c^4}T_{\mu\nu}.
+$$
+
+Here $G_{\mu\nu}$ is the Einstein tensor, which is built from the curvature of spacetime; $g_{\mu\nu}$ is the metric, which describes distances and time intervals; $\Lambda$ is the cosmological constant; and $T_{\mu\nu}$ describes the density and flow of energy and momentum. $G$ is Newton's gravitational constant and $c$ the speed of light. In short, the equations connect the distribution of matter and energy with the geometry of spacetime. The cosmological constant matters on the scale of the whole universe, but is negligible for the spacetime around a single black hole.
+
+### The Schwarzschild radius
+
+In 1916 Karl Schwarzschild published an exact solution of these equations for the space outside an idealised spherical, non-rotating mass. In this model, the event horizon lies at the radius
+
+$$
+r_s=\frac{2GM}{c^2},
+$$
+
+where $M$ is the mass. For one solar mass, $r_s$ is about **2.95 km**, and it grows in proportion to the mass. This does not mean that the Sun is a black hole: the real Sun is vastly larger. The formula shows how small a region the same mass would need to be confined to for the idealised model to have a horizon. Real astrophysical black holes usually rotate, and their spacetime is better described by the Kerr solution.
+
+## What happens to space and time near a black hole?
+
+### Gravitational time dilation
+
+General relativity predicts that clocks at different places in a gravitational field can measure different amounts of elapsed time. For a clock that stays **at rest** at radius $r$ outside a non-rotating Schwarzschild black hole, compared with a clock far away, one useful relation is
+
+$$
+d\tau=dt\sqrt{1-\frac{2GM}{rc^2}}=dt\sqrt{1-\frac{r_s}{r}},
+$$
+
+where $d\tau$ is the proper time measured by the local clock, $dt$ is the Schwarzschild coordinate time (the time of a distant observer), and $r$ is the radial coordinate. A clock held at $r = 2r_s$, for example, runs at $\sqrt{1/2}\approx 0.71$ times the rate of the distant clock.
+
+This formula applies only under its stated assumptions: a non-rotating black hole, a clock at rest, and a position outside the horizon. It does **not** mean that someone falling freely into the black hole experiences their own clock stopping.
+
+### Gravitational lensing
+
+Light follows paths shaped by curved spacetime. Near a black hole, extreme bending can distort how surrounding gas and background stars appear. Some light circles partway around the black hole before escaping; other rays are captured. This is one reason why realistic images of black holes show warped rings and unexpectedly bright regions [@nasa-anatomy].
+
+### Tidal forces
+
+Gravity can differ noticeably between two nearby points. These differences are called tidal forces. Their strength depends on the mass of the black hole and on the distance from it, so they are not equally severe at the horizons of all black holes: at the horizon of a supermassive black hole they are much weaker than at the horizon of a stellar-mass one.
+
+## Sagittarius A\*: the black hole in our galaxy
+
+**Sagittarius A\*** is the compact radio source associated with the Milky Way's central supermassive black hole, about **27,000 light-years** from Earth. The black hole has a mass of roughly **four million times the mass of the Sun** [@eso2022].
+
+### How did astronomers establish its existence?
+
+Research teams followed the motions of individual stars near the centre of the galaxy over many years. The star **S2** (also called S0-2) completes an orbit roughly every **16 years** and, at its closest approach, moves at almost three percent of the speed of light [@eso2020]. Such fast motion requires a huge mass concentrated in a remarkably small volume. These stellar orbits provide strong dynamical evidence for a supermassive black hole. Reinhard Genzel and Andrea Ghez shared half of the 2020 Nobel Prize in Physics for the discovery of a supermassive compact object at the centre of our galaxy [@nobel2020].
+
+S2's orbit has also been used to test general relativity. Astronomers have measured a **gravitational redshift** of its light and a **Schwarzschild precession** of its orbit, both consistent with Einstein's predictions [@eso2020]. Precession means that the orbit is not a perfectly closed ellipse: its orientation gradually turns with each revolution.
+
+### The 2022 Event Horizon Telescope image
+
+On **12 May 2022**, the Event Horizon Telescope (EHT) Collaboration presented the first reconstructed image of Sagittarius A\*. The observations were made in **2017** with a worldwide network of radio observatories, combined by very-long-baseline interferometry into a virtual telescope the size of Earth [@eso2022; @eht2022].
+
+<Figure
+  src="/images/sagittarius-a-star-eht-2022.webp"
+  alt="A blurred orange ring of light with three brighter patches around a darker centre, on a black background."
+  caption="The first image of Sagittarius A*, reconstructed by the Event Horizon Telescope from observations made in 2017. The ring is radio emission from hot gas; the dark centre is the shadow, not the event horizon itself."
+  credit="Image: EHT Collaboration, via ESO (CC BY 4.0), resized."
+/>
+
+The image shows a **bright ring of radio emission around a darker central region**. It is not a photograph of the inside of the black hole, nor a direct image of its event horizon. The dark region is associated with the **black-hole shadow**, which is shaped by strong gravitational lensing and the capture of light. The measured size of the ring agrees with the predictions for a black hole of the mass that had already been inferred from the stellar orbits [@eht2022].
+
+Sagittarius A\* is especially difficult to image, because the surrounding gas changes within minutes and radio waves are scattered by material between Earth and the centre of the galaxy. Reconstructing the image therefore required extensive analysis and many cross-checks [@eht2022].
+
+<Callout type="note" title="Observation and model">
+  What has been **observed** at Sagittarius A\* are the orbits of stars, the gravitational redshift and precession of S2, and a ring of radio emission around a shadow. That these observations come from a black hole with an event horizon is the **interpretation** that fits them best within general relativity. Singularities, Hawking radiation and the inner structure of black holes are **theoretical** topics; none of them has been observed at Sagittarius A\*.
+</Callout>
+
+## Why these observations matter
+
+General relativity predicted phenomena that seemed extraordinary when they were first proposed: the bending of light, clocks running at different rates, and extreme spacetime geometries. Today, the orbits of stars near Sagittarius A\*, gravitational-wave signals from merging black holes and EHT observations offer independent ways to test these ideas.
+
+The evidence is strong, but important questions remain. General relativity is a classical theory, while the microscopic world is described by quantum physics. How the two fit together under the most extreme conditions, above all inside black holes, is still unresolved. Hawking radiation and the black-hole information problem are major topics of theoretical research, not phenomena observed at Sagittarius A\*.
+
+## Conclusion
+
+Black holes show that gravity is more than a force that pulls objects together: in Einstein's theory, it is inseparable from the structure of spacetime. The event horizon, gravitational time dilation and the bending of light all follow from this geometric description. Sagittarius A\* turns these abstract ideas into testable science, through the orbits of nearby stars and radio observations of the gas close to its horizon. Black holes are therefore both extraordinary astronomical objects and natural laboratories that show where our understanding of physics is strong, and where it is still incomplete.
